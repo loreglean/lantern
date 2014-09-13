@@ -14,7 +14,7 @@ namespace lantern
 		float z;
 		float w;
 
-		vector4(float x, float y, float z, float w)
+		vector4(float const x, float const y, float const z, float const w)
 			: x(x), y(y), z(z), w(w)
 		{
 

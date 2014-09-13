@@ -13,7 +13,7 @@ namespace lantern
 		float y;
 		float z;
 
-		vector3(float x, float y, float z)
+		vector3(float const x, float const y, float const z)
 			: x(x), y(y), z(z)
 		{
 
@@ -24,12 +24,12 @@ namespace lantern
 			return vector3(-x, -y, -z);
 		}
 
-		vector3 operator*(float s) const
+		vector3 operator*(float const s) const
 		{
 			return vector3(x * s, y * s, z * s);
 		}
 
-		vector3& operator*=(float s)
+		vector3& operator*=(float const s)
 		{
 			x *= s;
 			y *= s;
@@ -73,7 +73,7 @@ namespace lantern
 
 		void normalize()
 		{
-			float length_reciprocal = 1.0f / length();
+			float const length_reciprocal = 1.0f / length();
 
 			x *= length_reciprocal;
 			y *= length_reciprocal;
@@ -92,9 +92,9 @@ namespace lantern
 
 		float distance_to(vector3 const& p) const
 		{
-			float dist_x = p.x - x;
-			float dist_y = p.y - y;
-			float dist_z = p.z - z;
+			float const dist_x = p.x - x;
+			float const dist_y = p.y - y;
+			float const dist_z = p.z - z;
 			return sqrt(dist_x * dist_x + dist_y * dist_y + dist_z * dist_z);
 		}
 
@@ -104,7 +104,7 @@ namespace lantern
 		static vector3 const Z_UNIT;
 	};
 
-	vector3 operator*(float s, vector3 v)
+	vector3 operator*(float const s, vector3 const v)
 	{
 		return vector3(v.x * s, v.y * s, v.z * s);
 	}

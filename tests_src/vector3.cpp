@@ -8,7 +8,7 @@ using namespace lantern;
 
 TEST(vector3, constructor)
 {
-	vector3 v(2.0f, -4.0f, 15.0f);
+	vector3 const v(2.0f, -4.0f, 15.0f);
 	
 	ASSERT_FLOATS_NEAR(v.x, 2.0f);
 	ASSERT_FLOATS_NEAR(v.y, -4.0f);
@@ -17,9 +17,9 @@ TEST(vector3, constructor)
 
 TEST(vector3, negation)
 {
-	vector3 v(13.0f, -99.0f, 0.0f);
+	vector3 const v(13.0f, -99.0f, 0.0f);
 	
-	vector3 v_neg = -v;
+	vector3 const v_neg = -v;
 	ASSERT_FLOATS_NEAR(v_neg.x, -13.0f);
 	ASSERT_FLOATS_NEAR(v_neg.y, 99.0f);
 	ASSERT_FLOATS_NEAR(v_neg.z, 0.0f);
@@ -27,7 +27,7 @@ TEST(vector3, negation)
 
 TEST(vector3, multiplication_by_scalar)
 {
-	vector3 v(1.0f, -2.0f, 3.0f);
+	vector3 const v(1.0f, -2.0f, 3.0f);
 	
 	vector3 v_muled = v * 6.0f;
 	ASSERT_FLOATS_NEAR(v_muled.x, 6.0f);
@@ -48,8 +48,8 @@ TEST(vector3, multiplication_by_scalar)
 
 TEST(vector3, addition_subtracton)
 {
-	vector3 v(-15.0f, 0.0f, 7.0f);
-	vector3 w(15.0f, -5.0f, 13.0f);
+	vector3 const v(-15.0f, 0.0f, 7.0f);
+	vector3 const w(15.0f, -5.0f, 13.0f);
 
 	vector3 v_w_added = v + w;
 	ASSERT_FLOATS_NEAR(v_w_added.x, 0.0f);
@@ -76,7 +76,7 @@ TEST(vector3, addition_subtracton)
 
 TEST(vector3, length)
 {
-	vector3 v(5.0f, -4.0f, 7.0f);
+	vector3 const v(5.0f, -4.0f, 7.0f);
 
 	ASSERT_FLOATS_NEAR(v.length(), 9.4868f);
 }
@@ -94,16 +94,16 @@ TEST(vector3, normalization)
 
 TEST(vector3, dot_product)
 {
-	vector3 v(12.0f, -3.0f, 5.0f);
-	vector3 w(-5.0f, -3.0f, 0.5f);
+	vector3 const v(12.0f, -3.0f, 5.0f);
+	vector3 const w(-5.0f, -3.0f, 0.5f);
 
 	ASSERT_FLOATS_NEAR(v.dot(w), -48.5f);
 }
 
 TEST(vector3, cross_product)
 {
-	vector3 v(-5.0f, 17.0f, 3.0f);
-	vector3 w(3.0f, 12.0f, 0.0f);
+	vector3 const v(-5.0f, 17.0f, 3.0f);
+	vector3 const w(3.0f, 12.0f, 0.0f);
 
 	vector3 cross = v.cross(w);
 	ASSERT_FLOATS_NEAR(cross.x, -36.0f);
@@ -113,8 +113,8 @@ TEST(vector3, cross_product)
 
 TEST(vector3, distance_between_points)
 {
-	vector3 p1(5.0f, 5.0f, 5.0f);
-	vector3 p2(0.0f, 2.0f, 3.0f);
+	vector3 const p1(5.0f, 5.0f, 5.0f);
+	vector3 const p2(0.0f, 2.0f, 3.0f);
 
 	ASSERT_FLOATS_NEAR(p1.distance_to(p2), 6.1644f);
 }
