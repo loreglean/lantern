@@ -1,25 +1,53 @@
 cmake_minimum_required(VERSION 2.8)
 
+# Project name
 project(lantern)
 
+# Add testing tool
 include(CTest)
 
-include_directories(src)
-include_directories(include)
+# Project directories
+include_directories(src include tests/src tests/include)
 
-set(LANTERN_SOURCES src/vector3.cpp)
-set(LANTERN_HEADERS include/vector3.h include/vector4.h)
-set(TESTS_SOURCES tests_src/main.cpp tests_src/vector3.cpp tests_src/vector4.cpp)
+# Project files
+#
+set(LANTERN_SOURCES
+    src/vector3.cpp
+    src/matrix3x3.cpp)
+set(LANTERN_HEADERS
+    include/vector3.h
+    include/vector4.h
+    include/matrix3x3.h
+    include/matrix4x4.h)
+set(TESTS_SOURCES
+    tests/src/main.cpp
+    tests/src/vector3.cpp
+    tests/src/matrix3x3.cpp)
+set(TESTS_HEADERS
+    tests/include/util.h)
 
+# Add library target
 add_library(
 	lantern STATIC
 	${LANTERN_SOURCES}
 	${LANTERN_HEADERS})
 
+# Add tests exec target
 add_executable(
 	tests
 	${TESTS_SOURCES}
+	${TESTS_HEADERS}
 	${LANTERN_HEADERS})
+
+# Link libraries to tests exec
 target_link_libraries(tests lantern gtest pthread)
 
+# Add tests exec to tests list
 add_test(lantern_tests tests)
+
+# Additional compiler flags
+set(COMPILER_FLAGS
+    "-std=c++11 -Wall")
+
+# Add compiler flags
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
