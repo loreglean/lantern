@@ -13,6 +13,7 @@ include_directories(src include tests/src tests/include)
 #
 set(LANTERN_SOURCES
     src/vector3.cpp
+    src/vector4.cpp
     src/matrix3x3.cpp
     src/matrix4x4.cpp)
 set(LANTERN_HEADERS
@@ -25,7 +26,7 @@ set(TESTS_SOURCES
     tests/src/vector3.cpp
     tests/src/vector4.cpp
     tests/src/matrix3x3.cpp
-     tests/src/matrix4x4.cpp)
+    tests/src/matrix4x4.cpp)
 set(TESTS_HEADERS
     tests/include/common.h)
 
