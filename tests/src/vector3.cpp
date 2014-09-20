@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "util.h"
+#include "common.h"
 #include "vector3.h"
 
 using namespace lantern;

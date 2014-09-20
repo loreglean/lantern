@@ -13,7 +13,8 @@ include_directories(src include tests/src tests/include)
 #
 set(LANTERN_SOURCES
     src/vector3.cpp
-    src/matrix3x3.cpp)
+    src/matrix3x3.cpp
+    src/matrix4x4.cpp)
 set(LANTERN_HEADERS
     include/vector3.h
     include/vector4.h
@@ -22,9 +23,11 @@ set(LANTERN_HEADERS
 set(TESTS_SOURCES
     tests/src/main.cpp
     tests/src/vector3.cpp
-    tests/src/matrix3x3.cpp)
+    tests/src/vector4.cpp
+    tests/src/matrix3x3.cpp
+     tests/src/matrix4x4.cpp)
 set(TESTS_HEADERS
-    tests/include/util.h)
+    tests/include/common.h)
 
 # Add library target
 add_library(
