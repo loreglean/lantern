@@ -15,18 +15,21 @@ set(LANTERN_SOURCES
     src/vector3.cpp
     src/vector4.cpp
     src/matrix3x3.cpp
-    src/matrix4x4.cpp)
+    src/matrix4x4.cpp
+    src/camera.cpp)
 set(LANTERN_HEADERS
     include/vector3.h
     include/vector4.h
     include/matrix3x3.h
-    include/matrix4x4.h)
+    include/matrix4x4.h
+    include/camera.h)
 set(TESTS_SOURCES
     tests/src/main.cpp
     tests/src/vector3.cpp
     tests/src/vector4.cpp
     tests/src/matrix3x3.cpp
-    tests/src/matrix4x4.cpp)
+    tests/src/matrix4x4.cpp
+    tests/src/camera.cpp)
 set(TESTS_HEADERS
     tests/include/common.h)
 
