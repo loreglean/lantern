@@ -7,22 +7,49 @@ project(lantern)
 include(CTest)
 
 # Project directories
-include_directories(src include tests/src tests/include)
+include_directories(
+    examples/empty_app
+    lantern/src lantern/include
+    tests/src tests/include)
 
-# Project files
+# Additional compiler flags
+set(COMPILER_FLAGS
+    "-std=c++11 -Wall")
+
+# Add compiler flags
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
+
+# Targets
 #
+
+# Library
+#
+
 set(LANTERN_SOURCES
-    src/vector3.cpp
-    src/vector4.cpp
-    src/matrix3x3.cpp
-    src/matrix4x4.cpp
-    src/camera.cpp)
+    lantern/src/vector3.cpp
+    lantern/src/vector4.cpp
+    lantern/src/matrix3x3.cpp
+    lantern/src/matrix4x4.cpp
+    lantern/src/camera.cpp
+    lantern/src/app.cpp
+    lantern/src/bitmap_painter.cpp)
 set(LANTERN_HEADERS
-    include/vector3.h
-    include/vector4.h
-    include/matrix3x3.h
-    include/matrix4x4.h
-    include/camera.h)
+    lantern/include/vector3.h
+    lantern/include/vector4.h
+    lantern/include/matrix3x3.h
+    lantern/include/matrix4x4.h
+    lantern/include/camera.h
+    lantern/include/app.h
+    lantern/include/bitmap_painter.h)
+
+add_library(
+	lantern STATIC
+	${LANTERN_SOURCES}
+	${LANTERN_HEADERS})
+
+# Tests
+#
+
 set(TESTS_SOURCES
     tests/src/main.cpp
     tests/src/vector3.cpp
@@ -33,28 +60,22 @@ set(TESTS_SOURCES
 set(TESTS_HEADERS
     tests/include/common.h)
 
-# Add library target
-add_library(
-	lantern STATIC
-	${LANTERN_SOURCES}
-	${LANTERN_HEADERS})
-
-# Add tests exec target
 add_executable(
 	tests
 	${TESTS_SOURCES}
 	${TESTS_HEADERS}
 	${LANTERN_HEADERS})
 
-# Link libraries to tests exec
 target_link_libraries(tests lantern gtest pthread)
 
-# Add tests exec to tests list
 add_test(lantern_tests tests)
 
-# Additional compiler flags
-set(COMPILER_FLAGS
-    "-std=c++11 -Wall")
+# Empty app example
+#
 
-# Add compiler flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
+add_executable(
+    empty_app
+    examples/empty_app/main.cpp
+    ${LANTERN_HEADERS})
+
+target_link_libraries(empty_app lantern SDL2)

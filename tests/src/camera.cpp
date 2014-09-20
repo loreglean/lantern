@@ -19,18 +19,9 @@ TEST(camera, constructor)
 	ASSERT_FLOATS_NEAR(c.get_up().x, 0.0f);
 	ASSERT_FLOATS_NEAR(c.get_up().y, 1.0f);
 	ASSERT_FLOATS_NEAR(c.get_up().z, 0.0f);
-	ASSERT_FLOATS_NEAR(c.get_position().x, 0.0f);
-	ASSERT_FLOATS_NEAR(c.get_position().y, 0.0f);
-	ASSERT_FLOATS_NEAR(c.get_position().z, 0.0f);
-}
-
-TEST(camera, setting_position)
-{
-	camera c{vector3::ZERO, vector3::Z_UNIT};
-	c.set_position(vector3{0.12f, 0.1f, -2.0f});
-	ASSERT_FLOATS_NEAR(c.get_position().x, 0.12f);
-	ASSERT_FLOATS_NEAR(c.get_position().y, 0.1f);
-	ASSERT_FLOATS_NEAR(c.get_position().z, -2.0f);
+	ASSERT_FLOATS_NEAR(c.position.x, 0.0f);
+	ASSERT_FLOATS_NEAR(c.position.y, 0.0f);
+	ASSERT_FLOATS_NEAR(c.position.z, 0.0f);
 }
 
 TEST(camera, moving)
@@ -40,33 +31,33 @@ TEST(camera, moving)
 	camera c{vector3::ZERO, vector3{cos_value, 0.0f, sin_value}};
 
 	c.move_forward(1.0f);
-	ASSERT_FLOATS_NEAR(c.get_position().x, cos_value);
-	ASSERT_FLOATS_NEAR(c.get_position().y, 0.0f);
-	ASSERT_FLOATS_NEAR(c.get_position().z, sin_value);
+	ASSERT_FLOATS_NEAR(c.position.x, cos_value);
+	ASSERT_FLOATS_NEAR(c.position.y, 0.0f);
+	ASSERT_FLOATS_NEAR(c.position.z, sin_value);
 	c.move_backward(2.0f);
-	ASSERT_FLOATS_NEAR(c.get_position().x, -cos_value);
-	ASSERT_FLOATS_NEAR(c.get_position().y, 0.0f);
-	ASSERT_FLOATS_NEAR(c.get_position().z, -sin_value);
+	ASSERT_FLOATS_NEAR(c.position.x, -cos_value);
+	ASSERT_FLOATS_NEAR(c.position.y, 0.0f);
+	ASSERT_FLOATS_NEAR(c.position.z, -sin_value);
 
-	c.set_position(vector3::ZERO);
+	c.position = vector3::ZERO;
 
 	c.move_right(2.0f);
-	ASSERT_FLOATS_NEAR(c.get_position().x, 2 * sin_value);
-	ASSERT_FLOATS_NEAR(c.get_position().y, 0.0f);
-	ASSERT_FLOATS_NEAR(c.get_position().z, 2 * (-cos_value));
+	ASSERT_FLOATS_NEAR(c.position.x, 2 * sin_value);
+	ASSERT_FLOATS_NEAR(c.position.y, 0.0f);
+	ASSERT_FLOATS_NEAR(c.position.z, 2 * (-cos_value));
 	c.move_left(5.0f);
-	ASSERT_FLOATS_NEAR(c.get_position().x, -3 * sin_value);
-	ASSERT_FLOATS_NEAR(c.get_position().y, 0.0f);
-	ASSERT_FLOATS_NEAR(c.get_position().z, 3 * cos_value);
+	ASSERT_FLOATS_NEAR(c.position.x, -3 * sin_value);
+	ASSERT_FLOATS_NEAR(c.position.y, 0.0f);
+	ASSERT_FLOATS_NEAR(c.position.z, 3 * cos_value);
 
 	c.move_up(7.0f);
-	ASSERT_FLOATS_NEAR(c.get_position().x, -3 * sin_value);
-	ASSERT_FLOATS_NEAR(c.get_position().y, 7.0f);
-	ASSERT_FLOATS_NEAR(c.get_position().z, 3 * cos_value);
+	ASSERT_FLOATS_NEAR(c.position.x, -3 * sin_value);
+	ASSERT_FLOATS_NEAR(c.position.y, 7.0f);
+	ASSERT_FLOATS_NEAR(c.position.z, 3 * cos_value);
 	c.move_down(4.5f);
-	ASSERT_FLOATS_NEAR(c.get_position().x, -3 * sin_value);
-	ASSERT_FLOATS_NEAR(c.get_position().y, 2.5f);
-	ASSERT_FLOATS_NEAR(c.get_position().z, 3 * cos_value);
+	ASSERT_FLOATS_NEAR(c.position.x, -3 * sin_value);
+	ASSERT_FLOATS_NEAR(c.position.y, 2.5f);
+	ASSERT_FLOATS_NEAR(c.position.z, 3 * cos_value);
 }
 
 TEST(camera, rotation)

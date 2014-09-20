@@ -4,14 +4,9 @@
 using namespace lantern;
 
 camera::camera(vector3 position, vector3 forward)
-	: m_position{position}, m_forward{forward.normalized()}
+	: position{position}, m_forward{forward.normalized()}
 {
 	establish_coordinate_system();
-}
-
-vector3 camera::get_position() const
-{
-	return m_position;
 }
 
 vector3 camera::get_forward() const
@@ -27,11 +22,6 @@ vector3 camera::get_right() const
 vector3 camera::get_up() const
 {
 	return m_up;
-}
-
-void camera::set_position(vector3 const &position)
-{
-	m_position = position;
 }
 
 void camera::establish_coordinate_system()
@@ -58,7 +48,7 @@ void camera::establish_coordinate_system()
 
 void camera::move_right(float distance)
 {
-	m_position += m_right * distance;
+	position += m_right * distance;
 }
 
 void camera::move_left(float const distance)
@@ -68,7 +58,7 @@ void camera::move_left(float const distance)
 
 void camera::move_up(float const distance)
 {
-	m_position += m_up * distance;
+	position += m_up * distance;
 }
 
 void camera::move_down(float const distance)
@@ -78,7 +68,7 @@ void camera::move_down(float const distance)
 
 void camera::move_forward(float const distance)
 {
-	m_position += m_forward * distance;
+	position += m_forward * distance;
 }
 
 void camera::move_backward(float const distance)

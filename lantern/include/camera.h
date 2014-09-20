@@ -5,17 +5,18 @@
 
 namespace lantern
 {
+	/** Class representing camera in 3D world.
+	*/
 	class camera
 	{
 	public:
+		vector3 position;
+
 		camera(vector3 position, vector3 forward);
 
-		vector3 get_position() const;
 		vector3 get_forward() const;
 		vector3 get_right() const;
 		vector3 get_up() const;
-
-		void set_position(vector3 const& position);
 
 		void move_right(float const distance);
 		void move_left(float const distance);
@@ -28,7 +29,6 @@ namespace lantern
 		void pitch(float const radians);
 
 	private:
-		vector3 m_position;
 		vector3 m_forward;
 		vector3 m_right;
 		vector3 m_up;
