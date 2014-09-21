@@ -32,12 +32,16 @@ set(LANTERN_SOURCES
     lantern/src/matrix4x4.cpp
     lantern/src/camera.cpp
     lantern/src/app.cpp
+    lantern/src/point.cpp
+    lantern/src/color.cpp
     lantern/src/bitmap_painter.cpp)
 set(LANTERN_HEADERS
     lantern/include/vector3.h
     lantern/include/vector4.h
     lantern/include/matrix3x3.h
     lantern/include/matrix4x4.h
+    lantern/include/point.h
+    lantern/include/color.h
     lantern/include/camera.h
     lantern/include/app.h
     lantern/include/bitmap_painter.h)
@@ -56,7 +60,8 @@ set(TESTS_SOURCES
     tests/src/vector4.cpp
     tests/src/matrix3x3.cpp
     tests/src/matrix4x4.cpp
-    tests/src/camera.cpp)
+    tests/src/camera.cpp
+    tests/src/bitmap_painter.cpp)
 set(TESTS_HEADERS
     tests/include/common.h)
 
