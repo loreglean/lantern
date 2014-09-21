@@ -3,7 +3,7 @@
 
 using namespace lantern;
 
-camera::camera(vector3 position, vector3 forward)
+camera::camera(vector3 const& position, vector3 const& forward)
 	: position{position}, m_forward{forward.normalized()}
 {
 	establish_coordinate_system();

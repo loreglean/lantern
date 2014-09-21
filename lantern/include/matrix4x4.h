@@ -11,7 +11,7 @@ namespace lantern
 	*	Used to represent 3D affine transformations.
 	*	Coordinate system assumed to be left-handed. Values are accessed as [row][column].
 	*/
-    class matrix4x4
+    class matrix4x4 final
     {
     public:
         float values[4][4];

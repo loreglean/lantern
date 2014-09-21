@@ -4,7 +4,7 @@
 
 using namespace lantern;
 
-app::app(unsigned int width, unsigned int height)
+app::app(unsigned int const width, unsigned int const height)
 	: m_window{nullptr},
 	  m_renderer{nullptr},
 	  m_target_texture{nullptr},

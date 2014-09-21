@@ -7,12 +7,12 @@ namespace lantern
 {
 	/** Class representing camera in 3D world.
 	*/
-	class camera
+	class camera final
 	{
 	public:
 		vector3 position;
 
-		camera(vector3 position, vector3 forward);
+		camera(vector3 const& position, vector3 const& forward);
 
 		vector3 get_forward() const;
 		vector3 get_right() const;

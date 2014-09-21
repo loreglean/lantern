@@ -5,13 +5,13 @@ using namespace lantern;
 class empty_app : public app
 {
 public:
-	empty_app(unsigned int width, unsigned int height);
+	empty_app(unsigned int const width, unsigned int const height);
 
 protected:
 	void update() override;
 };
 
-empty_app::empty_app(unsigned int width, unsigned int height)
+empty_app::empty_app(unsigned int const width, unsigned int const height)
 	: app(width, height)
 {
 }

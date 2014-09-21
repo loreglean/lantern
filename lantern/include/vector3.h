@@ -10,7 +10,7 @@ namespace lantern
 	*	providing operations for both interpretations.
 	*	It also can be used to just store three related float values.
 	*/
-	class vector3
+	class vector3 final
 	{
 	public:
 		float x;

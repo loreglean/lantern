@@ -9,7 +9,7 @@ namespace lantern
 	class app
 	{
 	public:
-		app(unsigned int width, unsigned int height);
+		app(unsigned int const width, unsigned int const height);
 		virtual ~app();
 
 		int start();
