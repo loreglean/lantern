@@ -6,9 +6,10 @@ using namespace lantern;
 
 // Helper function to ASSERT_TRUE that pixel color matches
 //
-static void assert_pixel_color(bitmap_painter const& painter, point2D const& point, color const& c)
+static void assert_pixel_color(bitmap_painter const& painter, point2d const& point, color const& c)
 {
-	bool pixel_color_matches = (painter.get_pixel_color(point) == c);
+	color const current_color = painter.get_pixel_color(point);
+	bool const pixel_color_matches{current_color == c};
 	ASSERT_TRUE(pixel_color_matches);
 }
 
@@ -17,14 +18,14 @@ static void assert_pixel_color(bitmap_painter const& painter, point2D const& poi
 //
 static void assert_pixels_colors(
 	bitmap_painter const& painter,
-	std::vector<point2D> const& points, color const& points_color,
+	std::vector<point2d> const& points, color const& points_color,
 	color const& other_pixels_color)
 {
 	for (unsigned int i{0}; i < painter.get_bitmap_width(); i++)
 	{
 		for (unsigned int j{0}; j < painter.get_bitmap_height(); j++)
 		{
-			point2D p{i, j};
+			point2d p{i, j};
 
 			if (std::find(std::begin(points), std::end(points), p) != std::end(points))
 			{
@@ -47,7 +48,7 @@ static void assert_horizontal_line_color(
 {
 	for (unsigned int i{x0}; i <= x1; i++)
 	{
-		assert_pixel_color(painter, point2D{i, y}, c);
+		assert_pixel_color(painter, point2d{i, y}, c);
 	}
 }
 
@@ -65,7 +66,7 @@ TEST(bitmap_painter, draw_pixel)
 {
 	bitmap_painter painter{6, 6};
 	painter.clear(0);
-	painter.draw_pixel(point2D{2, 2}, color::WHITE);
+	painter.draw_pixel(point2d{2, 2}, color::WHITE);
 	for (unsigned int i{0}; i < 6; i++)
 	{
 		if (i != 2)
@@ -78,116 +79,200 @@ TEST(bitmap_painter, draw_pixel)
 			assert_horizontal_line_color(painter, 3, 5, i, color::BLACK);
 		}
 	}
-	assert_pixel_color(painter, point2D{2, 2}, color::WHITE);
+	assert_pixel_color(painter, point2d{2, 2}, color::WHITE);
 }
 
 TEST(bitmap_painter, draw_line)
 {
 	bitmap_painter painter{6, 6};
 
-	// Horizontal
+	// Octants are:
+	//
+	//      \    |    /
+	//       \   |   /
+	//        \ 5|6 /
+	//        4\ | /7
+	// --------  p0  -------
+	//        3/ | \0
+	//        / 2|1 \
+	//       /   |   \
+	//      /    |    \
+
+
+	// Point
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2D{0, 0}, point2D{5, 0}, color::BLUE);
+	painter.draw_line(point2d{1, 1}, point2d{1, 1}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2D>{point2D{0, 0}, point2D{1, 0}, point2D{2, 0}, point2D{3, 0}, point2D{4, 0}, point2D{5, 0}},
+		std::vector<point2d>{point2d{1, 1}},
 		color::BLUE,
 		color::BLACK);
 
-	painter.clear(0);
-	painter.draw_line(point2D{5, 0}, point2D{0, 0}, color::BLUE);
-	assert_pixels_colors(
-		painter,
-		std::vector<point2D>{point2D{0, 0}, point2D{1, 0}, point2D{2, 0}, point2D{3, 0}, point2D{4, 0}, point2D{5, 0}},
-		color::BLUE,
-		color::BLACK);
-
-	// Vertical
+	// Horizontal line
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2D{0, 0}, point2D{0, 5}, color::BLUE);
+	painter.draw_line(point2d{0, 3}, point2d{5, 3}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2D>{point2D{0, 0}, point2D{0, 1}, point2D{0, 2}, point2D{0, 3}, point2D{0, 4}, point2D{0, 5}},
+		std::vector<point2d>{point2d{0, 3}, point2d{1, 3}, point2d{2, 3}, point2d{3, 3}, point2d{4, 3}, point2d{5, 3}},
 		color::BLUE,
 		color::BLACK);
 
-	painter.clear(0);
-	painter.draw_line(point2D{0, 5}, point2D{0, 0}, color::BLUE);
-	assert_pixels_colors(
-		painter,
-		std::vector<point2D>{point2D{0, 0}, point2D{0, 1}, point2D{0, 2}, point2D{0, 3}, point2D{0, 4}, point2D{0, 5}},
-		color::BLUE,
-		color::BLACK);
-
-	// Single point
+	// Vertical line
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2D{0, 0}, point2D{0, 0}, color::BLUE);
+	painter.draw_line(point2d{3, 0}, point2d{3, 5}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2D>{point2D{0, 0}},
+		std::vector<point2d>{point2d{3, 0}, point2d{3, 1}, point2d{3, 2}, point2d{3, 3}, point2d{3, 4}, point2d{3, 5}},
 		color::BLUE,
 		color::BLACK);
 
-	// Abs(slope) = 1
+	// Octant 0
+	//
+
+	// Through origin
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2D{0, 0}, point2D{5, 5}, color::BLUE);
+	painter.draw_line(point2d{0, 0}, point2d{5, 2}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2D>{point2D{0, 0}, point2D{1, 1}, point2D{2, 2}, point2D{3, 3}, point2D{4, 4}, point2D{5, 5}},
+		std::vector<point2d>{point2d{0, 0}, point2d{1, 0}, point2d{2, 1}, point2d{3, 1}, point2d{4, 2}, point2d{5, 2}},
 		color::BLUE,
 		color::BLACK);
 
-	painter.clear(0);
-	painter.draw_line(point2D{5, 5}, point2D{0, 0}, color::BLUE);
-	assert_pixels_colors(
-		painter,
-		std::vector<point2D>{point2D{0, 0}, point2D{1, 1}, point2D{2, 2}, point2D{3, 3}, point2D{4, 4}, point2D{5, 5}},
-		color::BLUE,
-		color::BLACK);
-
-	// Abs(slope_x) < 1, abs(slope_y) > 1
+	// Not through origin
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2D{0, 5}, point2D{2, 0}, color::BLUE);
+	painter.draw_line(point2d{1, 0}, point2d{5, 3}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2D>{point2D{0, 5}, point2D{0, 4}, point2D{1, 3}, point2D{1, 2}, point2D{2, 1}, point2D{2, 0}},
+		std::vector<point2d>{point2d{1, 0}, point2d{2, 1}, point2d{3, 1}, point2d{4, 2}, point2d{5, 3}},
 		color::BLUE,
 		color::BLACK);
 
-	painter.clear(0);
-	painter.draw_line(point2D{2, 0}, point2D{0, 5}, color::BLUE);
-	assert_pixels_colors(
-		painter,
-		std::vector<point2D>{point2D{0, 5}, point2D{0, 4}, point2D{1, 3}, point2D{1, 2}, point2D{2, 1}, point2D{2, 0}},
-		color::BLUE,
-		color::BLACK);
+	// Octant 4
+	//
 
-	// Abs(slope_x) > 1, abs(slope_y) < 1
+	// Through origin
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2D{0, 0}, point2D{5, 1}, color::BLUE);
+	painter.draw_line(point2d{5, 2}, point2d{0, 0}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2D>{point2D{0, 0}, point2D{1, 0}, point2D{2, 0}, point2D{3, 1}, point2D{4, 1}, point2D{5, 1}},
+		std::vector<point2d>{point2d{0, 0}, point2d{1, 0}, point2d{2, 1}, point2d{3, 1}, point2d{4, 2}, point2d{5, 2}},
 		color::BLUE,
 		color::BLACK);
 
+	// Not through origin
+	//
+
 	painter.clear(0);
-	painter.draw_line(point2D{5, 1}, point2D{0, 0}, color::BLUE);
+	painter.draw_line(point2d{5, 3}, point2d{1, 0}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2D>{point2D{0, 0}, point2D{1, 0}, point2D{2, 0}, point2D{3, 1}, point2D{4, 1}, point2D{5, 1}},
+		std::vector<point2d>{point2d{1, 0}, point2d{2, 1}, point2d{3, 1}, point2d{4, 2}, point2d{5, 3}},
+		color::BLUE,
+		color::BLACK);
+
+	// Octant 1
+	//
+
+	// Through origin
+	//
+
+	painter.clear(0);
+	painter.draw_line(point2d{0, 0}, point2d{2, 5}, color::BLUE);
+	assert_pixels_colors(
+		painter,
+		std::vector<point2d>{point2d{0, 0}, point2d{0, 1}, point2d{1, 2}, point2d{1, 3}, point2d{2, 4}, point2d{2, 5}},
+		color::BLUE,
+		color::BLACK);
+
+	// Not through origin
+	//
+
+	painter.clear(0);
+	painter.draw_line(point2d{1, 1}, point2d{2, 5}, color::BLUE);
+	assert_pixels_colors(
+		painter,
+		std::vector<point2d>{point2d{1, 1}, point2d{1, 2}, point2d{2, 3}, point2d{2, 4}, point2d{2, 5}},
+		color::BLUE,
+		color::BLACK);
+
+	// Octant 5
+	//
+
+	// Through origin
+	//
+
+	painter.clear(0);
+	painter.draw_line(point2d{2, 5}, point2d{0, 0}, color::BLUE);
+	assert_pixels_colors(
+		painter,
+		std::vector<point2d>{point2d{0, 0}, point2d{0, 1}, point2d{1, 2}, point2d{1, 3}, point2d{2, 4}, point2d{2, 5}},
+		color::BLUE,
+		color::BLACK);
+
+	// Not through origin
+	//
+
+	painter.clear(0);
+	painter.draw_line(point2d{2, 5}, point2d{1, 1}, color::BLUE);
+	assert_pixels_colors(
+		painter,
+		std::vector<point2d>{point2d{1, 1}, point2d{1, 2}, point2d{2, 3}, point2d{2, 4}, point2d{2, 5}},
+		color::BLUE,
+		color::BLACK);
+
+	// Octant 6
+	//
+
+	painter.clear(0);
+	painter.draw_line(point2d{0, 5}, point2d{2, 0}, color::BLUE);
+	assert_pixels_colors(
+		painter,
+		std::vector<point2d>{point2d{0, 5}, point2d{0, 4}, point2d{1, 3}, point2d{1, 2}, point2d{2, 1}, point2d{2, 0}},
+		color::BLUE,
+		color::BLACK);
+
+	// Octant 2
+	//
+
+	painter.clear(0);
+	painter.draw_line(point2d{2, 0}, point2d{0, 5}, color::BLUE);
+	assert_pixels_colors(
+		painter,
+		std::vector<point2d>{point2d{0, 5}, point2d{0, 4}, point2d{1, 3}, point2d{1, 2}, point2d{2, 1}, point2d{2, 0}},
+		color::BLUE,
+		color::BLACK);
+
+	// Octant 7
+	//
+
+	painter.clear(0);
+	painter.draw_line(point2d{0, 2}, point2d{5, 0}, color::BLUE);
+	assert_pixels_colors(
+		painter,
+		std::vector<point2d>{point2d{0, 2}, point2d{1, 2}, point2d{2, 1}, point2d{3, 1}, point2d{4, 0}, point2d{5, 0}},
+		color::BLUE,
+		color::BLACK);
+
+	// Octant 3
+	//
+
+	painter.clear(0);
+	painter.draw_line(point2d{5, 0}, point2d{0, 2}, color::BLUE);
+	assert_pixels_colors(
+		painter,
+		std::vector<point2d>{point2d{0, 2}, point2d{1, 2}, point2d{2, 1}, point2d{3, 1}, point2d{4, 0}, point2d{5, 0}},
 		color::BLUE,
 		color::BLACK);
 }

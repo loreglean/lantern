@@ -3,13 +3,13 @@
 
 namespace lantern
 {
-	class point2D final
+	class point2d final
 	{
 	public:
 		unsigned int x;
 		unsigned int y;
 
-		bool operator==(point2D const& p) const;
+		bool operator==(point2d const& p) const;
 	};
 }
 

@@ -20,12 +20,12 @@ namespace lantern
 		unsigned int get_bitmap_height() const;
 		int get_pitch() const;
 		unsigned char const* get_data() const;
-		color get_pixel_color(point2D const& point) const;
+		color get_pixel_color(point2d const& point) const;
 
 		// TODO: clear with custom color, not only gray
 		void clear(unsigned char const bytes_value);
-		void draw_pixel(point2D const &point, color const &c);
-		void draw_line(point2D const& p0, point2D const& p1, color const& c);
+		void draw_pixel(point2d const &point, color const &c);
+		void draw_line(point2d const& p0, point2d const& p1, color const& c);
 
 	private:
 		unsigned int m_bitmap_width;
