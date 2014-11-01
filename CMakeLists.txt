@@ -10,11 +10,11 @@ include(CTest)
 include_directories(
     examples/empty_app
     lantern/src lantern/include
-    tests/src tests/include)
+    tests/src tests/include tests/resources)
 
 # Additional compiler flags
 set(COMPILER_FLAGS
-    "-std=c++11 -Wall -Werror")
+    "-std=c++11 -Wall -Wno-comment -Werror")
 
 # Add compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
@@ -34,7 +34,9 @@ set(LANTERN_SOURCES
     lantern/src/app.cpp
     lantern/src/point.cpp
     lantern/src/color.cpp
-    lantern/src/bitmap_painter.cpp)
+    lantern/src/bitmap_painter.cpp
+    lantern/src/mesh.cpp
+    lantern/src/obj_import.cpp)
 set(LANTERN_HEADERS
     lantern/include/vector3.h
     lantern/include/vector4.h
@@ -44,7 +46,9 @@ set(LANTERN_HEADERS
     lantern/include/color.h
     lantern/include/camera.h
     lantern/include/app.h
-    lantern/include/bitmap_painter.h)
+    lantern/include/bitmap_painter.h
+    lantern/include/mesh.h
+    lantern/include/obj_import.h)
 
 add_library(
 	lantern STATIC
@@ -61,7 +65,8 @@ set(TESTS_SOURCES
     tests/src/matrix3x3.cpp
     tests/src/matrix4x4.cpp
     tests/src/camera.cpp
-    tests/src/bitmap_painter.cpp)
+    tests/src/bitmap_painter.cpp
+    tests/src/obj_import.cpp)
 set(TESTS_HEADERS
     tests/include/common.h)
 
@@ -70,6 +75,12 @@ add_executable(
 	${TESTS_SOURCES}
 	${TESTS_HEADERS}
 	${LANTERN_HEADERS})
+
+add_custom_command(
+    TARGET tests POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${PROJECT_SOURCE_DIR}/tests/resources"
+    $<TARGET_FILE_DIR:tests>/resources)
 
 target_link_libraries(tests lantern gtest pthread)
 
