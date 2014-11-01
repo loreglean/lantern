@@ -10,13 +10,22 @@ namespace lantern
 	class camera final
 	{
 	public:
-		vector3 position;
+		camera(
+			vector3 const& position,
+			vector3 const& forward,
+			vector3 const& fake_up,
+			float const horizontal_fov,
+			float const aspect_ratio);
 
-		camera(vector3 const& position, vector3 const& forward);
+		vector3 get_position() const;
+		void set_position(vector3 const& position);
 
 		vector3 get_forward() const;
 		vector3 get_right() const;
 		vector3 get_up() const;
+		float get_horizontal_fov() const;
+		float get_vertical_fov() const;
+		float get_aspect_ratio() const;
 
 		void move_right(float const distance);
 		void move_left(float const distance);
@@ -29,11 +38,15 @@ namespace lantern
 		void pitch(float const radians);
 
 	private:
+		vector3 m_position;
 		vector3 m_forward;
 		vector3 m_right;
 		vector3 m_up;
+		float const m_horizontal_fov;
+		float const m_vertical_fov;
+		float const m_aspect_ratio;
 
-		void establish_coordinate_system();
+		void establish_coordinate_system(vector3 const& fake_up);
 	};
 }
 

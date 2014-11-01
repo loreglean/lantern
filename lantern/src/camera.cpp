@@ -3,10 +3,29 @@
 
 using namespace lantern;
 
-camera::camera(vector3 const& position, vector3 const& forward)
-	: position{position}, m_forward{forward.normalized()}
+camera::camera(
+	vector3 const& position,
+	vector3 const& forward,
+	vector3 const& fake_up,
+	float const horizontal_fov,
+	float const aspect_ratio)
+	: m_position{position},
+	  m_forward{forward.normalized()},
+	  m_horizontal_fov{horizontal_fov},
+	  m_vertical_fov{horizontal_fov * aspect_ratio},
+	  m_aspect_ratio{aspect_ratio}
 {
-	establish_coordinate_system();
+	establish_coordinate_system(fake_up.normalized());
+}
+
+vector3 camera::get_position() const
+{
+	return m_position;
+}
+
+void camera::set_position(vector3 const& position)
+{
+	m_position = position;
 }
 
 vector3 camera::get_forward() const
@@ -24,31 +43,35 @@ vector3 camera::get_up() const
 	return m_up;
 }
 
-void camera::establish_coordinate_system()
+float camera::get_horizontal_fov() const
 {
-	// We need to create coordinate system based on forward vector we got:
-	// forward is perpendicular to right, forward is perpendicular to up, and right is perpendicular to up.
+	return m_horizontal_fov;
+}
+
+float camera::get_vertical_fov() const
+{
+	return m_vertical_fov;
+}
+
+float camera::get_aspect_ratio() const
+{
+	return m_aspect_ratio;
+}
+
+void camera::establish_coordinate_system(vector3 const& fake_up)
+{
+	// fake_up vector does not represent the up vector itself
+	// It might be different - together with m_forward it represents the plane where the correct up vector should be
+	// So we use it to calculate right vector and then fix it
 	//
 
-	// But we have only forward now, so we will do the trick.
-	// First, we will compute up vector.
-	// To do that we will assume for now that right vector is (1, 0, 0) (call it right') and will take their cross product.
-	// Now we have: forward is perpendicular to up, right' is perpendicular to up.
-	//
-
-	vector3 fake_right{1.0f, 0.0f, 0.0f};
-	m_up = m_forward.cross(fake_right).normalized();
-
-	// Although we now have both forward and up, we have to compute correct right vector.
-	// For now up is perpendicular to right', but forward isn't.
-	// To get vector that is perpendicular to both of them we take their cross product.
-	// Thus getting: forward is perpendicular to up, forward is perpendicular to right, up is perpendicular to right.
-	m_right = m_up.cross(m_forward).normalized();
+	m_right = fake_up.cross(m_forward).normalized();
+	m_up = m_forward.cross(m_right).normalized();
 }
 
 void camera::move_right(float distance)
 {
-	position += m_right * distance;
+	m_position += m_right * distance;
 }
 
 void camera::move_left(float const distance)
@@ -58,7 +81,7 @@ void camera::move_left(float const distance)
 
 void camera::move_up(float const distance)
 {
-	position += m_up * distance;
+	m_position += m_up * distance;
 }
 
 void camera::move_down(float const distance)
@@ -68,7 +91,7 @@ void camera::move_down(float const distance)
 
 void camera::move_forward(float const distance)
 {
-	position += m_forward * distance;
+	m_position += m_forward * distance;
 }
 
 void camera::move_backward(float const distance)
