@@ -8,7 +8,7 @@ public:
 	empty_app(unsigned int const width, unsigned int const height);
 
 protected:
-	void update() override;
+	void frame(float delta_since_last_frame) override;
 };
 
 empty_app::empty_app(unsigned int const width, unsigned int const height)
@@ -16,7 +16,7 @@ empty_app::empty_app(unsigned int const width, unsigned int const height)
 {
 }
 
-void empty_app::update()
+void empty_app::frame(float delta_since_last_frame)
 {
 }
 

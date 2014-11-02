@@ -9,8 +9,9 @@ include(CTest)
 # Project directories
 include_directories(
     examples/empty_app
+    examples/rotating_car_app
     lantern/src lantern/include
-    tests/src tests/include tests/resources)
+    tests/src tests/include)
 
 # Additional compiler flags
 set(COMPILER_FLAGS
@@ -36,7 +37,10 @@ set(LANTERN_SOURCES
     lantern/src/color.cpp
     lantern/src/bitmap_painter.cpp
     lantern/src/mesh.cpp
-    lantern/src/obj_import.cpp)
+    lantern/src/obj_import.cpp
+    lantern/src/scene_object.cpp
+    lantern/src/scene.cpp
+    lantern/src/pipeline.cpp)
 set(LANTERN_HEADERS
     lantern/include/vector3.h
     lantern/include/vector4.h
@@ -48,12 +52,19 @@ set(LANTERN_HEADERS
     lantern/include/app.h
     lantern/include/bitmap_painter.h
     lantern/include/mesh.h
-    lantern/include/obj_import.h)
+    lantern/include/obj_import.h
+    lantern/include/scene_object.h
+    lantern/include/scene.h
+    lantern/include/pipeline.h)
 
 add_library(
 	lantern STATIC
 	${LANTERN_SOURCES}
 	${LANTERN_HEADERS})
+
+set_target_properties(
+    lantern PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 
 # Tests
 #
@@ -76,6 +87,10 @@ add_executable(
 	${TESTS_HEADERS}
 	${LANTERN_HEADERS})
 
+set_target_properties(
+    tests PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests/")
+
 add_custom_command(
     TARGET tests POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
@@ -94,4 +109,28 @@ add_executable(
     examples/empty_app/main.cpp
     ${LANTERN_HEADERS})
 
+set_target_properties(
+    empty_app PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples/empty_app")
+
 target_link_libraries(empty_app lantern SDL2)
+
+# Rotating car app example
+#
+
+add_executable(
+    rotating_car_app
+    examples/rotating_car_app/main.cpp
+    ${LANTERN_HEADERS})
+
+set_target_properties(
+    rotating_car_app PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples/rotating_car_app")
+
+add_custom_command(
+    TARGET rotating_car_app POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${PROJECT_SOURCE_DIR}/examples/rotating_car_app/resources"
+    $<TARGET_FILE_DIR:rotating_car_app>/resources)
+
+target_link_libraries(rotating_car_app lantern SDL2)

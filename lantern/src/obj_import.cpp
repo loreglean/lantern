@@ -52,6 +52,13 @@ std::shared_ptr<mesh const> lantern::import_obj_mesh(std::string path)
 		{
 			face f;
 			line_stream >> f.index1 >> f.index2 >> f.index3;
+
+			// Decrement faces indices, because .obj format starts counting them from 1
+			//
+			--f.index1;
+			--f.index2;
+			--f.index3;
+
 			faces.push_back(f);
 		}
 

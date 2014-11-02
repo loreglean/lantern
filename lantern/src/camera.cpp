@@ -8,12 +8,16 @@ camera::camera(
 	vector3 const& forward,
 	vector3 const& fake_up,
 	float const horizontal_fov,
-	float const aspect_ratio)
+	float const aspect_ratio,
+	float const near_plane_z,
+	float const far_plane_z)
 	: m_position{position},
 	  m_forward{forward.normalized()},
 	  m_horizontal_fov{horizontal_fov},
 	  m_vertical_fov{horizontal_fov * aspect_ratio},
-	  m_aspect_ratio{aspect_ratio}
+	  m_aspect_ratio{aspect_ratio},
+	  m_near_plane_z{near_plane_z},
+	  m_far_plane_z{far_plane_z}
 {
 	establish_coordinate_system(fake_up.normalized());
 }
@@ -56,6 +60,16 @@ float camera::get_vertical_fov() const
 float camera::get_aspect_ratio() const
 {
 	return m_aspect_ratio;
+}
+
+float camera::get_near_plane_z() const
+{
+	return m_near_plane_z;
+}
+
+float camera::get_far_plane_z() const
+{
+	return m_far_plane_z;
 }
 
 void camera::establish_coordinate_system(vector3 const& fake_up)

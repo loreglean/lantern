@@ -15,7 +15,9 @@ namespace lantern
 			vector3 const& forward,
 			vector3 const& fake_up,
 			float const horizontal_fov,
-			float const aspect_ratio);
+			float const aspect_ratio,
+			float const near_plane_z,
+			float const far_plane_z);
 
 		vector3 get_position() const;
 		void set_position(vector3 const& position);
@@ -26,6 +28,8 @@ namespace lantern
 		float get_horizontal_fov() const;
 		float get_vertical_fov() const;
 		float get_aspect_ratio() const;
+		float get_near_plane_z() const;
+		float get_far_plane_z() const;
 
 		void move_right(float const distance);
 		void move_left(float const distance);
@@ -45,6 +49,8 @@ namespace lantern
 		float const m_horizontal_fov;
 		float const m_vertical_fov;
 		float const m_aspect_ratio;
+		float const m_near_plane_z;
+		float const m_far_plane_z;
 
 		void establish_coordinate_system(vector3 const& fake_up);
 	};

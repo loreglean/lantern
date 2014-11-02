@@ -12,10 +12,14 @@ namespace lantern
 		app(unsigned int const width, unsigned int const height);
 		virtual ~app();
 
+		// Runs main loop
 		int start();
 
 	protected:
-		virtual void update() = 0;
+		bitmap_painter& get_painter();
+
+		virtual void frame(float delta_since_last_frame) = 0;
+		virtual void on_key_down(SDL_Keysym key);
 
 	private:
 		SDL_Window* m_window;
