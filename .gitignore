@@ -25,3 +25,6 @@
 
 # Doxygen
 doc
+
+# Do not ignore resources
+!**/resources/*
