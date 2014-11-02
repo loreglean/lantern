@@ -132,6 +132,41 @@ TEST(bitmap_painter, draw_line)
 		color::BLUE,
 		color::BLACK);
 
+	// |Slope| = 1
+	//
+
+	painter.clear(0);
+	painter.draw_line(point2d{0, 0}, point2d{5, 5}, color::BLUE);
+	assert_pixels_colors(
+		painter,
+		std::vector<point2d>{point2d{0, 0}, point2d{1, 1}, point2d{2, 2}, point2d{3, 3}, point2d{4, 4}, point2d{5, 5}},
+		color::BLUE,
+		color::BLACK);
+
+	painter.clear(0);
+	painter.draw_line(point2d{5, 5}, point2d{0, 0}, color::BLUE);
+	assert_pixels_colors(
+		painter,
+		std::vector<point2d>{point2d{0, 0}, point2d{1, 1}, point2d{2, 2}, point2d{3, 3}, point2d{4, 4}, point2d{5, 5}},
+		color::BLUE,
+		color::BLACK);
+
+	painter.clear(0);
+	painter.draw_line(point2d{0, 5}, point2d{5, 0}, color::BLUE);
+	assert_pixels_colors(
+		painter,
+		std::vector<point2d>{point2d{0, 5}, point2d{1, 4}, point2d{2, 3}, point2d{3, 2}, point2d{4, 1}, point2d{5, 0}},
+		color::BLUE,
+		color::BLACK);
+
+	painter.clear(0);
+	painter.draw_line(point2d{5, 0}, point2d{0, 5}, color::BLUE);
+	assert_pixels_colors(
+		painter,
+		std::vector<point2d>{point2d{0, 5}, point2d{1, 4}, point2d{2, 3}, point2d{3, 2}, point2d{4, 1}, point2d{5, 0}},
+		color::BLUE,
+		color::BLACK);
+
 	// Octant 0
 	//
 

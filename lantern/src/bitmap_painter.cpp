@@ -175,7 +175,7 @@ void bitmap_painter::draw_line(point2d const& p0, point2d const& p1, color const
 			counter_delta = 1;
 			counter_max = p1.x;
 		}
-		else if (slope > 1)
+		else if (slope >= 1.0f)
 		{
 			// Octant 1
 			//
@@ -190,7 +190,7 @@ void bitmap_painter::draw_line(point2d const& p0, point2d const& p1, color const
 			counter_delta = 1;
 			counter_max = p1.y;
 		}
-		else if (slope < -1)
+		else if (slope < -1.0f)
 		{
 			// Octant 6
 			//
@@ -241,7 +241,7 @@ void bitmap_painter::draw_line(point2d const& p0, point2d const& p1, color const
 			counter_delta = -1;
 			counter_max = p1.x;
 		}
-		else if (slope > 1)
+		else if (slope >= 1.0f)
 		{
 			// Octant 5
 			//
@@ -256,7 +256,7 @@ void bitmap_painter::draw_line(point2d const& p0, point2d const& p1, color const
 			counter_delta = -1;
 			counter_max = p1.y;
 		}
-		else if (slope < -1)
+		else if (slope < -1.0f)
 		{
 			// Octant 2
 			//
