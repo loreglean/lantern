@@ -20,7 +20,7 @@ void pipeline::draw_mesh(
 	vector3 const& position,
 	vector3 const& rotation,
 	camera const& camera,
-	bitmap_painter& p) const
+	bitmap_painter& painter) const
 {
 	matrix4x4 const local_to_world_transform{
 		matrix4x4::rotation_around_x_axis(rotation.x) *
@@ -58,7 +58,7 @@ void pipeline::draw_mesh(
 	std::vector<vector4> transformed_vertices;
 	for (vector3 const& v : mesh->get_vertices())
 	{
-		vector4 v_transformed = vector4{v.x, v.y, v.z, 1.0f} * local_to_clip_transform;
+		vector4 v_transformed{vector4{v.x, v.y, v.z, 1.0f} * local_to_clip_transform};
 
 		if ((v_transformed.x > v_transformed.w) || (v_transformed.x < -v_transformed.w))
 		{
@@ -83,14 +83,16 @@ void pipeline::draw_mesh(
 			continue;
 		}
 
-		v.x /= v.w;
-		v.y /= v.w;
-		v.z /= v.w;
-		v.w /= v.w;
+		float const w_reciprocal = 1.0f / v.w;
+
+		v.x *= w_reciprocal;
+		v.y *= w_reciprocal;
+		v.z *= w_reciprocal;
+		v.w = 1.0f;
 	}
 
-	float const width = p.get_bitmap_width();
-	float const height = p.get_bitmap_height();
+	float const width{static_cast<float>(painter.get_bitmap_width())};
+	float const height{static_cast<float>(painter.get_bitmap_height())};
 	matrix4x4 const ndc_to_screen{
 		width / 2.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, -height / 2.0f, 0.0f, 0.0f,
@@ -113,27 +115,33 @@ void pipeline::draw_mesh(
 		vector4 const& v2{transformed_vertices[f.index2]};
 		vector4 const& v3{transformed_vertices[f.index3]};
 
-		bool v1_clipped = is_vector4_marked_as_clipped(v1);
-		bool v2_clipped = is_vector4_marked_as_clipped(v2);
-		bool v3_clipped = is_vector4_marked_as_clipped(v3);
+		bool const v1_clipped{is_vector4_marked_as_clipped(v1)};
+		bool const v2_clipped{is_vector4_marked_as_clipped(v2)};
+		bool const v3_clipped{is_vector4_marked_as_clipped(v3)};
 
 		if (!v1_clipped && !v2_clipped)
-			p.draw_line(
+		{
+			painter.draw_line(
 				point2d{static_cast<unsigned int>(v1.x), static_cast<unsigned int>(v1.y)},
 				point2d{static_cast<unsigned int>(v2.x), static_cast<unsigned int>(v2.y)},
 				color{255, 255, 255});
+		}
 
 		if (!v3_clipped && !v2_clipped)
-			p.draw_line(
+		{
+			painter.draw_line(
 				point2d{static_cast<unsigned int>(v2.x), static_cast<unsigned int>(v2.y)},
 				point2d{static_cast<unsigned int>(v3.x), static_cast<unsigned int>(v3.y)},
 				color{255, 255, 255});
+		}
 
 		if (!v1_clipped && !v3_clipped)
-			p.draw_line(
+		{
+			painter.draw_line(
 				point2d{static_cast<unsigned int>(v3.x), static_cast<unsigned int>(v3.y)},
 				point2d{static_cast<unsigned int>(v1.x), static_cast<unsigned int>(v1.y)},
 				color{255, 255, 255});
+		}
 	}
 }
 
