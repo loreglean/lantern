@@ -15,7 +15,7 @@ include_directories(
 
 # Additional compiler flags
 set(COMPILER_FLAGS
-    "-std=c++11 -Wall -Wno-comment -Werror")
+    "-std=gnu++0x -Wall -Wno-comment -Werror")
 
 # Add compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
@@ -113,7 +113,11 @@ set_target_properties(
     empty_app PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples/empty_app")
 
-target_link_libraries(empty_app lantern SDL2)
+if (UNIX)
+    target_link_libraries(empty_app lantern SDL2)
+elseif (MINGW)
+    target_link_libraries(empty_app lantern mingw32 SDL2main SDL2)
+endif()
 
 # Rotating car app example
 #
@@ -133,4 +137,8 @@ add_custom_command(
     "${PROJECT_SOURCE_DIR}/examples/rotating_car_app/resources"
     $<TARGET_FILE_DIR:rotating_car_app>/resources)
 
-target_link_libraries(rotating_car_app lantern SDL2)
+if (UNIX)
+    target_link_libraries(rotating_car_app lantern SDL2)
+elseif (MINGW)
+    target_link_libraries(rotating_car_app lantern mingw32 SDL2main SDL2)
+endif()
