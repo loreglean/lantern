@@ -47,14 +47,14 @@ void pipeline::draw_mesh(
 	float const left{-right};
 	float const top{std::tan(camera.get_vertical_fov() / 2.0f) * projection_plane_z};
 	float const bottom{-top};
-	matrix4x4 const camera_to_homogeneous_clip{
+	matrix4x4 const camera_to_clip_transform{
 		2.0f * projection_plane_z / (right - left), 0.0f, 0.0f, 0.0f,
 		0.0f, 2.0f * projection_plane_z / (top - bottom), 0.0f, 0.0f,
 		(left + right) / (left - right), (bottom + top) / (bottom - top), (far + near) / (far - near), 1.0f,
 		0.0f, 0.0f, -2.0f * near * far / (far - near), 0.0f};
 
 	matrix4x4 const local_to_clip_transform{
-		local_to_world_transform * world_to_camera_transform * camera_to_homogeneous_clip};
+		local_to_world_transform * world_to_camera_transform * camera_to_clip_transform};
 
 	std::vector<vector4> transformed_vertices;
 	for (vector3 const& v : mesh->get_vertices())

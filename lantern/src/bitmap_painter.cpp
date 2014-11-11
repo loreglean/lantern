@@ -62,7 +62,7 @@ void bitmap_painter::clear(unsigned char const bytes_value)
 	memset(m_data, bytes_value, m_data_total_size);
 }
 
-void bitmap_painter::draw_pixel(point2d const &point, color const &c)
+void bitmap_painter::draw_pixel(point2d const& point, color const& c)
 {
 	unsigned int const pixel_first_byte_index{m_pitch * point.y + point.x * 4};
 
