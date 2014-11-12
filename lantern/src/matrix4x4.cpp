@@ -9,7 +9,7 @@ matrix4x4 const matrix4x4::IDENTITY = matrix4x4{
 	0.0f, 0.0f, 0.0f, 1.0f};
 
 matrix4x4::matrix4x4()
-	: values{0.0f}
+	: values{{0.0f}}
 {
 }
 
