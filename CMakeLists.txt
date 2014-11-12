@@ -69,6 +69,14 @@ set_target_properties(
 # Tests
 #
 
+if(CMAKE_HOST_UNIX)
+    set(GTestPath /usr/src/gtest/)
+    set(GTEST_FILES ${GTestPath}/src/gtest-all.cc ${GTestPath}/src/gtest_main.cc)
+
+    include_directories(SYSTEM ${GTestPath}/)
+    include_directories(SYSTEM ${GTestPath}/include/)
+endif(CMAKE_HOST_UNIX)
+
 set(TESTS_SOURCES
     tests/src/main.cpp
     tests/src/vector3.cpp
@@ -77,7 +85,9 @@ set(TESTS_SOURCES
     tests/src/matrix4x4.cpp
     tests/src/camera.cpp
     tests/src/bitmap_painter.cpp
-    tests/src/obj_import.cpp)
+    tests/src/obj_import.cpp
+    ${GTEST_FILES})
+
 set(TESTS_HEADERS
     tests/include/common.h)
 
@@ -97,7 +107,7 @@ add_custom_command(
     "${PROJECT_SOURCE_DIR}/tests/resources"
     $<TARGET_FILE_DIR:tests>/resources)
 
-target_link_libraries(tests lantern gtest pthread)
+target_link_libraries(tests lantern pthread)
 
 add_test(lantern_tests tests)
 

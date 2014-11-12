@@ -4,13 +4,13 @@ lantern
 Software renderer written for educational purposes. Uses SDL2 for rendering and Google C++ Testing Framework for tests.
 
 ###Building on Linux
-* Install SDL2 (https://www.libsdl.org/download-2.0.php, or just ```sudo apt-get install libsdl2-dev``` for apt). If you want to build tests target, you must also install Google Testing Framework (https://code.google.com/p/googletest/downloads/list)
+* Install SDL2 (https://www.libsdl.org/download-2.0.php, or just ```sudo apt-get install libsdl2-dev``` for apt). If you want to build tests target, you must also install Google Testing Framework (https://code.google.com/p/googletest/downloads/list, or just ```sudo apg-get install libgtest-dev``` for apt)
 * Run terminal. Move to lantern source code folder
 * Run: ```mkdir build && cd build``` to create and move to the build folder
 * Run: ```cmake -G "Unix Makefiles" ..``` to generate makefile
-* Run: ```make lantern``` to build library
-* Run: ```make rotating_car_app``` to build example application
-* Run: ```make tests``` to build tests executable
+* Run: ```make lantern -j$(nproc) -s``` to build library
+* Run: ```make rotating_car_app -j$(nproc) -s``` to build example application
+* Run: ```make tests -j$(nproc) -s``` to build tests executable
 
 ###Building on Windows (using MinGW)
 * Install SDL2 (https://www.libsdl.org/download-2.0.php, select MinGW version of development library). If you want to build tests target, you must also install Google Testing Framework (https://code.google.com/p/googletest/downloads/list) and pthreads library (you can use MinGW Installation Manager for this one)
