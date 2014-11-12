@@ -14,11 +14,19 @@ include_directories(
     tests/src tests/include)
 
 # Additional compiler flags
-set(COMPILER_FLAGS
-    "-std=gnu++0x -Wall -Wno-comment -Werror")
+set(COMPILER_FLAGS)
+if(MSVC)
+  set(COMPILER_FLAGS "${COMPILER_FLAGS} /W4 /GS")
+  set(LINK_FLAGS "${LINK_FLAGS} /SafeSEH /DynamicBase /NXCompat")
+  add_definitions("-D_USE_MATH_DEFINES") # http://msdn.microsoft.com/en-us/library/4hwaceh6.aspx
+else()
+  set(COMPILER_FLAGS
+    "-std=gnu++0x -flto -Wall -Wextra -Wno-comment -Werror -Wno-unused-parameter -Wno-unknown-pragmas")
+endif(MSVC)
 
 # Add compiler flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEFAULT_CMAKE_C_FLAGS} ${COMPILER_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DEFAULT_CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
 
 # Targets
 #
@@ -116,8 +124,11 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     "${PROJECT_SOURCE_DIR}/tests/resources"
     $<TARGET_FILE_DIR:tests>/resources)
-
-target_link_libraries(tests lantern pthread)
+if(MSVC)
+    target_link_libraries(tests lantern)
+else()
+    target_link_libraries(tests lantern pthread)
+endif(MSVC)
 
 add_test(lantern_tests tests)
 
@@ -135,7 +146,7 @@ set_target_properties(
 
 if (UNIX)
     target_link_libraries(empty_app lantern SDL2)
-elseif (MINGW)
+else ()
     target_link_libraries(empty_app lantern SDL2main SDL2)
 endif()
 
@@ -159,6 +170,6 @@ add_custom_command(
 
 if (UNIX)
     target_link_libraries(rotating_car_app lantern SDL2)
-elseif (MINGW)
+else ()
     target_link_libraries(rotating_car_app lantern SDL2main SDL2)
 endif()

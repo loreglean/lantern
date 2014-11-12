@@ -24,4 +24,13 @@ Software renderer written for educational purposes. Uses SDL2 for rendering and 
 * Run: ```mingw32-make rotating_car_app -j%NUMBER_OF_PROCESSORS% -s``` to build example application
 * Run: ```mingw32-make tests -j%NUMBER_OF_PROCESSORS% -s``` to build tests executable
 
+###Building on Windows (using Visual Studio)
+* Install SDL2 and gtest the same way like in MinGW case
+* Run cmd like in MinGW case
+* Run: ```cmake -G "Visual Studio 12" ..``` to generate solution and projects files (in this case we use VS Express 2013 for Desktop or more common Visual Studio 2013)
+* Run: ```"C:\Program Files (x86)\MSBuild\12.0\Bin\MSBuild.exe" .\lantern.sln /m /t:lantern``` to build library
+* Run: ```"C:\Program Files (x86)\MSBuild\12.0\Bin\MSBuild.exe" .\lantern.sln /m /t:rotating_car_app``` to build example application
+* Run: ```"C:\Program Files (x86)\MSBuild\12.0\Bin\MSBuild.exe" .\lantern.sln /m /t:tests``` to build tests executable
+
+
 You can also use CLion EAP (http://confluence.jetbrains.com/display/CLION/Early+Access+Program) for both platforms.

@@ -23,8 +23,13 @@ namespace lantern
 		std::vector<face> const& get_faces() const;
 
 	private:
+#if _MSC_VER
+		std::vector<vector3> m_vertices;
+		std::vector<face> m_faces;
+#else
 		std::vector<vector3> const m_vertices;
 		std::vector<face> const m_faces;
+#endif
 	};
 }
 

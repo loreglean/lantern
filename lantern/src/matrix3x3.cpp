@@ -1,4 +1,7 @@
 #include "matrix3x3.h"
+#if _MSC_VER
+#include <string.h>
+#endif
 
 using namespace lantern;
 
@@ -7,10 +10,17 @@ matrix3x3 const matrix3x3::IDENTITY = matrix3x3{
 	0.0f, 1.0f, 1.0f,
 	0.0f, 0.0f, 1.0f};
 
+#if _MSC_VER
+matrix3x3::matrix3x3()
+{
+	memset(values, 0, sizeof(float) * 3 * 3);
+}
+#else
 matrix3x3::matrix3x3()
 	: values{0.0f}
 {
 }
+#endif
 
 matrix3x3::matrix3x3(
 	float const m00, float const m01, float const m02,
