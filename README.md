@@ -13,13 +13,15 @@ Software renderer written for educational purposes. Uses SDL2 for rendering and 
 * Run: ```make tests -j$(nproc) -s``` to build tests executable
 
 ###Building on Windows (using MinGW)
-* Install SDL2 (https://www.libsdl.org/download-2.0.php, select MinGW version of development library). If you want to build tests target, you must also install Google Testing Framework (https://code.google.com/p/googletest/downloads/list) and pthreads library (you can use MinGW Installation Manager for this one)
+* Install SDL2 (https://www.libsdl.org/download-2.0.php,
+* select Visual C++ 32/64-bit of development library, unpack to root of source dir, at include folder create SDL2 and move all containce files to it).
+* If you want to build tests target, you must also install Google Testing Framework (https://code.google.com/p/googletest/downloads/list just unpack to source dir, current 1.7.0 using now) and pthreads library (you can use MinGW Installation Manager for this one)
 * Make sure your PATH environment variable contains MinGW's bin folder - CMake needs it
 * Run cmd.exe
 * Move to your build folder
 * Run: ```<path_to_cmake_bin_folder>/cmake.exe -G "MinGW Makefiles" <path_to_lantern_source_folder>``` to generate makefile
-* Run: ```mingw32-make lantern``` to build library
-* Run: ```mingw32-make rotating_car_app``` to build example application
-* Run: ```mingw32-make tests``` to build tests executable
+* Run: ```mingw32-make lantern -j%NUMBER_OF_PROCESSORS% -s``` to build library
+* Run: ```mingw32-make rotating_car_app -j%NUMBER_OF_PROCESSORS% -s``` to build example application
+* Run: ```mingw32-make tests -j%NUMBER_OF_PROCESSORS% -s``` to build tests executable
 
 You can also use CLion EAP (http://confluence.jetbrains.com/display/CLION/Early+Access+Program) for both platforms.

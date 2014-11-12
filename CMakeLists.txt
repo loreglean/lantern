@@ -25,6 +25,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
 
 # Library
 #
+if(CMAKE_HOST_WIN32)
+   set(SDL2Path ${CMAKE_SOURCE_DIR}/SDL2-devel-2.0.3-VC)
+
+   include_directories(SYSTEM ${SDL2Path}/include)
+   link_directories(${SDL2Path}/lib/x86)
+endif(CMAKE_HOST_WIN32)
 
 set(LANTERN_SOURCES
     lantern/src/vector3.cpp
@@ -71,11 +77,15 @@ set_target_properties(
 
 if(CMAKE_HOST_UNIX)
     set(GTestPath /usr/src/gtest/)
-    set(GTEST_FILES ${GTestPath}/src/gtest-all.cc ${GTestPath}/src/gtest_main.cc)
-
-    include_directories(SYSTEM ${GTestPath}/)
-    include_directories(SYSTEM ${GTestPath}/include/)
 endif(CMAKE_HOST_UNIX)
+if(CMAKE_HOST_WIN32)
+    set(GTestPath ${CMAKE_SOURCE_DIR}/gtest-1.7.0)
+endif(CMAKE_HOST_WIN32)
+set(GTEST_FILES ${GTestPath}/src/gtest-all.cc ${GTestPath}/src/gtest_main.cc)
+
+include_directories(SYSTEM ${GTestPath}/)
+include_directories(SYSTEM ${GTestPath}/include/)
+
 
 set(TESTS_SOURCES
     tests/src/main.cpp
@@ -126,7 +136,7 @@ set_target_properties(
 if (UNIX)
     target_link_libraries(empty_app lantern SDL2)
 elseif (MINGW)
-    target_link_libraries(empty_app lantern mingw32 SDL2main SDL2)
+    target_link_libraries(empty_app lantern SDL2main SDL2)
 endif()
 
 # Rotating car app example
@@ -150,5 +160,5 @@ add_custom_command(
 if (UNIX)
     target_link_libraries(rotating_car_app lantern SDL2)
 elseif (MINGW)
-    target_link_libraries(rotating_car_app lantern mingw32 SDL2main SDL2)
+    target_link_libraries(rotating_car_app lantern SDL2main SDL2)
 endif()
