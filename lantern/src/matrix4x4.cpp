@@ -1,4 +1,7 @@
 #include "matrix4x4.h"
+#if _MSC_VER
+#include <string.h>
+#endif
 
 using namespace lantern;
 
@@ -8,10 +11,17 @@ matrix4x4 const matrix4x4::IDENTITY = matrix4x4{
 	0.0f, 0.0f, 1.0f, 0.0f,
 	0.0f, 0.0f, 0.0f, 1.0f};
 
+#if _MSC_VER
+matrix4x4::matrix4x4()
+{
+	memset(values, 0, sizeof(float) * 4 * 4);
+}
+#else
 matrix4x4::matrix4x4()
 	: values{0.0f}
 {
 }
+#endif
 
 matrix4x4::matrix4x4(
 	float const m00, float const m01, float const m02, float const m03,
