@@ -12,6 +12,15 @@ Software renderer written for educational purposes. Uses SDL2 for rendering and 
 * Run: ```make rotating_car_app``` to build example application
 * Run: ```make tests``` to build tests executable
 
+###Building on Mac OS X
+* Install SDL2 (https://www.libsdl.org/download-2.0.php (in your ```/Library/Frameworks```). Install CMake (http://www.cmake.org/download/ . If you want to build tests target, you must also install Google Testing Framework (https://code.google.com/p/googletest/downloads/list)
+* Run terminal. Move to lantern source code folder
+* Run: ```mkdir build && cd build``` to create and move to the build folder
+* Open CMake.app and insert the path to folders of source code and binaries (```build``` folder). Then press "Configure" and "Generate"
+* Run: ```make lantern``` to build library
+* Run: ```make rotating_car_app``` to build example application
+* Run: ```make tests``` to build tests executable
+
 ###Building on Windows (using MinGW)
 * Install SDL2 (https://www.libsdl.org/download-2.0.php, select MinGW version of development library). If you want to build tests target, you must also install Google Testing Framework (https://code.google.com/p/googletest/downloads/list) and pthreads library (you can use MinGW Installation Manager for this one)
 * Make sure your PATH environment variable contains MinGW's bin folder - CMake needs it

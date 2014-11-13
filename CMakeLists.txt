@@ -113,7 +113,9 @@ set_target_properties(
     empty_app PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples/empty_app")
 
-if (UNIX)
+if (APPLE)
+    target_link_libraries(empty_app lantern /Library/Frameworks/SDL2.framework)
+elseif (UNIX)
     target_link_libraries(empty_app lantern SDL2)
 elseif (MINGW)
     target_link_libraries(empty_app lantern mingw32 SDL2main SDL2)
@@ -137,7 +139,9 @@ add_custom_command(
     "${PROJECT_SOURCE_DIR}/examples/rotating_car_app/resources"
     $<TARGET_FILE_DIR:rotating_car_app>/resources)
 
-if (UNIX)
+if (APPLE)
+    target_link_libraries(rotating_car_app lantern /Library/Frameworks/SDL2.framework)
+elseif (UNIX)
     target_link_libraries(rotating_car_app lantern SDL2)
 elseif (MINGW)
     target_link_libraries(rotating_car_app lantern mingw32 SDL2main SDL2)
