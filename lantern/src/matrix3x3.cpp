@@ -12,6 +12,16 @@ matrix3x3::matrix3x3()
 {
 }
 
+matrix3x3::matrix3x3(float m[3][3])
+{
+	// values = m;
+	for (int i=0; i<3; ++i) {
+		for (int j=0; j<3; ++j) {
+			values[i][j] = m[i][j];
+		}
+	}
+}
+
 matrix3x3::matrix3x3(
 	float const m00, float const m01, float const m02,
 	float const m10, float const m11, float const m12,
@@ -32,18 +42,17 @@ matrix3x3::matrix3x3(
 
 matrix3x3 matrix3x3::operator*(matrix3x3 const& m) const
 {
-	return matrix3x3{
-		values[0][0] * m.values[0][0] + values[0][1] * m.values[1][0] + values[0][2] * m.values[2][0],
-		values[0][0] * m.values[0][1] + values[0][1] * m.values[1][1] + values[0][2] * m.values[2][1],
-		values[0][0] * m.values[0][2] + values[0][1] * m.values[1][2] + values[0][2] * m.values[2][2],
-
-		values[1][0] * m.values[0][0] + values[1][1] * m.values[1][0] + values[1][2] * m.values[2][0],
-		values[1][0] * m.values[0][1] + values[1][1] * m.values[1][1] + values[1][2] * m.values[2][1],
-		values[1][0] * m.values[0][2] + values[1][1] * m.values[1][2] + values[1][2] * m.values[2][2],
-
-		values[2][0] * m.values[0][0] + values[2][1] * m.values[1][0] + values[2][2] * m.values[2][0],
-		values[2][0] * m.values[0][1] + values[2][1] * m.values[1][1] + values[2][2] * m.values[2][1],
-		values[2][0] * m.values[0][2] + values[2][1] * m.values[1][2] + values[2][2] * m.values[2][2]};
+	float temp[3][3];
+	for(int i=0; i<3; i++) {
+		for(int l=0; l<3; l++) {
+			float s = 0;
+			for(int j=0; j<3; j++) {
+				s += values[i][j]*m.values[j][l];
+			}
+			temp[i][l] = s;
+		}
+	}
+	return matrix3x3(temp);
 }
 
 matrix3x3 matrix3x3::scale(float const x, float const y, float const z)

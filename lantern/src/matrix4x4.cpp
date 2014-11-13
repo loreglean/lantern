@@ -13,6 +13,16 @@ matrix4x4::matrix4x4()
 {
 }
 
+matrix4x4::matrix4x4(float m[4][4])
+{
+	// values = m;
+	for (int i=0; i<4; ++i) {
+		for (int j=0; j<4; ++j) {
+			values[i][j] = m[i][j];
+		}
+	}
+}
+
 matrix4x4::matrix4x4(
 	float const m00, float const m01, float const m02, float const m03,
 	float const m10, float const m11, float const m12, float const m13,
@@ -42,26 +52,17 @@ matrix4x4::matrix4x4(
 
 matrix4x4 matrix4x4::operator*(matrix4x4 const &m) const
 {
-	return matrix4x4{
-		values[0][0] * m.values[0][0] + values[0][1] * m.values[1][0] + values[0][2] * m.values[2][0] + values[0][3] * m.values[3][0],
-		values[0][0] * m.values[0][1] + values[0][1] * m.values[1][1] + values[0][2] * m.values[2][1] + values[0][3] * m.values[3][1],
-		values[0][0] * m.values[0][2] + values[0][1] * m.values[1][2] + values[0][2] * m.values[2][2] + values[0][3] * m.values[3][2],
-		values[0][0] * m.values[0][3] + values[0][1] * m.values[1][3] + values[0][2] * m.values[2][3] + values[0][3] * m.values[3][3],
-
-		values[1][0] * m.values[0][0] + values[1][1] * m.values[1][0] + values[1][2] * m.values[2][0] + values[1][3] * m.values[3][0],
-		values[1][0] * m.values[0][1] + values[1][1] * m.values[1][1] + values[1][2] * m.values[2][1] + values[1][3] * m.values[3][1],
-		values[1][0] * m.values[0][2] + values[1][1] * m.values[1][2] + values[1][2] * m.values[2][2] + values[1][3] * m.values[3][2],
-		values[1][0] * m.values[0][3] + values[1][1] * m.values[1][3] + values[1][2] * m.values[2][3] + values[1][3] * m.values[3][3],
-
-		values[2][0] * m.values[0][0] + values[2][1] * m.values[1][0] + values[2][2] * m.values[2][0] + values[2][3] * m.values[3][0],
-		values[2][0] * m.values[0][1] + values[2][1] * m.values[1][1] + values[2][2] * m.values[2][1] + values[2][3] * m.values[3][1],
-		values[2][0] * m.values[0][2] + values[2][1] * m.values[1][2] + values[2][2] * m.values[2][2] + values[2][3] * m.values[3][2],
-		values[2][0] * m.values[0][3] + values[2][1] * m.values[1][3] + values[2][2] * m.values[2][3] + values[2][3] * m.values[3][3],
-
-		values[3][0] * m.values[0][0] + values[3][1] * m.values[1][0] + values[3][2] * m.values[2][0] + values[3][3] * m.values[3][0],
-		values[3][0] * m.values[0][1] + values[3][1] * m.values[1][1] + values[3][2] * m.values[2][1] + values[3][3] * m.values[3][1],
-		values[3][0] * m.values[0][2] + values[3][1] * m.values[1][2] + values[3][2] * m.values[2][2] + values[3][3] * m.values[3][2],
-		values[3][0] * m.values[0][3] + values[3][1] * m.values[1][3] + values[3][2] * m.values[2][3] + values[3][3] * m.values[3][3]};
+	float temp[4][4];
+	for(int i=0; i<4; i++) {
+		for(int l=0; l<4; l++) {
+			float s = 0;
+			for(int j=0; j<4; j++) {
+				s += values[i][j]*m.values[j][l];
+			}
+			temp[i][l] = s;
+		}
+	}
+	return matrix4x4(temp);
 }
 
 matrix4x4 matrix4x4::translation(float const x, float const y, float const z)

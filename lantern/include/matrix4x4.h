@@ -16,7 +16,8 @@ namespace lantern
     public:
         float values[4][4];
 
-		matrix4x4();
+        matrix4x4();
+		matrix4x4(float m[4][4]);
         matrix4x4(
             float const m00, float const m01, float const m02, float const m03,
             float const m10, float const m11, float const m12, float const m13,
