@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include "matrix4x4.h"
 
 using namespace lantern;
@@ -10,6 +11,18 @@ matrix4x4 const matrix4x4::IDENTITY = matrix4x4{
 
 matrix4x4::matrix4x4()
 {
+
+}
+
+matrix4x4::matrix4x4(float const m[4][4])
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		for (int j = 0; j < 4; ++j)
+		{
+			values[i][j] = m[i][j];
+		}
+	}
 }
 
 matrix4x4::matrix4x4(
@@ -39,28 +52,23 @@ matrix4x4::matrix4x4(
 	values[3][3] = m33;
 }
 
-matrix4x4 matrix4x4::operator*(matrix4x4 const &m) const
+matrix4x4 matrix4x4::operator*(matrix4x4 const& m) const
 {
-	return matrix4x4{
-		values[0][0] * m.values[0][0] + values[0][1] * m.values[1][0] + values[0][2] * m.values[2][0] + values[0][3] * m.values[3][0],
-		values[0][0] * m.values[0][1] + values[0][1] * m.values[1][1] + values[0][2] * m.values[2][1] + values[0][3] * m.values[3][1],
-		values[0][0] * m.values[0][2] + values[0][1] * m.values[1][2] + values[0][2] * m.values[2][2] + values[0][3] * m.values[3][2],
-		values[0][0] * m.values[0][3] + values[0][1] * m.values[1][3] + values[0][2] * m.values[2][3] + values[0][3] * m.values[3][3],
+	matrix4x4 result;
 
-		values[1][0] * m.values[0][0] + values[1][1] * m.values[1][0] + values[1][2] * m.values[2][0] + values[1][3] * m.values[3][0],
-		values[1][0] * m.values[0][1] + values[1][1] * m.values[1][1] + values[1][2] * m.values[2][1] + values[1][3] * m.values[3][1],
-		values[1][0] * m.values[0][2] + values[1][1] * m.values[1][2] + values[1][2] * m.values[2][2] + values[1][3] * m.values[3][2],
-		values[1][0] * m.values[0][3] + values[1][1] * m.values[1][3] + values[1][2] * m.values[2][3] + values[1][3] * m.values[3][3],
+	for (size_t i = 0; i < 4; ++i)
+	{
+		for (size_t j = 0; j < 4; ++j)
+		{
+			result.values[i][j] = 0.0f;
+			for (size_t k = 0; k < 4; ++k)
+			{
+				result.values[i][j] += values[i][k] * m.values[k][j];
+			}
+		}
+	}
 
-		values[2][0] * m.values[0][0] + values[2][1] * m.values[1][0] + values[2][2] * m.values[2][0] + values[2][3] * m.values[3][0],
-		values[2][0] * m.values[0][1] + values[2][1] * m.values[1][1] + values[2][2] * m.values[2][1] + values[2][3] * m.values[3][1],
-		values[2][0] * m.values[0][2] + values[2][1] * m.values[1][2] + values[2][2] * m.values[2][2] + values[2][3] * m.values[3][2],
-		values[2][0] * m.values[0][3] + values[2][1] * m.values[1][3] + values[2][2] * m.values[2][3] + values[2][3] * m.values[3][3],
-
-		values[3][0] * m.values[0][0] + values[3][1] * m.values[1][0] + values[3][2] * m.values[2][0] + values[3][3] * m.values[3][0],
-		values[3][0] * m.values[0][1] + values[3][1] * m.values[1][1] + values[3][2] * m.values[2][1] + values[3][3] * m.values[3][1],
-		values[3][0] * m.values[0][2] + values[3][1] * m.values[1][2] + values[3][2] * m.values[2][2] + values[3][3] * m.values[3][2],
-		values[3][0] * m.values[0][3] + values[3][1] * m.values[1][3] + values[3][2] * m.values[2][3] + values[3][3] * m.values[3][3]};
+	return result;
 }
 
 matrix4x4 matrix4x4::translation(float const x, float const y, float const z)

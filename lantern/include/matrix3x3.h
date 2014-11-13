@@ -15,6 +15,7 @@ namespace lantern
 		float values[3][3];
 
 		matrix3x3();
+		matrix3x3(float const m[3][3]);
 		matrix3x3(
 			float const m00, float const m01, float const m02,
 			float const m10, float const m11, float const m12,
