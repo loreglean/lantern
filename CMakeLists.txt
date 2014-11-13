@@ -14,11 +14,34 @@ include_directories(
     tests/src tests/include)
 
 # Additional compiler flags
-set(COMPILER_FLAGS
-    "-std=gnu++0x -Wall -Wno-comment -Werror")
+#
+if (MSVC)
+    # TODO: setup vc++ flags
+    set(COMPILER_FLAGS
+        "")
+else()
+    set(COMPILER_FLAGS
+        "-std=gnu++0x -Wall -Wno-comment -O3")
+endif()
 
 # Add compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
+
+# Additional MSVC-related stuff
+#
+if (MSVC)
+    # Setup dependencies folder
+    #
+    set(MSVC_DEPENDENCIES_FOLDER
+        "${CMAKE_BINARY_DIR}/dependencies/")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${MSVC_DEPENDENCIES_FOLDER}/include/)
+    execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${MSVC_DEPENDENCIES_FOLDER}/lib/)
+    include_directories(${MSVC_DEPENDENCIES_FOLDER}/include/)
+    link_directories(${MSVC_DEPENDENCIES_FOLDER}/lib/)
+
+    # Add math defines
+    add_definitions(-D_USE_MATH_DEFINES)
+endif()
 
 # Targets
 #
@@ -97,8 +120,11 @@ add_custom_command(
     "${PROJECT_SOURCE_DIR}/tests/resources"
     $<TARGET_FILE_DIR:tests>/resources)
 
-target_link_libraries(tests lantern gtest pthread)
-
+if (MSVC)
+    target_link_libraries(tests lantern gtest)
+else()
+    target_link_libraries(tests lantern gtest pthread)
+endif()
 add_test(lantern_tests tests)
 
 # Empty app example
@@ -113,10 +139,10 @@ set_target_properties(
     empty_app PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples/empty_app")
 
-if (UNIX)
-    target_link_libraries(empty_app lantern SDL2)
-elseif (MINGW)
+if (MINGW)
     target_link_libraries(empty_app lantern mingw32 SDL2main SDL2)
+else()
+    target_link_libraries(empty_app lantern SDL2main SDL2)
 endif()
 
 # Rotating car app example
@@ -137,8 +163,8 @@ add_custom_command(
     "${PROJECT_SOURCE_DIR}/examples/rotating_car_app/resources"
     $<TARGET_FILE_DIR:rotating_car_app>/resources)
 
-if (UNIX)
-    target_link_libraries(rotating_car_app lantern SDL2)
-elseif (MINGW)
+if (MINGW)
     target_link_libraries(rotating_car_app lantern mingw32 SDL2main SDL2)
+else()
+    target_link_libraries(rotating_car_app lantern SDL2main SDL2)
 endif()

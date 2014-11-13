@@ -8,7 +8,6 @@ matrix3x3 const matrix3x3::IDENTITY = matrix3x3{
 	0.0f, 0.0f, 1.0f};
 
 matrix3x3::matrix3x3()
-	: values{0.0f}
 {
 }
 

@@ -3,7 +3,7 @@
 using namespace lantern;
 
 mesh::mesh(std::vector<vector3> const& vertices, std::vector<face> const& faces)
-	: m_vertices{vertices}, m_faces{faces}
+	: m_vertices(vertices), m_faces(faces)
 {
 
 }
