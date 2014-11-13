@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include "matrix3x3.h"
 
 using namespace lantern;
@@ -9,6 +10,18 @@ matrix3x3 const matrix3x3::IDENTITY = matrix3x3{
 
 matrix3x3::matrix3x3()
 {
+
+}
+
+matrix3x3::matrix3x3(float const m[3][3])
+{
+	for (size_t i = 0; i < 3; ++i)
+    {
+		for (size_t j = 0; j < 3; ++j)
+        {
+			values[i][j] = m[i][j];
+		}
+	}
 }
 
 matrix3x3::matrix3x3(
@@ -31,18 +44,21 @@ matrix3x3::matrix3x3(
 
 matrix3x3 matrix3x3::operator*(matrix3x3 const& m) const
 {
-	return matrix3x3{
-		values[0][0] * m.values[0][0] + values[0][1] * m.values[1][0] + values[0][2] * m.values[2][0],
-		values[0][0] * m.values[0][1] + values[0][1] * m.values[1][1] + values[0][2] * m.values[2][1],
-		values[0][0] * m.values[0][2] + values[0][1] * m.values[1][2] + values[0][2] * m.values[2][2],
+    matrix3x3 result;
 
-		values[1][0] * m.values[0][0] + values[1][1] * m.values[1][0] + values[1][2] * m.values[2][0],
-		values[1][0] * m.values[0][1] + values[1][1] * m.values[1][1] + values[1][2] * m.values[2][1],
-		values[1][0] * m.values[0][2] + values[1][1] * m.values[1][2] + values[1][2] * m.values[2][2],
+    for (size_t i = 0; i < 3; ++i)
+    {
+        for (size_t j = 0; j < 3; ++j)
+        {
+            result.values[i][j] = 0.0f;
+            for (size_t k = 0; k < 3; ++k)
+            {
+                result.values[i][j] += values[i][k] * m.values[k][j];
+            }
+        }
+    }
 
-		values[2][0] * m.values[0][0] + values[2][1] * m.values[1][0] + values[2][2] * m.values[2][0],
-		values[2][0] * m.values[0][1] + values[2][1] * m.values[1][1] + values[2][2] * m.values[2][1],
-		values[2][0] * m.values[0][2] + values[2][1] * m.values[1][2] + values[2][2] * m.values[2][2]};
+    return result;
 }
 
 matrix3x3 matrix3x3::scale(float const x, float const y, float const z)
