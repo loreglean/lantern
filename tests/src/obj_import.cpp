@@ -1,4 +1,3 @@
-#include <gtest/gtest.h>
 #include "common.h"
 #include "obj_import.h"
 

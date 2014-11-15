@@ -1,7 +1,7 @@
 #ifndef LANTERN_APP_H
 #define LANTERN_APP_H
 
-#include <SDL2/SDL.h>
+#include "SDL.h"
 #include "bitmap_painter.h"
 
 namespace lantern

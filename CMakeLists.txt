@@ -6,49 +6,26 @@ project(lantern)
 # Add testing tool
 include(CTest)
 
-# Project directories
-include_directories(
-    examples/empty_app
-    examples/rotating_car_app
-    lantern/src lantern/include
-    tests/src tests/include)
+# SDL2 look up ==============================
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
+find_package(SDL2 REQUIRED)
+# ===========================================
 
-# Additional compiler flags
-#
+# Compiler setup ============================
 if (MSVC)
-    # TODO: setup vc++ flags
     set(COMPILER_FLAGS
         "")
+
+    add_definitions(-D_USE_MATH_DEFINES)
 else()
     set(COMPILER_FLAGS
-        "-std=gnu++0x -Wall -Wno-comment -O3")
+        "-std=gnu++0x -Wall -Wno-comment")
 endif()
 
-# Add compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
+# ===========================================
 
-# Additional MSVC-related stuff
-#
-if (MSVC)
-    # Setup dependencies folder
-    #
-    set(MSVC_DEPENDENCIES_FOLDER
-        "${CMAKE_BINARY_DIR}/dependencies/")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${MSVC_DEPENDENCIES_FOLDER}/include/)
-    execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${MSVC_DEPENDENCIES_FOLDER}/lib/)
-    include_directories(${MSVC_DEPENDENCIES_FOLDER}/include/)
-    link_directories(${MSVC_DEPENDENCIES_FOLDER}/lib/)
-
-    # Add math defines
-    add_definitions(-D_USE_MATH_DEFINES)
-endif()
-
-# Targets
-#
-
-# Library
-#
-
+# Library target ============================
 set(LANTERN_SOURCES
     lantern/src/vector3.cpp
     lantern/src/vector4.cpp
@@ -64,6 +41,7 @@ set(LANTERN_SOURCES
     lantern/src/scene_object.cpp
     lantern/src/scene.cpp
     lantern/src/pipeline.cpp)
+
 set(LANTERN_HEADERS
     lantern/include/vector3.h
     lantern/include/vector4.h
@@ -81,17 +59,37 @@ set(LANTERN_HEADERS
     lantern/include/pipeline.h)
 
 add_library(
-	lantern STATIC
-	${LANTERN_SOURCES}
-	${LANTERN_HEADERS})
+    lantern STATIC
+    ${LANTERN_SOURCES}
+    ${LANTERN_HEADERS})
+
+target_include_directories(lantern PUBLIC lantern/include)
+target_include_directories(lantern PRIVATE ${SDL2_INCLUDE_DIR})
 
 set_target_properties(
     lantern PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+# ===========================================
 
-# Tests
-#
+# Gooogle C++ testing framework target ======
+if(DEFINED ENV{GTEST_ROOT})
 
+string(REPLACE "\\" "/" GTEST_SOURCES "$ENV{GTEST_ROOT}/src/gtest-all.cc")
+
+add_library(
+    gtest STATIC
+    ${GTEST_SOURCES})
+
+target_include_directories(gtest PRIVATE $ENV{GTEST_ROOT}/include $ENV{GTEST_ROOT})
+
+if(UNIX)
+    target_link_libraries(gtest pthread)
+endif()
+
+endif()
+# ===========================================
+
+# Tests target ==============================
 set(TESTS_SOURCES
     tests/src/main.cpp
     tests/src/vector3.cpp
@@ -101,75 +99,83 @@ set(TESTS_SOURCES
     tests/src/camera.cpp
     tests/src/bitmap_painter.cpp
     tests/src/obj_import.cpp)
+
 set(TESTS_HEADERS
     tests/include/common.h)
 
 add_executable(
-	tests
-	${TESTS_SOURCES}
-	${TESTS_HEADERS}
-	${LANTERN_HEADERS})
+    tests
+    ${TESTS_SOURCES}
+    ${TESTS_HEADERS}
+    ${LANTERN_HEADERS})
+
+target_include_directories(tests PRIVATE lantern/include tests/include)
+
+if (DEFINED ENV{GTEST_ROOT})
+    target_include_directories(tests PRIVATE $ENV{GTEST_ROOT}/include)
+endif()
 
 set_target_properties(
     tests PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests/")
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests")
+
+target_link_libraries(tests lantern gtest)
 
 add_custom_command(
     TARGET tests POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     "${PROJECT_SOURCE_DIR}/tests/resources"
     $<TARGET_FILE_DIR:tests>/resources)
+# ===========================================
 
-if (MSVC)
-    target_link_libraries(tests lantern gtest)
-else()
-    target_link_libraries(tests lantern gtest pthread)
-endif()
-add_test(lantern_tests tests)
-
-# Empty app example
-#
-
+# Empty app target ==========================
 add_executable(
     empty_app
-    examples/empty_app/main.cpp
-    ${LANTERN_HEADERS})
+    examples/empty_app/main.cpp)
 
 set_target_properties(
     empty_app PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples/empty_app")
 
+target_include_directories(empty_app PRIVATE lantern/include)
+target_include_directories(empty_app PRIVATE ${SDL2_INCLUDE_DIR})
 
-if (MINGW)
-    target_link_libraries(empty_app lantern mingw32 SDL2main SDL2)
-elseif (APPLE)
-    target_link_libraries(empty_app lantern /Library/Frameworks/SDL2.framework)
-else()
-    target_link_libraries(empty_app lantern SDL2main SDL2)
+target_link_libraries(empty_app lantern ${SDL2_LIBRARY})
+
+if (WIN32)
+    add_custom_command(
+        TARGET empty_app
+        POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+        "${SDL2_DLL}"
+        $<TARGET_FILE_DIR:empty_app>)
 endif()
+# ===========================================
 
-# Rotating car app example
-#
-
+#Rotating car app target ==========================
 add_executable(
     rotating_car_app
-    examples/rotating_car_app/main.cpp
-    ${LANTERN_HEADERS})
+    examples/rotating_car_app/main.cpp)
 
 set_target_properties(
     rotating_car_app PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples/rotating_car_app")
+
+target_include_directories(rotating_car_app PRIVATE lantern/include)
+target_include_directories(rotating_car_app PRIVATE ${SDL2_INCLUDE_DIR})
+
+target_link_libraries(rotating_car_app lantern ${SDL2_LIBRARY})
+
+if (WIN32)
+    add_custom_command(
+        TARGET rotating_car_app
+        POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+        "${SDL2_DLL}"
+        $<TARGET_FILE_DIR:rotating_car_app>)
+endif()
 
 add_custom_command(
     TARGET rotating_car_app POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     "${PROJECT_SOURCE_DIR}/examples/rotating_car_app/resources"
     $<TARGET_FILE_DIR:rotating_car_app>/resources)
-
-if (MINGW)
-    target_link_libraries(rotating_car_app lantern mingw32 SDL2main SDL2)
-elseif (APPLE)
-    target_link_libraries(rotating_car_app lantern /Library/Frameworks/SDL2.framework)
-else()
-    target_link_libraries(rotating_car_app lantern SDL2main SDL2)
-endif()
+# ===========================================

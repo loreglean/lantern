@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include <algorithm>
+#include "common.h"
 #include "bitmap_painter.h"
 
 using namespace lantern;

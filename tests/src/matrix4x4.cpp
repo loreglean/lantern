@@ -1,4 +1,3 @@
-#include <gtest/gtest.h>
 #include "common.h"
 #include "matrix4x4.h"
 
