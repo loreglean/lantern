@@ -37,6 +37,6 @@ Software renderer written for educational purposes. Uses SDL2 for rendering and 
 * Install SDL2 ([https://www.libsdl.org/download-2.0.php](https://www.libsdl.org/download-2.0.php)) to ```/Library/Frameworks/``` or ```~/Library/Frameworks/```. If you want to build tests you must also download Google C++ Testing Framework ([https://code.google.com/p/googletest/downloads/list](https://code.google.com/p/googletest/downloads/list))
 * Open terminal, move to lantern folder
 * Run: ```mkdir build && cd build``` to create build folder and move to it
-* Run: ```set GTEST_ROOT=<path to gtest src>```. You need this only if you want to build tests target
+* Run: ```export GTEST_ROOT=<path to gtest src>```. You need this only if you want to build tests target
 * Run: ```cmake -G Xcode ..``` to generate project
 * XCode project is ready now
