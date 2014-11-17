@@ -5,8 +5,8 @@ using namespace lantern;
 
 TEST(camera, constructor)
 {
-	float cos_value = std::cos((float)M_PI/3.0f);
-	float sin_value = std::sin((float)M_PI/3.0f);
+	float cos_value{std::cos((float)M_PI/3.0f)};
+	float sin_value{std::sin((float)M_PI/3.0f)};
 	camera const c{vector3::ZERO, vector3{2 * cos_value, 0.0f, 2 * sin_value}, vector3::Y_UNIT, (float)M_PI / 2.0f, 0.5f, 0.01f, 100.0f};
 	ASSERT_FLOATS_NEAR(c.get_aspect_ratio(), 0.5f);
 	ASSERT_FLOATS_NEAR(c.get_horizontal_fov(), (float)M_PI / 2.0f);

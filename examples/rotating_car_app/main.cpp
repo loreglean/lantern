@@ -24,7 +24,7 @@ rotating_car_app::rotating_car_app(unsigned int const width, unsigned int const 
 	: app(width, height),
 	  m_camera{
 		  vector3::ZERO,
-		  vector3{0.0f, 0.0f, 1.0f},
+		  vector3::Z_UNIT,
 		  vector3::Y_UNIT,
 		  static_cast<float>(M_PI) / 2.0f,
 		  static_cast<float>(height) / static_cast<float>(width),
@@ -53,8 +53,8 @@ void rotating_car_app::on_key_down(SDL_Keysym key)
 {
 	app::on_key_down(key);
 
-	float const moving_speed = 0.1f;
-	float const rotation_speed = 0.05f;
+	float const moving_speed{0.1f};
+	float const rotation_speed{0.05f};
 
 	if (key.sym == SDLK_a)
 	{

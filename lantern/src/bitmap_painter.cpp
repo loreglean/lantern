@@ -39,7 +39,7 @@ unsigned char const* bitmap_painter::get_data() const
 	return m_data;
 }
 
-color bitmap_painter::get_pixel_color(point2d const &point) const
+color bitmap_painter::get_pixel_color(point2d const& point) const
 {
 	unsigned int const pixel_first_byte_index{m_pitch * point.y + point.x * 4};
 
@@ -107,8 +107,8 @@ void bitmap_painter::draw_line(point2d const& p0, point2d const& p1, color const
 		// Vertical line
 		//
 
-		int delta = (p0.y < p1.y) ? 1 : -1;
-		for (unsigned int i = p0.y; i <= p1.y; i += delta)
+		int delta{(p0.y < p1.y) ? 1 : -1};
+		for (unsigned int i{p0.y}; i <= p1.y; i += delta)
 		{
 			draw_pixel(point2d{p0.x, i}, c);
 		}
@@ -121,8 +121,8 @@ void bitmap_painter::draw_line(point2d const& p0, point2d const& p1, color const
 		// Horizontal line
 		//
 
-		int delta = (p0.x < p1.x) ? 1 : -1;
-		for (unsigned int i = p0.x; i <= p1.x; i += delta)
+		int delta{(p0.x < p1.x) ? 1 : -1};
+		for (unsigned int i{p0.x}; i <= p1.x; i += delta)
 		{
 			draw_pixel(point2d{i, p0.y}, c);
 		}
@@ -133,10 +133,10 @@ void bitmap_painter::draw_line(point2d const& p0, point2d const& p1, color const
 	// Line is y = slope * x + offset
 	//
 
-	int const length_x = static_cast<int>(p1.x) - static_cast<int>(p0.x);
-	int const length_y = static_cast<int>(p1.y) - static_cast<int>(p0.y);
+	int const length_x{static_cast<int>(p1.x) - static_cast<int>(p0.x)};
+	int const length_y{static_cast<int>(p1.y) - static_cast<int>(p0.y)};
 	float const slope{static_cast<float>(length_y) / static_cast<float>(length_x)};
-	float const offset = p0.y - slope * p0.x;
+	float const offset{p0.y - slope * p0.x};
 
 	// Every step we have two candidate points to be drawn
 	// Which one we choose depends of mid-point value (positive or negative)
@@ -290,14 +290,14 @@ void bitmap_painter::draw_line(point2d const& p0, point2d const& p1, color const
 
 	point2d current_point{p0.x, p0.y};
 
-	float const mid_dx = static_cast<float>(dx_positive_plane + dx_negative_plane) / 2.0f;
-	float const mid_dy = static_cast<float>(dy_positive_plane + dy_negative_plane) / 2.0f;
+	float const mid_dx{static_cast<float>(dx_positive_plane + dx_negative_plane) / 2.0f};
+	float const mid_dy{static_cast<float>(dy_positive_plane + dy_negative_plane) / 2.0f};
 
 	draw_pixel(current_point, c);
 
 	for (; counter != counter_max; counter += counter_delta)
 	{
-		float const mid_value = (current_point.y + mid_dy) - slope * (current_point.x + mid_dx) - offset;
+		float const mid_value{(current_point.y + mid_dy) - slope * (current_point.x + mid_dx) - offset};
 
 		if (mid_value >= 0.0f)
 		{

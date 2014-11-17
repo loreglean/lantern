@@ -16,9 +16,9 @@ matrix4x4::matrix4x4()
 
 matrix4x4::matrix4x4(float const m[4][4])
 {
-	for (int i = 0; i < 4; ++i)
+	for (int i{0}; i < 4; ++i)
 	{
-		for (int j = 0; j < 4; ++j)
+		for (int j{0}; j < 4; ++j)
 		{
 			values[i][j] = m[i][j];
 		}
@@ -56,12 +56,12 @@ matrix4x4 matrix4x4::operator*(matrix4x4 const& m) const
 {
 	matrix4x4 result;
 
-	for (size_t i = 0; i < 4; ++i)
+	for (size_t i{0}; i < 4; ++i)
 	{
-		for (size_t j = 0; j < 4; ++j)
+		for (size_t j{0}; j < 4; ++j)
 		{
 			result.values[i][j] = 0.0f;
-			for (size_t k = 0; k < 4; ++k)
+			for (size_t k{0}; k < 4; ++k)
 			{
 				result.values[i][j] += values[i][k] * m.values[k][j];
 			}

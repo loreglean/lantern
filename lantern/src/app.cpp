@@ -71,10 +71,10 @@ int app::start()
 	SDL_Event event;
 
 	// Time when last frame was executed
-	Uint32 last_frame_time = 0;
+	Uint32 last_frame_time{0};
 
-	Uint32 time_accumulator = 0;
-	unsigned int fps = 0;
+	Uint32 time_accumulator{0};
+	unsigned int fps{0};
 
 	while(running)
 	{
@@ -97,8 +97,8 @@ int app::start()
 
 		// Calculate time since last frame
 		//
-		Uint32 current_time = SDL_GetTicks();
-		Uint32 delta_since_last_frame = current_time - last_frame_time;
+		Uint32 current_time{SDL_GetTicks()};
+		Uint32 delta_since_last_frame{current_time - last_frame_time};
 
 		// Save last frame time
 		last_frame_time = SDL_GetTicks();
