@@ -9,21 +9,37 @@ namespace lantern
 	class face final
 	{
 	public:
-		unsigned int index1;
-		unsigned int index2;
-		unsigned int index3;
+		unsigned int vertex_index0;
+		unsigned int vertex_index1;
+		unsigned int vertex_index2;
+
+		unsigned int normal_index0;
+		unsigned int normal_index1;
+		unsigned int normal_index2;
+
+		unsigned int uv_index0;
+		unsigned int uv_index1;
+		unsigned int uv_index2;
 	};
 
 	class mesh final
 	{
 	public:
-		mesh(std::vector<vector3> const& vertices, std::vector<face> const& faces);
+		mesh(
+			std::vector<vector3> const& vertices,
+			std::vector<vector3> const& uvs,
+			std::vector<vector3> const& normals,
+			std::vector<face> const& faces);
 
 		std::vector<vector3> const& get_vertices() const;
+		std::vector<vector3> const& get_uvs() const;
+		std::vector<vector3> const& get_normals() const;
 		std::vector<face> const& get_faces() const;
 
 	private:
 		std::vector<vector3> const m_vertices;
+		std::vector<vector3> const m_uvs;
+		std::vector<vector3> const m_normals;
 		std::vector<face> const m_faces;
 	};
 }

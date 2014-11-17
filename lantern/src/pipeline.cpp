@@ -104,9 +104,9 @@ void pipeline::draw_mesh(
 
 	for (face const& f : mesh->get_faces())
 	{
-		vector4 const& v1{transformed_vertices[f.index1]};
-		vector4 const& v2{transformed_vertices[f.index2]};
-		vector4 const& v3{transformed_vertices[f.index3]};
+		vector4 const& v1{transformed_vertices[f.vertex_index0]};
+		vector4 const& v2{transformed_vertices[f.vertex_index1]};
+		vector4 const& v3{transformed_vertices[f.vertex_index2]};
 
 		bool const v1_clipped{is_vector4_marked_as_clipped(v1)};
 		bool const v2_clipped{is_vector4_marked_as_clipped(v2)};
