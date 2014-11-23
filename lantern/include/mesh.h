@@ -1,46 +1,68 @@
 #ifndef LANTERN_MESH_H
 #define LANTERN_MESH_H
 
-#include <vector>
+#include "mesh_attribute_info.h"
+#include "vector2.h"
 #include "vector3.h"
+#include "color.h"
 
 namespace lantern
 {
-	class face final
-	{
-	public:
-		unsigned int vertex_index0;
-		unsigned int vertex_index1;
-		unsigned int vertex_index2;
-
-		unsigned int normal_index0;
-		unsigned int normal_index1;
-		unsigned int normal_index2;
-
-		unsigned int uv_index0;
-		unsigned int uv_index1;
-		unsigned int uv_index2;
-	};
-
+	/** Class representing mesh.
+	*	It can be viewed as a container that holds vertices, attributes and their indices.
+	*/
 	class mesh final
 	{
 	public:
-		mesh(
-			std::vector<vector3> const& vertices,
-			std::vector<vector3> const& uvs,
-			std::vector<vector3> const& normals,
-			std::vector<face> const& faces);
+		mesh(std::vector<vector3> vertices, std::vector<unsigned int> indices);
 
+		/** Gets mesh vertices.
+		*
+		*/
 		std::vector<vector3> const& get_vertices() const;
-		std::vector<vector3> const& get_uvs() const;
-		std::vector<vector3> const& get_normals() const;
-		std::vector<face> const& get_faces() const;
+
+		/** Get mesh indices.
+		*	Used to save memory avoiding vertices duplication.
+		*/
+		std::vector<unsigned int> const& get_indices() const;
+
+		/** Gets const vector containing list of color attributes.
+		*
+		*/
+		std::vector<mesh_attribute_info<color>> const& get_color_attributes_storage() const;
+
+		/** Gets vector containing list of color attributes.
+		*
+		*/
+		std::vector<mesh_attribute_info<color>>& get_color_attributes_storage();
+
+		/** Gets const vector containing list of vector2 attributes.
+		*
+		*/
+		std::vector<mesh_attribute_info<vector2>> const& get_vector2_attributes_storage() const;
+
+		/** Gets vector containing list of vector2 attributes.
+		*
+		*/
+		std::vector<mesh_attribute_info<vector2>>& get_vector2_attributes_storage();
+
+		/** Gets const vector containing list of vector3 attributes.
+		*
+		*/
+		std::vector<mesh_attribute_info<vector3>> const& get_vector3_attributes_storage() const;
+
+		/** Gets vector containing list of vector3 attributes.
+		*
+		*/
+		std::vector<mesh_attribute_info<vector3>>& get_vector3_attributes_storage();
 
 	private:
 		std::vector<vector3> const m_vertices;
-		std::vector<vector3> const m_uvs;
-		std::vector<vector3> const m_normals;
-		std::vector<face> const m_faces;
+		std::vector<unsigned int> const m_indices;
+
+		std::vector<mesh_attribute_info<color>> m_color_attributes;
+		std::vector<mesh_attribute_info<vector2>> m_vector2_attributes;
+		std::vector<mesh_attribute_info<vector3>> m_vector3_attributes;
 	};
 }
 

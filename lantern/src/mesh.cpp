@@ -2,15 +2,8 @@
 
 using namespace lantern;
 
-mesh::mesh(
-		std::vector<vector3> const& vertices,
-		std::vector<vector3> const& uvs,
-		std::vector<vector3> const& normals,
-		std::vector<face> const& faces)
-	: m_vertices(vertices),
-	  m_uvs(uvs),
-	  m_normals(normals),
-	  m_faces(faces)
+mesh::mesh(std::vector<vector3> vertices, std::vector<unsigned int> indices)
+	: m_vertices(vertices), m_indices(indices)
 {
 
 }
@@ -20,17 +13,37 @@ std::vector<vector3> const& mesh::get_vertices() const
 	return m_vertices;
 }
 
-std::vector<vector3> const& mesh::get_uvs() const
+std::vector<unsigned int> const& mesh::get_indices() const
 {
-	return m_uvs;
+	return m_indices;
 }
 
-std::vector<vector3> const& mesh::get_normals() const
+std::vector<mesh_attribute_info<color>> const& mesh::get_color_attributes_storage() const
 {
-	return m_normals;
+	return m_color_attributes;
 }
 
-std::vector<face> const& mesh::get_faces() const
+std::vector<mesh_attribute_info<color>>& mesh::get_color_attributes_storage()
 {
-	return m_faces;
+	return m_color_attributes;
+}
+
+std::vector<mesh_attribute_info<vector2>> const& mesh::get_vector2_attributes_storage() const
+{
+	return m_vector2_attributes;
+}
+
+std::vector<mesh_attribute_info<vector2>>& mesh::get_vector2_attributes_storage()
+{
+	return m_vector2_attributes;
+}
+
+std::vector<mesh_attribute_info<vector3>> const& mesh::get_vector3_attributes_storage() const
+{
+	return m_vector3_attributes;
+}
+
+std::vector<mesh_attribute_info<vector3>>& mesh::get_vector3_attributes_storage()
+{
+	return m_vector3_attributes;
 }

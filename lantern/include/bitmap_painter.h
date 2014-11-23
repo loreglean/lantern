@@ -34,6 +34,25 @@ namespace lantern
 		unsigned char* m_data;
 		unsigned int m_pitch;
 	};
+
+	// Inlined due to huge amount of invocations
+	//
+	inline void bitmap_painter::draw_pixel(point2d const& point, color const& c)
+	{
+		unsigned int const pixel_first_byte_index{m_pitch * point.y + point.x * 4};
+
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+		m_data[pixel_first_byte_index + 0] = c.b;
+		m_data[pixel_first_byte_index + 1] = c.g;
+		m_data[pixel_first_byte_index + 2] = c.r;
+		// m_data[pixel_first_byte_index + 3] is alpha, we don't use it for now
+#else
+		// m_data[pixel_first_byte_index + 0] is alpha, we don't use it for now
+		m_data[pixel_first_byte_index + 1] = c.r;
+		m_data[pixel_first_byte_index + 2] = c.g;
+		m_data[pixel_first_byte_index + 3] = c.b;
+#endif
+	}
 }
 
 #endif // LANTERN_BITMAP_PAINTER_H

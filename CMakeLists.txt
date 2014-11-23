@@ -19,7 +19,7 @@ if (MSVC)
     add_definitions(-D_USE_MATH_DEFINES)
 else()
     set(COMPILER_FLAGS
-        "-std=gnu++0x -Wall -Wno-comment")
+        "-std=gnu++0x -Wall -Werror -Wno-comment")
 endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
@@ -27,6 +27,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
 
 # Library target ============================
 set(LANTERN_SOURCES
+    lantern/src/vector2.cpp
     lantern/src/vector3.cpp
     lantern/src/vector4.cpp
     lantern/src/matrix3x3.cpp
@@ -38,11 +39,11 @@ set(LANTERN_SOURCES
     lantern/src/bitmap_painter.cpp
     lantern/src/mesh.cpp
     lantern/src/obj_import.cpp
-    lantern/src/scene_object.cpp
-    lantern/src/scene.cpp
+    lantern/src/shader.cpp
     lantern/src/pipeline.cpp)
 
 set(LANTERN_HEADERS
+    lantern/include/vector2.h
     lantern/include/vector3.h
     lantern/include/vector4.h
     lantern/include/matrix3x3.h
@@ -52,10 +53,10 @@ set(LANTERN_HEADERS
     lantern/include/camera.h
     lantern/include/app.h
     lantern/include/bitmap_painter.h
+    lantern/include/mesh_attribute_info.h
     lantern/include/mesh.h
     lantern/include/obj_import.h
-    lantern/include/scene_object.h
-    lantern/include/scene.h
+    lantern/include/shader.h
     lantern/include/pipeline.h)
 
 add_library(

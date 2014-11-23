@@ -33,6 +33,7 @@ namespace lantern
 		static matrix4x4 rotation_around_y_axis(float const radians);
 		static matrix4x4 rotation_around_z_axis(float const radians);
 		static matrix4x4 rotation_around_axis(vector3 const& axis, float const radians);
+		static matrix4x4 clip_space(float const hfov, float const vfov, float const near, float const far);
 
 		static const matrix4x4 IDENTITY;
 	};
