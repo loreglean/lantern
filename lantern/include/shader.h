@@ -50,7 +50,7 @@ namespace lantern
 		color m_color;
 	};
 
-	// Inline due to huge amount of invocations
+	// Inlined due to huge amount of invocations
 	//
 
 	inline vector4 color_shader::process_vertex(vector4 const& vertex)
