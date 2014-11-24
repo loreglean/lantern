@@ -6,9 +6,9 @@
 namespace lantern
 {
 	/** Class representing 3-dimensional vector.
-	*	Can be interpreted either as a point or a geometrical vector,
-	*	providing operations for both interpretations.
-	*	It also can be used to just store three related float values.
+	* Can be interpreted either as a point or a geometrical vector,
+	* providing operations for both interpretations.
+	* It also can be used to just store three related float values.
 	*/
 	class vector3 final
 	{

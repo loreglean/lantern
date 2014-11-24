@@ -7,7 +7,7 @@
 namespace lantern
 {
 	/** Class representing 3x3 matrix.
-	*	Coordinate system assumed to be left-handed. Values are accessed as [row][column].
+	* Coordinate system assumed to be left-handed. Values are accessed as [row][column].
 	*/
 	class matrix3x3 final
 	{

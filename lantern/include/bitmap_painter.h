@@ -8,7 +8,7 @@
 namespace lantern
 {
 	/** Class that implements drawing on a given size bitmap.
-	*	It works in ARGB8888 data format.
+	* It works in ARGB8888 data format.
 	*/
 	class bitmap_painter final
 	{

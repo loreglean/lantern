@@ -9,12 +9,12 @@
 namespace lantern
 {
 	/** Class representing shading algorithm.
-	*	It should not be treated as something "running on GPU" despite of common notation.
-	*	Its purpose is to move shading algorithm into separate object.
+	* It should not be treated as something "running on GPU" despite of common notation.
+	* Its purpose is to move shading algorithm into separate object.
 	*
-	*	Attributes values (like vertex normal, or interpolated color) are filled via bind points.
-	*	Bind point is just an address of variable for pipeline to put value into.
-	*	They can be registered via pipeline::register_<attr-type>_attribute method.
+	* Attributes values (like vertex normal, or interpolated color) are filled via bind points.
+	* Bind point is just an address of variable for pipeline to put value into.
+	* They can be registered via pipeline::register_<attr-type>_attribute method.
 	*/
 	class shader
 	{

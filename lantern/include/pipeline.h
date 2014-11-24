@@ -7,7 +7,7 @@
 
 namespace lantern
 {
-	/** Class that holds information abount binded attribute: it's info and bind point.
+	/** Class that holds information about binded attribute: its info and bind point.
 	*/
 	template<typename T>
 	class binded_mesh_attribute_info final
@@ -18,43 +18,43 @@ namespace lantern
 	};
 
 	/** Class representing rendering pipeline.
-	*	It can be treated as object that connects mesh data and shader to produce image.
+	* It can be treated as object that connects mesh data and shader to produce image.
 	*/
 	class pipeline final
 	{
 	public:
 		/** Binds vertices to pipeline.
-		*	Pipeline will use them from rendering until different vertices will be binded or reset_state() called.
+		* Pipeline will use them from rendering until different vertices will be binded or reset_state() called.
 		*/
 		void bind_vertices(std::vector<vector3> const* vertices);
 
 		/** Binds indices to pipeline.
-		*	Pipeline will use them from rendering until different indices will be binded or reset_state() called.
+		* Pipeline will use them from rendering until different indices will be binded or reset_state() called.
 		*/
 		void bind_indices(std::vector<unsigned int> const* indices);
 
 		/** Binds color attribute to pipeline.
-		*	Pipeline will use this attribute until reset_state() called.
+		* Pipeline will use this attribute until reset_state() called.
 		*/
 		void bind_color_attribute(mesh_attribute_info<color> const* attr_info, color* bind_point);
 
 		/** Binds vector2 attribute to pipeline.
-		*	Pipeline will use this attribute until reset_state() called.
+		* Pipeline will use this attribute until reset_state() called.
 		*/
 		void bind_vector2_attribute(mesh_attribute_info<vector2f> const* attr_info, vector2f* bind_point);
 
 		/** Binds vector3 attribute to pipeline.
-		*	Pipeline will use this attribute until reset_state() called.
+		* Pipeline will use this attribute until reset_state() called.
 		*/
 		void bind_vector3_attribute(mesh_attribute_info<vector3> const* attr_info, vector3* bind_point);
 
 		/** Binds shader to pipeline.
-		*	Pipeline will use this shader until different one will be binded or until reset_state() called.
+		* Pipeline will use this shader until different one will be binded or until reset_state() called.
 		*/
 		void bind_shader(shader* s);
 
 		/** Reset saved pipeline state.
-		*	It discards binded shader, vertices, indices and all attributes.
+		* It discards binded shader, vertices, indices and all attributes.
 		*/
 		void reset_state();
 

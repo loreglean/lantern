@@ -7,7 +7,7 @@
 namespace lantern
 {
 	/** Class representing mesh attribute info, like texcoords, colors, normals etc.
-	*	Those values will be interpolated by pipeline and passed to a shader during rendering.
+	* Those values will be interpolated by pipeline and passed to a shader during rendering.
 	*/
 	template<typename T>
 	class mesh_attribute_info final
@@ -16,17 +16,15 @@ namespace lantern
 		mesh_attribute_info(std::string id, std::vector<T> data, std::vector<unsigned int> indices);
 
 		/** Gets attribute id.
-		*
 		*/
 		std::string const& get_id() const;
 
 		/** Gets attribute data.
-		*
 		*/
 		std::vector<T> const& get_data() const;
 
 		/** Gets attributes indices.
-		*	Those values define which data value applies for vertex with corresponding index.
+		* Those values define which data value applies for vertex with corresponding index.
 		*/
 		std::vector<unsigned int> const& get_indices() const;
 

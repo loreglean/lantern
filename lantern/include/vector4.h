@@ -6,7 +6,7 @@
 namespace lantern
 {
 	/** Class representing 4-dimensional homogeneous vector.
-	*	Used to apply 3D affine transformations represented as 4x4 matrices.
+	* Used to apply 3D affine transformations represented as 4x4 matrices.
 	*/
 	class vector4 final
 	{

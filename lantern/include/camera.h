@@ -5,7 +5,7 @@
 
 namespace lantern
 {
-	/** Class representing camera in 3D world.
+	/** Class representing camera.
 	*/
 	class camera final
 	{

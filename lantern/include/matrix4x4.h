@@ -8,8 +8,8 @@
 namespace lantern
 {
 	/** Class representing 4x4 matrix.
-	*	Used to represent 3D affine transformations.
-	*	Coordinate system assumed to be left-handed. Values are accessed as [row][column].
+	* Used to represent 3D affine transformations.
+	* Coordinate system assumed to be left-handed. Values are accessed as [row][column].
 	*/
 	class matrix4x4 final
 	{

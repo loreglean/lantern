@@ -7,7 +7,7 @@
 namespace lantern
 {
 	/** Wavefront .obj file reader.
-	*	Derived classes can override on_* virtual functions to process definitions.
+	* Derived classes can override on_* virtual functions to process definitions.
 	*/
 	class obj_reader
 	{
@@ -40,7 +40,6 @@ namespace lantern
 	};
 
 	/** Simple importer of mesh object from .obj file.
-	*
 	*/
 	class obj_mesh_importer : public obj_reader
 	{

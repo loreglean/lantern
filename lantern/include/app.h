@@ -12,7 +12,8 @@ namespace lantern
 		app(unsigned int const width, unsigned int const height);
 		virtual ~app();
 
-		// Runs main loop
+		/** Runs main loop
+		*/
 		int start();
 
 	protected:
