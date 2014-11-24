@@ -66,7 +66,7 @@ namespace lantern
 		std::vector<vector3> m_vertices;
 		std::vector<unsigned int> m_indices;
 
-		std::vector<vector2> m_texcoords;
+		std::vector<vector2f> m_texcoords;
 		std::vector<unsigned int> m_texcoords_indices;
 
 		std::vector<vector3> m_normals;

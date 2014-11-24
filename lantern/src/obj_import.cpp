@@ -267,7 +267,7 @@ mesh obj_mesh_importer::get_mesh() const
 
 	if (m_read_texcoords)
 	{
-		mesh_attribute_info<vector2> texcoords_info{"texcoords", m_texcoords, m_texcoords_indices};
+		mesh_attribute_info<vector2f> texcoords_info{"texcoords", m_texcoords, m_texcoords_indices};
 		m.get_vector2_attributes_storage().push_back(texcoords_info);
 	}
 
@@ -301,7 +301,7 @@ void obj_mesh_importer::on_texcoord_def(float const x, float const y)
 {
 	if (m_read_texcoords)
 	{
-		m_texcoords.push_back(vector2{x, y});
+		m_texcoords.push_back(vector2f{x, y});
 	}
 }
 

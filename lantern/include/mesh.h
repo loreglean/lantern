@@ -39,12 +39,12 @@ namespace lantern
 		/** Gets const vector containing list of vector2 attributes.
 		*
 		*/
-		std::vector<mesh_attribute_info<vector2>> const& get_vector2_attributes_storage() const;
+		std::vector<mesh_attribute_info<vector2f>> const& get_vector2_attributes_storage() const;
 
 		/** Gets vector containing list of vector2 attributes.
 		*
 		*/
-		std::vector<mesh_attribute_info<vector2>>& get_vector2_attributes_storage();
+		std::vector<mesh_attribute_info<vector2f>>& get_vector2_attributes_storage();
 
 		/** Gets const vector containing list of vector3 attributes.
 		*
@@ -61,7 +61,7 @@ namespace lantern
 		std::vector<unsigned int> const m_indices;
 
 		std::vector<mesh_attribute_info<color>> m_color_attributes;
-		std::vector<mesh_attribute_info<vector2>> m_vector2_attributes;
+		std::vector<mesh_attribute_info<vector2f>> m_vector2_attributes;
 		std::vector<mesh_attribute_info<vector3>> m_vector3_attributes;
 	};
 }

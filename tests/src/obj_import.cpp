@@ -54,10 +54,10 @@ static void assert_obj_vertices(mesh const& mesh)
 
 static void assert_obj_texcoords(mesh const& mesh)
 {
-	mesh_attribute_info<vector2> const* texcoords_info{nullptr};
+	mesh_attribute_info<vector2f> const* texcoords_info{nullptr};
 	for (size_t i{0}; i < mesh.get_vector2_attributes_storage().size(); ++i)
 	{
-		mesh_attribute_info<vector2> const& attribute_info = mesh.get_vector2_attributes_storage()[i];
+		mesh_attribute_info<vector2f> const& attribute_info = mesh.get_vector2_attributes_storage()[i];
 		if (attribute_info.get_id() == "texcoords")
 		{
 			texcoords_info = &attribute_info;
@@ -65,7 +65,7 @@ static void assert_obj_texcoords(mesh const& mesh)
 	}
 	ASSERT_NE(texcoords_info, nullptr);
 
-	std::vector<vector2> const correct_texcoords
+	std::vector<vector2f> const correct_texcoords
 		{ vector2{0.0f, 0.0f},
 		  vector2{1.0f, 0.0f},
 		  vector2{1.0f, 1.0f},

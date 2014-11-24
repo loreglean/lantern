@@ -41,7 +41,7 @@ namespace lantern
 		/** Binds vector2 attribute to pipeline.
 		*	Pipeline will use this attribute until reset_state() called.
 		*/
-		void bind_vector2_attribute(mesh_attribute_info<vector2> const* attr_info, vector2* bind_point);
+		void bind_vector2_attribute(mesh_attribute_info<vector2f> const* attr_info, vector2f* bind_point);
 
 		/** Binds vector3 attribute to pipeline.
 		*	Pipeline will use this attribute until reset_state() called.
@@ -67,7 +67,7 @@ namespace lantern
 		std::vector<unsigned int> const* m_indices;
 
 		std::vector<binded_mesh_attribute_info<color>> m_color_attributes;
-		std::vector<binded_mesh_attribute_info<vector2>> m_vector2_attributes;
+		std::vector<binded_mesh_attribute_info<vector2f>> m_vector2_attributes;
 		std::vector<binded_mesh_attribute_info<vector3>> m_vector3_attributes;
 
 		shader* m_shader;

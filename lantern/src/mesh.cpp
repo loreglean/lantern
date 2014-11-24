@@ -28,12 +28,12 @@ std::vector<mesh_attribute_info<color>>& mesh::get_color_attributes_storage()
 	return m_color_attributes;
 }
 
-std::vector<mesh_attribute_info<vector2>> const& mesh::get_vector2_attributes_storage() const
+std::vector<mesh_attribute_info<vector2f>> const& mesh::get_vector2_attributes_storage() const
 {
 	return m_vector2_attributes;
 }
 
-std::vector<mesh_attribute_info<vector2>>& mesh::get_vector2_attributes_storage()
+std::vector<mesh_attribute_info<vector2f>>& mesh::get_vector2_attributes_storage()
 {
 	return m_vector2_attributes;
 }

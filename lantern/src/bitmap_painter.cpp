@@ -39,7 +39,7 @@ unsigned char const* bitmap_painter::get_data() const
 	return m_data;
 }
 
-color bitmap_painter::get_pixel_color(point2d const& point) const
+color bitmap_painter::get_pixel_color(vector2ui const& point) const
 {
 	unsigned int const pixel_first_byte_index{m_pitch * point.y + point.x * 4};
 
@@ -62,7 +62,7 @@ void bitmap_painter::clear(unsigned char const bytes_value)
 	memset(m_data, bytes_value, m_data_total_size);
 }
 
-void bitmap_painter::draw_line(point2d const& p0, point2d const& p1, color const& c)
+void bitmap_painter::draw_line(vector2ui const& p0, vector2ui const& p1, color const& c)
 {
 	// See "Derivation" at http://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
 	//
@@ -93,7 +93,7 @@ void bitmap_painter::draw_line(point2d const& p0, point2d const& p1, color const
 		int delta{(p0.y < p1.y) ? 1 : -1};
 		for (unsigned int i{p0.y}; i <= p1.y; i += delta)
 		{
-			draw_pixel(point2d{p0.x, i}, c);
+			draw_pixel(vector2ui{p0.x, i}, c);
 		}
 
 		return;
@@ -107,7 +107,7 @@ void bitmap_painter::draw_line(point2d const& p0, point2d const& p1, color const
 		int delta{(p0.x < p1.x) ? 1 : -1};
 		for (unsigned int i{p0.x}; i <= p1.x; i += delta)
 		{
-			draw_pixel(point2d{i, p0.y}, c);
+			draw_pixel(vector2ui{i, p0.y}, c);
 		}
 
 		return;
@@ -271,7 +271,7 @@ void bitmap_painter::draw_line(point2d const& p0, point2d const& p1, color const
 		}
 	}
 
-	point2d current_point{p0.x, p0.y};
+	vector2ui current_point{p0.x, p0.y};
 
 	float const mid_dx{static_cast<float>(dx_positive_plane + dx_negative_plane) / 2.0f};
 	float const mid_dy{static_cast<float>(dy_positive_plane + dy_negative_plane) / 2.0f};

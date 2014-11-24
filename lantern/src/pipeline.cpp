@@ -27,9 +27,9 @@ void pipeline::bind_color_attribute(mesh_attribute_info<color> const* attr_info,
 	m_color_attributes.push_back(binded_mesh_attribute_info<color>{attr_info, bind_point});
 }
 
-void pipeline::bind_vector2_attribute(mesh_attribute_info<vector2> const* attr_info, vector2* bind_point)
+void pipeline::bind_vector2_attribute(mesh_attribute_info<vector2f> const* attr_info, vector2f* bind_point)
 {
-	m_vector2_attributes.push_back(binded_mesh_attribute_info<vector2>{attr_info, bind_point});
+	m_vector2_attributes.push_back(binded_mesh_attribute_info<vector2f>{attr_info, bind_point});
 }
 void pipeline::bind_vector3_attribute(mesh_attribute_info<vector3> const* attr_info, vector3* bind_point)
 {
@@ -140,7 +140,7 @@ void pipeline::draw(bitmap_painter& painter)
 			}
 
 			painter.draw_pixel(
-					point2d{static_cast<unsigned int>(v0.x), static_cast<unsigned int>(v0.y)},
+					vector2ui{static_cast<unsigned int>(v0.x), static_cast<unsigned int>(v0.y)},
 					m_shader->process_pixel(vector3{v0.x, v0.y, v0.z}));
 		}
 
@@ -155,7 +155,7 @@ void pipeline::draw(bitmap_painter& painter)
 			}
 
 			painter.draw_pixel(
-					point2d{static_cast<unsigned int>(v1.x), static_cast<unsigned int>(v1.y)},
+					vector2ui{static_cast<unsigned int>(v1.x), static_cast<unsigned int>(v1.y)},
 					m_shader->process_pixel(vector3{v1.x, v1.y, v1.z}));
 		}
 
@@ -170,7 +170,7 @@ void pipeline::draw(bitmap_painter& painter)
 			}
 
 			painter.draw_pixel(
-					point2d{static_cast<unsigned int>(v2.x), static_cast<unsigned int>(v2.y)},
+					vector2ui{static_cast<unsigned int>(v2.x), static_cast<unsigned int>(v2.y)},
 					m_shader->process_pixel(vector3{v2.x, v2.y, v2.z}));
 		}
 	}

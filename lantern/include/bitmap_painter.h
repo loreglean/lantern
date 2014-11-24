@@ -2,7 +2,7 @@
 #define LANTERN_BITMAP_PAINTER_H
 
 #include <cstddef>
-#include "point.h"
+#include "vector2.h"
 #include "color.h"
 
 namespace lantern
@@ -20,12 +20,12 @@ namespace lantern
 		unsigned int get_bitmap_height() const;
 		int get_pitch() const;
 		unsigned char const* get_data() const;
-		color get_pixel_color(point2d const& point) const;
+		color get_pixel_color(vector2ui const& point) const;
 
 		// TODO: clear with custom color, not only gray
 		void clear(unsigned char const bytes_value);
-		void draw_pixel(point2d const &point, color const &c);
-		void draw_line(point2d const& p0, point2d const& p1, color const& c);
+		void draw_pixel(vector2ui const& point, color const& c);
+		void draw_line(vector2ui const& p0, vector2ui const& p1, color const& c);
 
 	private:
 		unsigned int m_bitmap_width;
@@ -37,7 +37,7 @@ namespace lantern
 
 	// Inlined due to huge amount of invocations
 	//
-	inline void bitmap_painter::draw_pixel(point2d const& point, color const& c)
+	inline void bitmap_painter::draw_pixel(vector2ui const& point, color const& c)
 	{
 		unsigned int const pixel_first_byte_index{m_pitch * point.y + point.x * 4};
 
