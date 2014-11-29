@@ -1,6 +1,6 @@
 #include "bitmap_painter.h"
 #include <cstring>
-#include <cmath>
+#include <utility>
 
 using namespace lantern;
 
@@ -90,10 +90,19 @@ void bitmap_painter::draw_line(vector2ui const& p0, vector2ui const& p1, color c
 		// Vertical line
 		//
 
-		int delta{(p0.y < p1.y) ? 1 : -1};
-		for (unsigned int i{p0.y}; i <= p1.y; i += delta)
+		if (p0.y < p1.y)
 		{
-			draw_pixel(vector2ui{p0.x, i}, c);
+			for (unsigned int i{p0.y}; i <= p1.y; ++i)
+			{
+				draw_pixel(vector2ui{p0.x, i}, c);
+			}
+		}
+		else
+		{
+			for (unsigned int i{p1.y}; i <= p0.y; ++i)
+			{
+				draw_pixel(vector2ui{p0.x, i}, c);
+			}
 		}
 
 		return;
@@ -104,10 +113,19 @@ void bitmap_painter::draw_line(vector2ui const& p0, vector2ui const& p1, color c
 		// Horizontal line
 		//
 
-		int delta{(p0.x < p1.x) ? 1 : -1};
-		for (unsigned int i{p0.x}; i <= p1.x; i += delta)
+		if (p0.x < p1.x)
 		{
-			draw_pixel(vector2ui{i, p0.y}, c);
+			for (unsigned int i{p0.x}; i <= p1.x; ++i)
+			{
+				draw_pixel(vector2ui{i, p0.y}, c);
+			}
+		}
+		else
+		{
+			for (unsigned int i{p1.x}; i <= p0.x; ++i)
+			{
+				draw_pixel(vector2ui{i, p0.y}, c);
+			}
 		}
 
 		return;

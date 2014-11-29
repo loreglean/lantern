@@ -6,10 +6,16 @@ using namespace lantern;
 
 // Helper function to ASSERT_TRUE that pixel color matches
 //
-static void assert_pixel_color(bitmap_painter const& painter, point2d const& point, color const& c)
+static void assert_pixel_color(bitmap_painter const& painter, vector2ui const& point, color const& c)
 {
 	color const current_color = painter.get_pixel_color(point);
 	bool const pixel_color_matches{current_color == c};
+
+	if (!pixel_color_matches)
+	{
+		int i = 0;
+	}
+
 	ASSERT_TRUE(pixel_color_matches);
 }
 
@@ -18,14 +24,14 @@ static void assert_pixel_color(bitmap_painter const& painter, point2d const& poi
 //
 static void assert_pixels_colors(
 	bitmap_painter const& painter,
-	std::vector<point2d> const& points, color const& points_color,
+	std::vector<vector2ui> const& points, color const& points_color,
 	color const& other_pixels_color)
 {
 	for (unsigned int i{0}; i < painter.get_bitmap_width(); i++)
 	{
 		for (unsigned int j{0}; j < painter.get_bitmap_height(); j++)
 		{
-			point2d p{i, j};
+			vector2ui p{i, j};
 
 			if (std::find(std::begin(points), std::end(points), p) != std::end(points))
 			{
@@ -48,7 +54,7 @@ static void assert_horizontal_line_color(
 {
 	for (unsigned int i{x0}; i <= x1; i++)
 	{
-		assert_pixel_color(painter, point2d{i, y}, c);
+		assert_pixel_color(painter, vector2ui{i, y}, c);
 	}
 }
 
@@ -66,7 +72,7 @@ TEST(bitmap_painter, draw_pixel)
 {
 	bitmap_painter painter{6, 6};
 	painter.clear(0);
-	painter.draw_pixel(point2d{2, 2}, color::WHITE);
+	painter.draw_pixel(vector2ui{2, 2}, color::WHITE);
 	for (unsigned int i{0}; i < 6; i++)
 	{
 		if (i != 2)
@@ -79,7 +85,7 @@ TEST(bitmap_painter, draw_pixel)
 			assert_horizontal_line_color(painter, 3, 5, i, color::BLACK);
 		}
 	}
-	assert_pixel_color(painter, point2d{2, 2}, color::WHITE);
+	assert_pixel_color(painter, vector2ui{2, 2}, color::WHITE);
 }
 
 TEST(bitmap_painter, draw_line)
@@ -103,10 +109,10 @@ TEST(bitmap_painter, draw_line)
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2d{1, 1}, point2d{1, 1}, color::BLUE);
+	painter.draw_line(vector2ui{1, 1}, vector2ui{1, 1}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2d>{point2d{1, 1}},
+		std::vector<vector2ui>{vector2ui{1, 1}},
 		color::BLUE,
 		color::BLACK);
 
@@ -114,56 +120,72 @@ TEST(bitmap_painter, draw_line)
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2d{0, 3}, point2d{5, 3}, color::BLUE);
+	painter.draw_line(vector2ui{0, 3}, vector2ui{5, 3}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2d>{point2d{0, 3}, point2d{1, 3}, point2d{2, 3}, point2d{3, 3}, point2d{4, 3}, point2d{5, 3}},
+		std::vector<vector2ui>{vector2ui{0, 3}, vector2ui{1, 3}, vector2ui{2, 3}, vector2ui{3, 3}, vector2ui{4, 3}, vector2ui{5, 3}},
 		color::BLUE,
 		color::BLACK);
+
+	painter.clear(0);
+	painter.draw_line(vector2ui{5, 3}, vector2ui{0, 3}, color::BLUE);
+	assert_pixels_colors(
+			painter,
+			std::vector<vector2ui>{vector2ui{0, 3}, vector2ui{1, 3}, vector2ui{2, 3}, vector2ui{3, 3}, vector2ui{4, 3}, vector2ui{5, 3}},
+			color::BLUE,
+			color::BLACK);
 
 	// Vertical line
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2d{3, 0}, point2d{3, 5}, color::BLUE);
+	painter.draw_line(vector2ui{3, 0}, vector2ui{3, 5}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2d>{point2d{3, 0}, point2d{3, 1}, point2d{3, 2}, point2d{3, 3}, point2d{3, 4}, point2d{3, 5}},
+		std::vector<vector2ui>{vector2ui{3, 0}, vector2ui{3, 1}, vector2ui{3, 2}, vector2ui{3, 3}, vector2ui{3, 4}, vector2ui{3, 5}},
 		color::BLUE,
 		color::BLACK);
+
+	painter.clear(0);
+	painter.draw_line(vector2ui{3, 5}, vector2ui{3, 0}, color::BLUE);
+	assert_pixels_colors(
+			painter,
+			std::vector<vector2ui>{vector2ui{3, 0}, vector2ui{3, 1}, vector2ui{3, 2}, vector2ui{3, 3}, vector2ui{3, 4}, vector2ui{3, 5}},
+			color::BLUE,
+			color::BLACK);
 
 	// |Slope| = 1
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2d{0, 0}, point2d{5, 5}, color::BLUE);
+	painter.draw_line(vector2ui{0, 0}, vector2ui{5, 5}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2d>{point2d{0, 0}, point2d{1, 1}, point2d{2, 2}, point2d{3, 3}, point2d{4, 4}, point2d{5, 5}},
+		std::vector<vector2ui>{vector2ui{0, 0}, vector2ui{1, 1}, vector2ui{2, 2}, vector2ui{3, 3}, vector2ui{4, 4}, vector2ui{5, 5}},
 		color::BLUE,
 		color::BLACK);
 
 	painter.clear(0);
-	painter.draw_line(point2d{5, 5}, point2d{0, 0}, color::BLUE);
+	painter.draw_line(vector2ui{5, 5}, vector2ui{0, 0}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2d>{point2d{0, 0}, point2d{1, 1}, point2d{2, 2}, point2d{3, 3}, point2d{4, 4}, point2d{5, 5}},
+		std::vector<vector2ui>{vector2ui{0, 0}, vector2ui{1, 1}, vector2ui{2, 2}, vector2ui{3, 3}, vector2ui{4, 4}, vector2ui{5, 5}},
 		color::BLUE,
 		color::BLACK);
 
 	painter.clear(0);
-	painter.draw_line(point2d{0, 5}, point2d{5, 0}, color::BLUE);
+	painter.draw_line(vector2ui{0, 5}, vector2ui{5, 0}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2d>{point2d{0, 5}, point2d{1, 4}, point2d{2, 3}, point2d{3, 2}, point2d{4, 1}, point2d{5, 0}},
+		std::vector<vector2ui>{vector2ui{0, 5}, vector2ui{1, 4}, vector2ui{2, 3}, vector2ui{3, 2}, vector2ui{4, 1}, vector2ui{5, 0}},
 		color::BLUE,
 		color::BLACK);
 
 	painter.clear(0);
-	painter.draw_line(point2d{5, 0}, point2d{0, 5}, color::BLUE);
+	painter.draw_line(vector2ui{5, 0}, vector2ui{0, 5}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2d>{point2d{0, 5}, point2d{1, 4}, point2d{2, 3}, point2d{3, 2}, point2d{4, 1}, point2d{5, 0}},
+		std::vector<vector2ui>{vector2ui{0, 5}, vector2ui{1, 4}, vector2ui{2, 3}, vector2ui{3, 2}, vector2ui{4, 1}, vector2ui{5, 0}},
 		color::BLUE,
 		color::BLACK);
 
@@ -174,10 +196,10 @@ TEST(bitmap_painter, draw_line)
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2d{0, 0}, point2d{5, 2}, color::BLUE);
+	painter.draw_line(vector2ui{0, 0}, vector2ui{5, 2}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2d>{point2d{0, 0}, point2d{1, 0}, point2d{2, 1}, point2d{3, 1}, point2d{4, 2}, point2d{5, 2}},
+		std::vector<vector2ui>{vector2ui{0, 0}, vector2ui{1, 0}, vector2ui{2, 1}, vector2ui{3, 1}, vector2ui{4, 2}, vector2ui{5, 2}},
 		color::BLUE,
 		color::BLACK);
 
@@ -185,10 +207,10 @@ TEST(bitmap_painter, draw_line)
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2d{1, 0}, point2d{5, 3}, color::BLUE);
+	painter.draw_line(vector2ui{1, 0}, vector2ui{5, 3}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2d>{point2d{1, 0}, point2d{2, 1}, point2d{3, 1}, point2d{4, 2}, point2d{5, 3}},
+		std::vector<vector2ui>{vector2ui{1, 0}, vector2ui{2, 1}, vector2ui{3, 1}, vector2ui{4, 2}, vector2ui{5, 3}},
 		color::BLUE,
 		color::BLACK);
 
@@ -199,10 +221,10 @@ TEST(bitmap_painter, draw_line)
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2d{5, 2}, point2d{0, 0}, color::BLUE);
+	painter.draw_line(vector2ui{5, 2}, vector2ui{0, 0}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2d>{point2d{0, 0}, point2d{1, 0}, point2d{2, 1}, point2d{3, 1}, point2d{4, 2}, point2d{5, 2}},
+		std::vector<vector2ui>{vector2ui{0, 0}, vector2ui{1, 0}, vector2ui{2, 1}, vector2ui{3, 1}, vector2ui{4, 2}, vector2ui{5, 2}},
 		color::BLUE,
 		color::BLACK);
 
@@ -210,10 +232,10 @@ TEST(bitmap_painter, draw_line)
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2d{5, 3}, point2d{1, 0}, color::BLUE);
+	painter.draw_line(vector2ui{5, 3}, vector2ui{1, 0}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2d>{point2d{1, 0}, point2d{2, 1}, point2d{3, 1}, point2d{4, 2}, point2d{5, 3}},
+		std::vector<vector2ui>{vector2ui{1, 0}, vector2ui{2, 1}, vector2ui{3, 1}, vector2ui{4, 2}, vector2ui{5, 3}},
 		color::BLUE,
 		color::BLACK);
 
@@ -224,10 +246,10 @@ TEST(bitmap_painter, draw_line)
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2d{0, 0}, point2d{2, 5}, color::BLUE);
+	painter.draw_line(vector2ui{0, 0}, vector2ui{2, 5}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2d>{point2d{0, 0}, point2d{0, 1}, point2d{1, 2}, point2d{1, 3}, point2d{2, 4}, point2d{2, 5}},
+		std::vector<vector2ui>{vector2ui{0, 0}, vector2ui{0, 1}, vector2ui{1, 2}, vector2ui{1, 3}, vector2ui{2, 4}, vector2ui{2, 5}},
 		color::BLUE,
 		color::BLACK);
 
@@ -235,10 +257,10 @@ TEST(bitmap_painter, draw_line)
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2d{1, 1}, point2d{2, 5}, color::BLUE);
+	painter.draw_line(vector2ui{1, 1}, vector2ui{2, 5}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2d>{point2d{1, 1}, point2d{1, 2}, point2d{2, 3}, point2d{2, 4}, point2d{2, 5}},
+		std::vector<vector2ui>{vector2ui{1, 1}, vector2ui{1, 2}, vector2ui{2, 3}, vector2ui{2, 4}, vector2ui{2, 5}},
 		color::BLUE,
 		color::BLACK);
 
@@ -249,10 +271,10 @@ TEST(bitmap_painter, draw_line)
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2d{2, 5}, point2d{0, 0}, color::BLUE);
+	painter.draw_line(vector2ui{2, 5}, vector2ui{0, 0}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2d>{point2d{0, 0}, point2d{0, 1}, point2d{1, 2}, point2d{1, 3}, point2d{2, 4}, point2d{2, 5}},
+		std::vector<vector2ui>{vector2ui{0, 0}, vector2ui{0, 1}, vector2ui{1, 2}, vector2ui{1, 3}, vector2ui{2, 4}, vector2ui{2, 5}},
 		color::BLUE,
 		color::BLACK);
 
@@ -260,10 +282,10 @@ TEST(bitmap_painter, draw_line)
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2d{2, 5}, point2d{1, 1}, color::BLUE);
+	painter.draw_line(vector2ui{2, 5}, vector2ui{1, 1}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2d>{point2d{1, 1}, point2d{1, 2}, point2d{2, 3}, point2d{2, 4}, point2d{2, 5}},
+		std::vector<vector2ui>{vector2ui{1, 1}, vector2ui{1, 2}, vector2ui{2, 3}, vector2ui{2, 4}, vector2ui{2, 5}},
 		color::BLUE,
 		color::BLACK);
 
@@ -271,10 +293,10 @@ TEST(bitmap_painter, draw_line)
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2d{0, 5}, point2d{2, 0}, color::BLUE);
+	painter.draw_line(vector2ui{0, 5}, vector2ui{2, 0}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2d>{point2d{0, 5}, point2d{0, 4}, point2d{1, 3}, point2d{1, 2}, point2d{2, 1}, point2d{2, 0}},
+		std::vector<vector2ui>{vector2ui{0, 5}, vector2ui{0, 4}, vector2ui{1, 3}, vector2ui{1, 2}, vector2ui{2, 1}, vector2ui{2, 0}},
 		color::BLUE,
 		color::BLACK);
 
@@ -282,10 +304,10 @@ TEST(bitmap_painter, draw_line)
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2d{2, 0}, point2d{0, 5}, color::BLUE);
+	painter.draw_line(vector2ui{2, 0}, vector2ui{0, 5}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2d>{point2d{0, 5}, point2d{0, 4}, point2d{1, 3}, point2d{1, 2}, point2d{2, 1}, point2d{2, 0}},
+		std::vector<vector2ui>{vector2ui{0, 5}, vector2ui{0, 4}, vector2ui{1, 3}, vector2ui{1, 2}, vector2ui{2, 1}, vector2ui{2, 0}},
 		color::BLUE,
 		color::BLACK);
 
@@ -293,10 +315,10 @@ TEST(bitmap_painter, draw_line)
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2d{0, 2}, point2d{5, 0}, color::BLUE);
+	painter.draw_line(vector2ui{0, 2}, vector2ui{5, 0}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2d>{point2d{0, 2}, point2d{1, 2}, point2d{2, 1}, point2d{3, 1}, point2d{4, 0}, point2d{5, 0}},
+		std::vector<vector2ui>{vector2ui{0, 2}, vector2ui{1, 2}, vector2ui{2, 1}, vector2ui{3, 1}, vector2ui{4, 0}, vector2ui{5, 0}},
 		color::BLUE,
 		color::BLACK);
 
@@ -304,10 +326,10 @@ TEST(bitmap_painter, draw_line)
 	//
 
 	painter.clear(0);
-	painter.draw_line(point2d{5, 0}, point2d{0, 2}, color::BLUE);
+	painter.draw_line(vector2ui{5, 0}, vector2ui{0, 2}, color::BLUE);
 	assert_pixels_colors(
 		painter,
-		std::vector<point2d>{point2d{0, 2}, point2d{1, 2}, point2d{2, 1}, point2d{3, 1}, point2d{4, 0}, point2d{5, 0}},
+		std::vector<vector2ui>{vector2ui{0, 2}, vector2ui{1, 2}, vector2ui{2, 1}, vector2ui{3, 1}, vector2ui{4, 0}, vector2ui{5, 0}},
 		color::BLUE,
 		color::BLACK);
 }
