@@ -66,10 +66,10 @@ static void assert_obj_texcoords(mesh const& mesh)
 	ASSERT_NE(texcoords_info, nullptr);
 
 	std::vector<vector2f> const correct_texcoords
-		{ vector2{0.0f, 0.0f},
-		  vector2{1.0f, 0.0f},
-		  vector2{1.0f, 1.0f},
-		  vector2(0.0f, 1.0f) };
+		{ vector2f{0.0f, 0.0f},
+		  vector2f{1.0f, 0.0f},
+		  vector2f{1.0f, 1.0f},
+		  vector2f(0.0f, 1.0f) };
 
 	ASSERT_EQ(texcoords_info->get_data().size(), 4);
 	for (size_t i{0}; i < 4; ++i)
