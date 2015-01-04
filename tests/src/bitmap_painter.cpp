@@ -14,6 +14,7 @@ static void assert_pixel_color(bitmap_painter const& painter, vector2ui const& p
 	if (!pixel_color_matches)
 	{
 		int i = 0;
+		(void)i;
 	}
 
 	ASSERT_TRUE(pixel_color_matches);
