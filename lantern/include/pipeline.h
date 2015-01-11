@@ -125,7 +125,7 @@ namespace lantern
 		template<typename TShader>
 		void rasterize_traversal_backtracking(
 			unsigned int const index0, unsigned int const index1, unsigned int const index2,
-			vector4 v0, vector4 v1, vector4 v2,
+			vector4 const& v0, vector4 const& v1, vector4 const& v2,
 			TShader& shader, texture& target_texture);
 
 		/** Checks if point lies on edge's positive halfplane, using top-left rule for points on the edge
@@ -476,7 +476,7 @@ namespace lantern
 	template<typename TShader>
 	void pipeline::rasterize_traversal_backtracking(
 		unsigned int const index0, unsigned int const index1, unsigned int const index2,
-		vector4 v0, vector4 v1, vector4 v2,
+		vector4 const& v0, vector4 const& v1, vector4 const& v2,
 		TShader& shader, texture& target_texture)
 	{
 		// Construct edges equations
@@ -516,46 +516,54 @@ namespace lantern
 		line edge1{e1_from.x, e1_from.y, e1_to.x, e1_to.y};
 		line edge2{e2_from.x, e2_from.y, e2_to.x, e2_to.y};
 
+		bool const edge0_normal_pointing_right = edge0.a > 0;
+		bool const edge1_normal_pointing_right = edge1.a > 0;
+		bool const edge2_normal_pointing_right = edge2.a > 0;
+
 		// Calculate triangle area on screen and inverse it
 		float const triangle_area_inversed = 1.0f / triangle_2d_area(v0.x, v0.y, v1.x, v1.y, v2.x, v2.y);
+
+		vector4 v0_sorted{v0};
+		vector4 v1_sorted{v1};
+		vector4 v2_sorted{v2};
 
 		// Sort vertices by y-coordinate
 		//
 
-		if (v1.y < v0.y)
+		if (v1_sorted.y < v0_sorted.y)
 		{
-			std::swap(v0, v1);
+			std::swap(v0_sorted, v1_sorted);
 		}
 
-		if (v2.y < v1.y)
+		if (v2_sorted.y < v1_sorted.y)
 		{
-			std::swap(v2, v1);
+			std::swap(v2_sorted, v1_sorted);
 		}
 
-		if (v1.y < v0.y)
+		if (v1_sorted.y < v0_sorted.y)
 		{
-			std::swap(v1, v0);
+			std::swap(v1_sorted, v0_sorted);
 		}
 
 		// v0 is top vertex
 		// v2 is bottom vertex
 
-		vector2ui current_pixel{static_cast<unsigned int>(v0.x), static_cast<unsigned int>(v0.y)};
-		vector2f current_pixel_center{std::floor(v0.x) + 0.5f, std::floor(v0.y) + 0.5f};
+		vector2ui current_pixel{static_cast<unsigned int>(v0_sorted.x), static_cast<unsigned int>(v0_sorted.y)};
+		vector2f current_pixel_center{std::floor(v0_sorted.x) + 0.5f, std::floor(v0_sorted.y) + 0.5f};
 
 		float edge0_equation_value{edge0.at(current_pixel_center.x, current_pixel_center.y)};
 		float edge1_equation_value{edge1.at(current_pixel_center.x, current_pixel_center.y)};
 		float edge2_equation_value{edge2.at(current_pixel_center.x, current_pixel_center.y)};
 
-		while (current_pixel_center.y <= v2.y)
+		while (current_pixel_center.y <= v2_sorted.y)
 		{
 			// Backtracking
 			//
 			while (true)
 			{
-				if ((edge0.a > 0 && edge0_equation_value < 0) ||
-					(edge1.a > 0 && edge1_equation_value < 0) ||
-					(edge2.a > 0 && edge2_equation_value < 0))
+				if ((edge0_normal_pointing_right && edge0_equation_value < 0) ||
+					(edge1_normal_pointing_right && edge1_equation_value < 0) ||
+					(edge2_normal_pointing_right && edge2_equation_value < 0))
 				{
 					break;
 				}
@@ -572,9 +580,9 @@ namespace lantern
 			// Moving along the scanline
 			while (true)
 			{
-				if ((edge0.a < 0 && edge0_equation_value < 0) ||
-					(edge1.a < 0 && edge1_equation_value < 0) ||
-					(edge2.a < 0 && edge2_equation_value < 0))
+				if ((!edge0_normal_pointing_right && edge0_equation_value < 0) ||
+					(!edge1_normal_pointing_right && edge1_equation_value < 0) ||
+					(!edge2_normal_pointing_right && edge2_equation_value < 0))
 				{
 					break;
 				}
