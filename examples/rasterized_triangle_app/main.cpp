@@ -95,7 +95,7 @@ void rasterized_color_triangle_app::on_key_down(SDL_Keysym const key)
 	}
 	else if (key.sym == SDLK_e)
 	{
-		m_camera.pitch(-rotation_speed);
+		m_camera.yaw(rotation_speed);
 	}
 
 	// Update model-view-projection according to camera changes
