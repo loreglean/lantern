@@ -1,36 +1,37 @@
 #include "app.h"
-#include "camera.h"
 #include "obj_import.h"
-#include "pipeline.h"
+#include "camera.h"
+#include "color_shader.h"
 
 using namespace lantern;
 
-class rotating_car_app : public app
+/** Draws simple triangle with interpolated color attribute */
+class rasterized_color_triangle_app : public app
 {
 public:
-	rotating_car_app(unsigned int const width, unsigned int const height);
+	rasterized_color_triangle_app(unsigned int const width, unsigned int const height);
 
 protected:
-	void frame(float delta_since_last_frame) override;
-	void on_key_down(SDL_Keysym key) override;
+	void frame(float const delta_since_last_frame) override;
+	void on_key_down(SDL_Keysym const key) override;
 
 private:
+	/** Updates view-model-projection matrix and gives it to the shader */
 	void update_shader_mvp();
 
-	vector3 m_car_position;
-	vector3 m_car_rotation;
-	mesh m_car_mesh;
+	vector3 const m_triangle_position;
+	vector3 const m_triangle_rotation;
+	mesh m_triangle_mesh;
 
 	camera m_camera;
-	color_shader m_shader;
-	pipeline m_pipeline;
+	color_shader m_color_shader;
 };
 
-rotating_car_app::rotating_car_app(unsigned int const width, unsigned int const height)
+rasterized_color_triangle_app::rasterized_color_triangle_app(unsigned int const width, unsigned int const height)
 	: app(width, height),
-	  m_car_position{0.0f, 0.0f, 5.0f},
-	  m_car_rotation{static_cast<float>(M_PI) / 8.0f, static_cast<float>(M_PI), 0.0f},
-	  m_car_mesh{load_mesh_from_obj("resources/car.obj", false, false)},
+	  m_triangle_position{0.0f, 0.0f, 1.5f},
+	  m_triangle_rotation{0.0f, 0.0f, 0.0f},
+	  m_triangle_mesh{load_mesh_from_obj("resources/triangle.obj", false, false)},
 	  m_camera{
 		  vector3::ZERO,
 		  vector3::Z_UNIT,
@@ -43,37 +44,25 @@ rotating_car_app::rotating_car_app(unsigned int const width, unsigned int const 
 	// Update model-view-projection matrix for the first time
 	update_shader_mvp();
 
-	// Create colors attribute
+	// Add color attribute to triangle mesh
 	//
-	std::vector<color> colors{ color{255, 255, 255} };
-	std::vector<unsigned int> colors_indices;
-	for (size_t i = 0; i < m_car_mesh.get_vertices().size(); ++i)
-	{
-		// All vertices use the same color
-		colors_indices.push_back(0);
-	}
-	mesh_attribute_info<color> color{"colors", colors, colors_indices};
-	m_car_mesh.get_color_attributes_storage().push_back(color);
+	std::vector<color> const colors{color::GREEN, color::RED, color::BLUE};
+	std::vector<unsigned int> const indices{0, 1, 2};
+	mesh_attribute_info<color> const color_info{VERTEX_COLOR_ATTR_ID, colors, indices};
+	m_triangle_mesh.get_color_attributes().push_back(color_info);
+};
 
-	// Bind data to pipeline
-	//
-	m_pipeline.bind_vertices(&m_car_mesh.get_vertices());
-	m_pipeline.bind_indices(&m_car_mesh.get_indices());
-	m_pipeline.bind_shader(&m_shader);
-	m_pipeline.bind_color_attribute(&m_car_mesh.get_color_attributes_storage()[0], m_shader.get_color_attr_bind_point());
-}
-
-void rotating_car_app::frame(float delta_since_last_frame)
+void rasterized_color_triangle_app::frame(float const delta_since_last_frame)
 {
-	// Draw
-	m_pipeline.draw(get_painter());
+	// Draw the triangle
+	get_pipeline().draw(m_triangle_mesh, m_color_shader, get_target_texture());
 }
 
-void rotating_car_app::on_key_down(SDL_Keysym key)
+void rasterized_color_triangle_app::on_key_down(SDL_Keysym const key)
 {
 	app::on_key_down(key);
 
-	float const moving_speed{0.1f};
+	float const moving_speed{0.01f};
 	float const rotation_speed{0.05f};
 
 	if (key.sym == SDLK_a)
@@ -106,20 +95,20 @@ void rotating_car_app::on_key_down(SDL_Keysym key)
 	}
 	else if (key.sym == SDLK_e)
 	{
-		m_camera.yaw(rotation_speed);
+		m_camera.pitch(-rotation_speed);
 	}
 
 	// Update model-view-projection according to camera changes
 	update_shader_mvp();
 }
 
-void rotating_car_app::update_shader_mvp()
+void rasterized_color_triangle_app::update_shader_mvp()
 {
 	matrix4x4 const local_to_world_transform{
-		matrix4x4::rotation_around_x_axis(m_car_rotation.x) *
-		matrix4x4::rotation_around_y_axis(m_car_rotation.y) *
-		matrix4x4::rotation_around_z_axis(m_car_rotation.z) *
-		matrix4x4::translation(m_car_position.x, m_car_position.y, m_car_position.z)};
+		matrix4x4::rotation_around_x_axis(m_triangle_rotation.x) *
+		matrix4x4::rotation_around_y_axis(m_triangle_rotation.y) *
+		matrix4x4::rotation_around_z_axis(m_triangle_rotation.z) *
+		matrix4x4::translation(m_triangle_position.x, m_triangle_position.y, m_triangle_position.z)};
 
 	matrix4x4 const camera_rotation{
 		m_camera.get_right().x, m_camera.get_up().x, m_camera.get_forward().x, 0.0f,
@@ -145,11 +134,11 @@ void rotating_car_app::update_shader_mvp()
 	matrix4x4 const local_to_clip_transform{
 		local_to_world_transform * world_to_camera_transform * camera_to_clip_transform};
 
-	m_shader.set_mvp_matrix(local_to_clip_transform);
+	m_color_shader.set_mvp_matrix(local_to_clip_transform);
 }
 
 int main(int argc, char* argv[])
 {
-	return rotating_car_app{640, 480}.start();
+	return rasterized_color_triangle_app{640, 480}.start();
 }
 

@@ -1,4 +1,4 @@
-#include "common.h"
+#include "assert_utils.h"
 #include "obj_import.h"
 
 using namespace lantern;
@@ -18,7 +18,7 @@ static void assert_obj_vertices(mesh const& mesh)
 		  vector3{1.0f, 1.0f, 0.0f},
 		  vector3{1.0f, 1.0f, 1.0f} };
 
-	std::vector<vector3> const& vertices{mesh.get_vertices()};
+	std::vector<vector3> const& vertices = mesh.get_vertices();
 
 	ASSERT_EQ(vertices.size(), 8);
 	for (size_t i{0}; i < 8; ++i)
@@ -29,7 +29,7 @@ static void assert_obj_vertices(mesh const& mesh)
 	// Test indices
 	//
 
-	std::vector<unsigned int> const& indices{mesh.get_indices()};
+	std::vector<unsigned int> const& indices = mesh.get_indices();
 
 	std::vector<unsigned int> const correct_indices
 		{ 0, 6, 4,
@@ -55,21 +55,22 @@ static void assert_obj_vertices(mesh const& mesh)
 static void assert_obj_texcoords(mesh const& mesh)
 {
 	mesh_attribute_info<vector2f> const* texcoords_info{nullptr};
-	for (size_t i{0}; i < mesh.get_vector2_attributes_storage().size(); ++i)
+	for (size_t i{0}; i < mesh.get_vector2f_attributes().size(); ++i)
 	{
-		mesh_attribute_info<vector2f> const& attribute_info = mesh.get_vector2_attributes_storage()[i];
-		if (attribute_info.get_id() == "texcoords")
+		mesh_attribute_info<vector2f> const& attribute_info = mesh.get_vector2f_attributes()[i];
+		if (attribute_info.get_id() == TEXCOORD_ATTR_ID)
 		{
 			texcoords_info = &attribute_info;
 		}
 	}
+
 	ASSERT_NE(texcoords_info, nullptr);
 
 	std::vector<vector2f> const correct_texcoords
-		{ vector2{0.0f, 0.0f},
-		  vector2{1.0f, 0.0f},
-		  vector2{1.0f, 1.0f},
-		  vector2(0.0f, 1.0f) };
+		{ vector2f{0.0f, 0.0f},
+		  vector2f{1.0f, 0.0f},
+		  vector2f{1.0f, 1.0f},
+		  vector2f(0.0f, 1.0f) };
 
 	ASSERT_EQ(texcoords_info->get_data().size(), 4);
 	for (size_t i{0}; i < 4; ++i)
@@ -101,10 +102,10 @@ static void assert_obj_texcoords(mesh const& mesh)
 void assert_obj_normals(mesh const& mesh)
 {
 	mesh_attribute_info<vector3> const* normals_info{nullptr};
-	for (size_t i{0}; i < mesh.get_vector3_attributes_storage().size(); ++i)
+	for (size_t i{0}; i < mesh.get_vector3_attributes().size(); ++i)
 	{
-		mesh_attribute_info<vector3> const& attribute_info = mesh.get_vector3_attributes_storage()[i];
-		if (attribute_info.get_id() == "normals")
+		mesh_attribute_info<vector3> const& attribute_info = mesh.get_vector3_attributes()[i];
+		if (attribute_info.get_id() == NORMAL_ATTR_ID)
 		{
 			normals_info = &attribute_info;
 		}

@@ -5,9 +5,6 @@
 
 using namespace lantern;
 
-// obj_reader
-//
-
 void obj_reader::read(std::string const& path)
 {
 	// Open file
@@ -267,14 +264,14 @@ mesh obj_mesh_importer::get_mesh() const
 
 	if (m_read_texcoords)
 	{
-		mesh_attribute_info<vector2f> texcoords_info{"texcoords", m_texcoords, m_texcoords_indices};
-		m.get_vector2_attributes_storage().push_back(texcoords_info);
-	}
+		mesh_attribute_info<vector2f> texcoords_info{TEXCOORD_ATTR_ID, m_texcoords, m_texcoords_indices};
+		m.get_vector2f_attributes().push_back(texcoords_info);
+	};
 
 	if (m_read_normals)
 	{
-		mesh_attribute_info<vector3> normals_info{"normals", m_normals, m_normals_indices};
-		m.get_vector3_attributes_storage().push_back(normals_info);
+		mesh_attribute_info<vector3> normals_info{NORMAL_ATTR_ID, m_normals, m_normals_indices};
+		m.get_vector3_attributes().push_back(normals_info);
 	}
 
 	return m;

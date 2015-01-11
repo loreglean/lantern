@@ -1,5 +1,4 @@
-#include "common.h"
-#include "vector4.h"
+#include "assert_utils.h"
 
 using namespace lantern;
 

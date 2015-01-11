@@ -13,13 +13,13 @@ matrix3x3::matrix3x3()
 
 }
 
-matrix3x3::matrix3x3(float const m[3][3])
+matrix3x3::matrix3x3(float const array[3][3])
 {
 	for (size_t i{0}; i < 3; ++i)
-    {
+	{
 		for (size_t j{0}; j < 3; ++j)
-        {
-			values[i][j] = m[i][j];
+		{
+			values[i][j] = array[i][j];
 		}
 	}
 }
@@ -44,21 +44,21 @@ matrix3x3::matrix3x3(
 
 matrix3x3 matrix3x3::operator*(matrix3x3 const& m) const
 {
-    matrix3x3 result;
+	matrix3x3 result;
 
-    for (size_t i{0}; i < 3; ++i)
-    {
-        for (size_t j{0}; j < 3; ++j)
-        {
-            result.values[i][j] = 0.0f;
-            for (size_t k{0}; k < 3; ++k)
-            {
-                result.values[i][j] += values[i][k] * m.values[k][j];
-            }
-        }
-    }
+	for (size_t i{0}; i < 3; ++i)
+	{
+		for (size_t j{0}; j < 3; ++j)
+		{
+			result.values[i][j] = 0.0f;
+			for (size_t k{0}; k < 3; ++k)
+			{
+				result.values[i][j] += values[i][k] * m.values[k][j];
+			}
+		}
+	}
 
-    return result;
+	return result;
 }
 
 matrix3x3 matrix3x3::scale(float const x, float const y, float const z)

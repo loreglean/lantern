@@ -83,7 +83,7 @@ void camera::establish_coordinate_system(vector3 const& fake_up)
 	m_up = m_forward.cross(m_right).normalized();
 }
 
-void camera::move_right(float distance)
+void camera::move_right(float const distance)
 {
 	m_position += m_right * distance;
 }

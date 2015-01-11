@@ -18,32 +18,42 @@ std::vector<unsigned int> const& mesh::get_indices() const
 	return m_indices;
 }
 
-std::vector<mesh_attribute_info<color>> const& mesh::get_color_attributes_storage() const
+std::vector<mesh_attribute_info<color>>& mesh::get_color_attributes()
 {
 	return m_color_attributes;
 }
 
-std::vector<mesh_attribute_info<color>>& mesh::get_color_attributes_storage()
+std::vector<mesh_attribute_info<color>> const& mesh::get_color_attributes() const
 {
 	return m_color_attributes;
 }
 
-std::vector<mesh_attribute_info<vector2f>> const& mesh::get_vector2_attributes_storage() const
+std::vector<mesh_attribute_info<float>>& mesh::get_float_attributes()
 {
-	return m_vector2_attributes;
+	return m_float_attributes;
 }
 
-std::vector<mesh_attribute_info<vector2f>>& mesh::get_vector2_attributes_storage()
+std::vector<mesh_attribute_info<float>> const& mesh::get_float_attributes() const
 {
-	return m_vector2_attributes;
+	return m_float_attributes;
 }
 
-std::vector<mesh_attribute_info<vector3>> const& mesh::get_vector3_attributes_storage() const
+std::vector<mesh_attribute_info<vector2f>>& mesh::get_vector2f_attributes()
+{
+	return m_vector2f_attributes;
+}
+
+std::vector<mesh_attribute_info<vector2f>> const& mesh::get_vector2f_attributes() const
+{
+	return m_vector2f_attributes;
+}
+
+std::vector<mesh_attribute_info<vector3>>& mesh::get_vector3_attributes()
 {
 	return m_vector3_attributes;
 }
 
-std::vector<mesh_attribute_info<vector3>>& mesh::get_vector3_attributes_storage()
+std::vector<mesh_attribute_info<vector3>> const& mesh::get_vector3_attributes() const
 {
 	return m_vector3_attributes;
 }

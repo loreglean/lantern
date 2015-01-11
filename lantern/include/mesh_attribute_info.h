@@ -1,60 +1,83 @@
 #ifndef LANTERN_MESH_ATTRIBUTE_INFO
 #define LANTERN_MESH_ATTRIBUTE_INFO
 
-#include <string>
 #include <vector>
 
 namespace lantern
 {
-	/** Class representing mesh attribute info, like texcoords, colors, normals etc.
-	* Those values will be interpolated by pipeline and passed to a shader during rendering.
-	*/
-	template<typename T>
+	/** Holds all the information associated with mesh attribute */
+	template<typename TAttr>
 	class mesh_attribute_info final
 	{
 	public:
-		mesh_attribute_info(std::string id, std::vector<T> data, std::vector<unsigned int> indices);
-
-		/** Gets attribute id.
+		/** Constructs attribute info
+		* @param attribute_id Attribute ID, should be unique
+		* @param data Attribute data
+		* @param indices Attribute indices
 		*/
-		std::string const& get_id() const;
+		mesh_attribute_info(
+			unsigned int const attribute_id,
+			std::vector<TAttr> const data,
+			std::vector<unsigned int> const indices);
 
-		/** Gets attribute data.
+		/** Gets attribute ID
+		* @returns Attribute ID value
 		*/
-		std::vector<T> const& get_data() const;
+		unsigned int get_id() const;
 
-		/** Gets attributes indices.
-		* Those values define which data value applies for vertex with corresponding index.
+		/** Gets attribute data
+		* @returns Attribute data
+		*/
+		std::vector<TAttr> const& get_data() const;
+
+		/** Gets attribute indices
+		* @returns Indices
 		*/
 		std::vector<unsigned int> const& get_indices() const;
 
 	private:
-		std::string const m_id;
-		std::vector<T> const m_data;
+		/** Attribute id */
+		unsigned int const m_id;
+
+		/** Attribute data */
+		std::vector<TAttr> const m_data;
+
+		/** Attribute indices */
 		std::vector<unsigned int> const m_indices;
 	};
 
-	template<typename T>
-	mesh_attribute_info<T>::mesh_attribute_info(std::string id, std::vector<T> data, std::vector<unsigned int> indices)
-			: m_id(id), m_data(data), m_indices(indices)
+	// Predefined attributes ids
+	//
+	unsigned int const VERTEX_COLOR_ATTR_ID = 0;
+	unsigned int const TEXCOORD_ATTR_ID = 1;
+	unsigned int const NORMAL_ATTR_ID = 2;
+
+	template<typename TAttr>
+	mesh_attribute_info<TAttr>::mesh_attribute_info(
+		unsigned int const attribute_id,
+		std::vector<TAttr> const data,
+		std::vector<unsigned int> const indices)
+		: m_id(attribute_id),
+		  m_data(data),
+		  m_indices(indices)
 	{
 
 	}
 
-	template<typename T>
-	std::string const& mesh_attribute_info<T>::get_id() const
+	template<typename TAttr>
+	unsigned int mesh_attribute_info<TAttr>::get_id() const
 	{
 		return m_id;
 	}
 
-	template<typename T>
-	std::vector<T> const& mesh_attribute_info<T>::get_data() const
+	template<typename TAttr>
+	std::vector<TAttr> const& mesh_attribute_info<TAttr>::get_data() const
 	{
 		return m_data;
 	}
 
-	template<typename T>
-	std::vector<unsigned int> const& mesh_attribute_info<T>::get_indices() const
+	template<typename TAttr>
+	std::vector<unsigned int> const& mesh_attribute_info<TAttr>::get_indices() const
 	{
 		return m_indices;
 	}

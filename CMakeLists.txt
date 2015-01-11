@@ -19,7 +19,7 @@ if (MSVC)
     add_definitions(-D_USE_MATH_DEFINES)
 else()
     set(COMPILER_FLAGS
-        "-std=gnu++0x -Wall -Werror -Wno-comment")
+        "-std=gnu++0x -Wall -Wno-comment")
 endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
@@ -27,34 +27,35 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
 
 # Library target ============================
 set(LANTERN_SOURCES
-    lantern/src/vector3.cpp
-    lantern/src/vector4.cpp
+    lantern/src/app.cpp
+    lantern/src/camera.cpp
+    lantern/src/color.cpp
     lantern/src/matrix3x3.cpp
     lantern/src/matrix4x4.cpp
-    lantern/src/camera.cpp
-    lantern/src/app.cpp
-    lantern/src/color.cpp
-    lantern/src/bitmap_painter.cpp
     lantern/src/mesh.cpp
     lantern/src/obj_import.cpp
-    lantern/src/shader.cpp
-    lantern/src/pipeline.cpp)
+    lantern/src/pipeline.cpp
+    lantern/src/texture.cpp
+    lantern/src/vector3.cpp
+    lantern/src/vector4.cpp)
 
 set(LANTERN_HEADERS
-    lantern/include/vector2.h
-    lantern/include/vector3.h
-    lantern/include/vector4.h
+    lantern/include/app.h
+    lantern/include/camera.h
+    lantern/include/color.h
+    lantern/include/color_shader.h
+    lantern/include/geometry_utils.h
     lantern/include/matrix3x3.h
     lantern/include/matrix4x4.h
-    lantern/include/color.h
-    lantern/include/camera.h
-    lantern/include/app.h
-    lantern/include/bitmap_painter.h
-    lantern/include/mesh_attribute_info.h
     lantern/include/mesh.h
+    lantern/include/mesh_attribute_info.h
     lantern/include/obj_import.h
+    lantern/include/pipeline.h
     lantern/include/shader.h
-    lantern/include/pipeline.h)
+    lantern/include/texture.h
+    lantern/include/vector2.h
+    lantern/include/vector3.h
+    lantern/include/vector4.h)
 
 add_library(
     lantern STATIC
@@ -72,34 +73,34 @@ set_target_properties(
 # Gooogle C++ testing framework target ======
 if(DEFINED ENV{GTEST_ROOT})
 
-string(REPLACE "\\" "/" GTEST_SOURCES "$ENV{GTEST_ROOT}/src/gtest-all.cc")
+    string(REPLACE "\\" "/" GTEST_SOURCES "$ENV{GTEST_ROOT}/src/gtest-all.cc")
 
-add_library(
-    gtest STATIC
-    ${GTEST_SOURCES})
+    add_library(
+        gtest STATIC
+        ${GTEST_SOURCES})
 
-target_include_directories(gtest PRIVATE $ENV{GTEST_ROOT}/include $ENV{GTEST_ROOT})
+    target_include_directories(gtest PRIVATE $ENV{GTEST_ROOT}/include $ENV{GTEST_ROOT})
 
-if(UNIX)
-    target_link_libraries(gtest pthread)
-endif()
+    if(UNIX)
+        target_link_libraries(gtest pthread)
+    endif()
 
 endif()
 # ===========================================
 
 # Tests target ==============================
 set(TESTS_SOURCES
+    tests/src/camera.cpp
     tests/src/main.cpp
-    tests/src/vector3.cpp
-    tests/src/vector4.cpp
     tests/src/matrix3x3.cpp
     tests/src/matrix4x4.cpp
-    tests/src/camera.cpp
-    tests/src/bitmap_painter.cpp
-    tests/src/obj_import.cpp)
+    tests/src/obj_import.cpp
+    tests/src/pipeline.cpp
+    tests/src/vector3.cpp
+    tests/src/vector4.cpp)
 
 set(TESTS_HEADERS
-    tests/include/common.h)
+    tests/include/assert_utils.h)
 
 add_executable(
     tests
@@ -149,31 +150,31 @@ if (WIN32)
 endif()
 # ===========================================
 
-#Rotating car app target ==========================
+# Rasterized triangle app target ======
 add_executable(
-    rotating_car_app
-    examples/rotating_car_app/main.cpp)
+    rasterized_triangle_app
+    examples/rasterized_triangle_app/main.cpp)
 
 set_target_properties(
-    rotating_car_app PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples/rotating_car_app")
+    rasterized_triangle_app PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples/rasterized_triangle_app")
 
-target_include_directories(rotating_car_app PRIVATE lantern/include)
-target_include_directories(rotating_car_app PRIVATE ${SDL2_INCLUDE_DIR})
+target_include_directories(rasterized_triangle_app PRIVATE lantern/include)
+target_include_directories(rasterized_triangle_app PRIVATE ${SDL2_INCLUDE_DIR})
 
-target_link_libraries(rotating_car_app lantern ${SDL2_LIBRARY})
+target_link_libraries(rasterized_triangle_app lantern ${SDL2_LIBRARY})
 
 if (WIN32)
     add_custom_command(
-        TARGET rotating_car_app
+        TARGET rasterized_triangle_app
         POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
         "${SDL2_DLL}"
-        $<TARGET_FILE_DIR:rotating_car_app>)
+        $<TARGET_FILE_DIR:rasterized_triangle_app>)
 endif()
 
 add_custom_command(
-    TARGET rotating_car_app POST_BUILD
+    TARGET rasterized_triangle_app POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-    "${PROJECT_SOURCE_DIR}/examples/rotating_car_app/resources"
-    $<TARGET_FILE_DIR:rotating_car_app>/resources)
+    "${PROJECT_SOURCE_DIR}/examples/rasterized_triangle_app/resources"
+    $<TARGET_FILE_DIR:rasterized_triangle_app>/resources)
 # ===========================================

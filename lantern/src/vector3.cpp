@@ -114,17 +114,17 @@ float vector3::distance_to(vector3 const& p) const
 	return std::sqrt(dist_x * dist_x + dist_y * dist_y + dist_z * dist_z);
 }
 
-float vector3::angle_with(vector3 const &v) const
+float vector3::angle_with(vector3 const& v) const
 {
 	return std::acos(dot(v) / (length() * v.length()));
 }
 
-vector3 vector3::projection_on(vector3 const &v) const
+vector3 vector3::projection_on(vector3 const& v) const
 {
 	return v.normalized() * (dot(v) / v.length());
 }
 
-vector3 vector3::perpendicular_on(vector3 const &v) const
+vector3 vector3::perpendicular_on(vector3 const& v) const
 {
 	return (*this) - projection_on(v);
 }

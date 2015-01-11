@@ -5,6 +5,7 @@
 
 namespace lantern
 {
+	/** Simple 2-dimensional vector */
 	template<typename T>
 	class vector2 final
 	{
@@ -16,6 +17,8 @@ namespace lantern
 		vector2(T const x, T const y);
 
 		bool operator==(vector2<T> const& other) const;
+		vector2 operator*(float const s) const;
+		vector2 operator+(vector2 const& v) const;
 	};
 
 	template<typename T>
@@ -36,6 +39,18 @@ namespace lantern
 	{
 		return ((x == other.x) && (y == other.y));
 	}
+
+	template<typename T>
+	vector2<T> vector2<T>::operator*(float const s) const
+	{
+		return vector2<T>{x * s, y * s};
+	}
+
+	template<typename T>
+	vector2<T> vector2<T>::operator+(vector2<T> const& v) const
+{
+	return vector2<T>{x + v.x, y + v.y};
+}
 
 	typedef vector2<float> vector2f;
 	typedef vector2<unsigned int> vector2ui;

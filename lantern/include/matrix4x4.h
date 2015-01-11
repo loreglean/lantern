@@ -9,15 +9,23 @@ namespace lantern
 {
 	/** Class representing 4x4 matrix.
 	* Used to represent 3D affine transformations.
-	* Coordinate system assumed to be left-handed. Values are accessed as [row][column].
+	* Coordinate system assumed to be left-handed
 	*/
 	class matrix4x4 final
 	{
 	public:
+		/** Data array, [row][column] */
 		float values[4][4];
 
+		/** Constructs matrix with zero values */
 		matrix4x4();
+
+		/** Constructs matrix using given array
+		* @param array Matrix values array
+		*/
 		matrix4x4(float const m[4][4]);
+
+		/** Constructs matrix with specified values */
 		matrix4x4(
 			float const m00, float const m01, float const m02, float const m03,
 			float const m10, float const m11, float const m12, float const m13,
@@ -26,20 +34,57 @@ namespace lantern
 
 		matrix4x4 operator*(matrix4x4 const& m) const;
 
+		/** Generates translation matrix
+		* @param x Distance along x-axis
+		* @param y Distance along y-axis
+		* @param z Distance along z-axis
+		*/
 		static matrix4x4 translation(float const x, float const y, float const z);
+
+		/** Generates scale matrix
+		* @param x Scale along x-axis
+		* @param y Scale along y-axis
+		* @param z Scale along z-axis
+		*/
 		static matrix4x4 scale(float const x, float const y, float const z);
+
+		/** Generates uniform scale matrix
+		* @param s Scale along each axis
+		*/
 		static matrix4x4 uniform_scale(float const s);
+
+		/** Generates rotation around x-axis
+		* @param radians Radians to rotate for
+		*/
 		static matrix4x4 rotation_around_x_axis(float const radians);
+
+		/** Generates rotation around y-axis
+		* @param radians Radians to rotate for
+		*/
 		static matrix4x4 rotation_around_y_axis(float const radians);
+
+		/** Generates rotation around z-axis
+		* @param radians Radians to rotate for
+		*/
 		static matrix4x4 rotation_around_z_axis(float const radians);
+
+		/** Generates rotation around specified axis
+		* @param axis Axis to rotate around
+		* @param radians Radians to rotate for
+		*/
 		static matrix4x4 rotation_around_axis(vector3 const& axis, float const radians);
+
+		/** Generates matrix that transforms point from camera space to homogeneous clip space
+		* @param hfov Horizontal field of view
+		* @param vfov Vertical field of view
+		* @param near Near plane z-coordinate
+		* @param far Far plane z-coordinate
+		*/
 		static matrix4x4 clip_space(float const hfov, float const vfov, float const near, float const far);
 
 		static const matrix4x4 IDENTITY;
 	};
 
-	// Inlined due to huge amount of invocations
-	//
 	inline vector4 operator*(vector4 const& v, matrix4x4 const& m)
 	{
 		return vector4{
