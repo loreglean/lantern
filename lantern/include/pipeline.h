@@ -903,7 +903,7 @@ namespace lantern
 
 			start_direction_is_right = true;
 			is_moving_right = true;
-			zigzag_x_index = current_pixel.x;
+			zigzag_x_index = current_pixel.x - 1;
 		}
 	};
 
