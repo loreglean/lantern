@@ -4,7 +4,7 @@ using namespace lantern;
 
 pipeline::pipeline()
 {
-	set_rasterization_algorithm(rasterization_algorithm_option::traversal_backtracking);
+	set_rasterization_algorithm(rasterization_algorithm_option::traversal_zigzag);
 	set_face_culling(face_culling_option::counter_clockwise);
 	set_fill_mode(fill_mode_option::solid);
 }
