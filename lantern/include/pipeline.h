@@ -39,7 +39,10 @@ namespace lantern
 	enum class rasterization_algorithm_option
 	{
 		/** Rasterization using traversal algorithm with axis-aligned bounding box */
-		traversal_aabb
+		traversal_aabb,
+
+		/** Rasterization using traversal alghorithm with backtracking */
+		traversal_backtracking
 	};
 
 	enum class fill_mode_option
@@ -107,6 +110,22 @@ namespace lantern
 		void rasterize_traversal_aabb(
 			unsigned int const index0, unsigned int const index1, unsigned int const index2,
 			vector4 const& v0, vector4 const& v1, vector4 const& v2,
+			TShader& shader, texture& target_texture);
+
+		/** Rasterizes triangle using current pipeline setup using traversal backtracking algorithm
+		* @param index0 First triangle vertex index in a mesh
+		* @param index1 Second triangle vertex index in a mesh
+		* @param index2 Third triangle vertex index in a mesh
+		* @param v0 First triangle vertex
+		* @param v1 Second triangle vertex
+		* @param v2 Third triangle vertex
+		* @param shader Shader to use
+		* @param target_texture Texture to draw into
+		*/
+		template<typename TShader>
+		void rasterize_traversal_backtracking(
+			unsigned int const index0, unsigned int const index1, unsigned int const index2,
+			vector4 v0, vector4 v1, vector4 v2,
 			TShader& shader, texture& target_texture);
 
 		/** Checks if point lies on edge's positive halfplane, using top-left rule for points on the edge
@@ -282,6 +301,13 @@ namespace lantern
 							v0, v1, v2,
 							shader, target_texture);
 						break;
+
+					case rasterization_algorithm_option::traversal_backtracking:
+						rasterize_traversal_backtracking(
+							index0, index1, index2,
+							v0, v1, v2,
+							shader, target_texture);
+						break;
 				}
 			}
 		}
@@ -438,14 +464,178 @@ namespace lantern
 					//
 					vector2ui point_ui{x, y};
 					target_texture.set_pixel_color(point_ui, shader.process_pixel(point_ui));
-				};
+				}
 
 				edge0_equation_value += edge0.a;
 				edge1_equation_value += edge1.a;
 				edge2_equation_value += edge2.a;
-			};
-		};
-	};
+			}
+		}
+	}
+
+	template<typename TShader>
+	void pipeline::rasterize_traversal_backtracking(
+		unsigned int const index0, unsigned int const index1, unsigned int const index2,
+		vector4 v0, vector4 v1, vector4 v2,
+		TShader& shader, texture& target_texture)
+	{
+		// Construct edges equations
+		//
+
+		vector2f e0_from, e0_to;
+		vector2f e1_from, e1_to;
+		vector2f e2_from, e2_to;
+
+		// Order of points depends of wind order
+		// Because this order defines edge's normal direction
+		//
+		if (m_face_culling == face_culling_option::clockwise)
+		{
+			e0_from = vector2f{v0.x, v0.y};
+			e0_to = vector2f{v1.x, v1.y};
+
+			e1_from = vector2f{v1.x, v1.y};
+			e1_to = vector2f{v2.x, v2.y};
+
+			e2_from = vector2f{v2.x, v2.y};
+			e2_to = vector2f{v0.x, v0.y};
+		}
+		else
+		{
+			e0_from = vector2f{v1.x, v1.y};
+			e0_to = vector2f{v0.x, v0.y};
+
+			e1_from = vector2f{v2.x, v2.y};
+			e1_to = vector2f{v1.x, v1.y};
+
+			e2_from = vector2f{v0.x, v0.y};
+			e2_to = vector2f{v2.x, v2.y};
+		}
+
+		line edge0{e0_from.x, e0_from.y, e0_to.x, e0_to.y};
+		line edge1{e1_from.x, e1_from.y, e1_to.x, e1_to.y};
+		line edge2{e2_from.x, e2_from.y, e2_to.x, e2_to.y};
+
+		// Calculate triangle area on screen and inverse it
+		float const triangle_area_inversed = 1.0f / triangle_2d_area(v0.x, v0.y, v1.x, v1.y, v2.x, v2.y);
+
+		// Sort vertices by y-coordinate
+		//
+
+		if (v1.y < v0.y)
+		{
+			std::swap(v0, v1);
+		}
+
+		if (v2.y < v1.y)
+		{
+			std::swap(v2, v1);
+		}
+
+		if (v1.y < v0.y)
+		{
+			std::swap(v1, v0);
+		}
+
+		// v0 is top vertex
+		// v2 is bottom vertex
+
+		vector2ui current_pixel{static_cast<unsigned int>(v0.x), static_cast<unsigned int>(v0.y)};
+		vector2f current_pixel_center{std::floor(v0.x) + 0.5f, std::floor(v0.y) + 0.5f};
+
+		float edge0_equation_value{edge0.at(current_pixel_center.x, current_pixel_center.y)};
+		float edge1_equation_value{edge1.at(current_pixel_center.x, current_pixel_center.y)};
+		float edge2_equation_value{edge2.at(current_pixel_center.x, current_pixel_center.y)};
+
+		while (current_pixel_center.y <= v2.y)
+		{
+			// Backtracking
+			//
+			while (true)
+			{
+				if ((edge0.a > 0 && edge0_equation_value < 0) ||
+					(edge1.a > 0 && edge1_equation_value < 0) ||
+					(edge2.a > 0 && edge2_equation_value < 0))
+				{
+					break;
+				}
+
+				current_pixel.x -= 1;
+				current_pixel_center.x -= 1.0f;
+
+				edge0_equation_value -= edge0.a;
+				edge1_equation_value -= edge1.a;
+				edge2_equation_value -= edge2.a;
+
+			}
+
+			// Moving along the scanline
+			while (true)
+			{
+				if ((edge0.a < 0 && edge0_equation_value < 0) ||
+					(edge1.a < 0 && edge1_equation_value < 0) ||
+					(edge2.a < 0 && edge2_equation_value < 0))
+				{
+					break;
+				}
+
+				if (is_point_on_positive_halfplane_top_left(edge0_equation_value, edge0.a, edge0.b) &&
+					is_point_on_positive_halfplane_top_left(edge1_equation_value, edge1.a, edge1.b) &&
+					is_point_on_positive_halfplane_top_left(edge2_equation_value, edge2.a, edge2.b))
+				{
+					float const area01{triangle_2d_area(v0.x, v0.y, v1.x, v1.y, current_pixel_center.x, current_pixel_center.y)};
+					float const area12{triangle_2d_area(v1.x, v1.y, v2.x, v2.y, current_pixel_center.x, current_pixel_center.y)};
+
+					// Calculate barycentric coordinates
+					//
+					float const b2{area01 * triangle_area_inversed};
+					float const b0{area12 * triangle_area_inversed};
+					float const b1{1.0f - b0 - b2};
+
+					// Process different attributes
+					//
+
+					set_bind_points_values_from_barycentric<color>(
+						m_binded_color_attributes,
+						index0, index1, index2,
+						b0, b1, b2);
+
+					set_bind_points_values_from_barycentric<float>(
+						m_binded_float_attributes,
+						index0, index1, index2,
+						b0, b1, b2);
+
+					set_bind_points_values_from_barycentric<vector2f>(
+						m_binded_vector2f_attributes,
+						index0, index1, index2,
+						b0, b1, b2);
+
+					set_bind_points_values_from_barycentric<vector3>(
+						m_binded_vector3_attributes,
+						index0, index1, index2,
+						b0, b1, b2);
+
+					// Pass pixel to shader
+					//
+					target_texture.set_pixel_color(current_pixel, shader.process_pixel(current_pixel));
+				}
+
+				current_pixel.x += 1;
+				current_pixel_center.x += 1.0f;
+
+				edge0_equation_value += edge0.a;
+				edge1_equation_value += edge1.a;
+				edge2_equation_value += edge2.a;
+			}
+
+			current_pixel.y += 1;
+			current_pixel_center.y += 1.0f;
+
+			edge0_equation_value += edge0.b;
+			edge1_equation_value += edge1.b;
+			edge2_equation_value += edge2.b;
+		}
+	}
 
 	inline bool pipeline::is_point_on_positive_halfplane_top_left(
 		float const edge_equation_value, float const edge_equation_a, float const edge_equation_b) const
@@ -501,7 +691,7 @@ namespace lantern
 
 			TAttr result_value = value0 * b0 + value1 * b1 + value2 * b2;
 			(*binded_attr.bind_point) = result_value;
-		};
+		}
 	}
 }
 

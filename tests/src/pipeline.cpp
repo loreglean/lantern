@@ -168,9 +168,22 @@ TEST(pipeline, mesh_rasterization_traversal_aabb)
 {
 	pipeline p;
 
-	p.set_rasterization_algorithm(rasterization_algorithm_option::traversal_aabb);
 	p.set_face_culling(face_culling_option::counter_clockwise);
 	p.set_fill_mode(fill_mode_option::solid);
+
+	p.set_rasterization_algorithm(rasterization_algorithm_option::traversal_aabb);
+	assert_pixel_centers_are_lit_no_ambiguities(p);
+	assert_pixel_centers_are_lit_top_left_rule(p);
+}
+
+TEST(pipeline, mesh_rasterization_traversal_backtracking)
+{
+	pipeline p;
+
+	p.set_face_culling(face_culling_option::counter_clockwise);
+	p.set_fill_mode(fill_mode_option::solid);
+
+	p.set_rasterization_algorithm(rasterization_algorithm_option::traversal_backtracking);
 	assert_pixel_centers_are_lit_no_ambiguities(p);
 	assert_pixel_centers_are_lit_top_left_rule(p);
 }
