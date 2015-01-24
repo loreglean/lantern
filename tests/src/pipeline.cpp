@@ -66,7 +66,7 @@ static void assert_pixel_centers_are_lit_no_ambiguities(pipeline& p)
 	test_shader shader_white{color::WHITE, &texture};
 
 	std::vector<vector3> triangle_vertices{
-		vector3{0.05f, 0.9f, 0.0f}, vector3{-0.9f, 0.5f, 0.0f}, vector3{0.15, -0.8f, 0.0f}};
+		vector3{0.05f, 0.9f, 0.0f}, vector3{-0.9f, 0.5f, 0.0f}, vector3{0.15f, -0.8f, 0.0f}};
 	std::vector<unsigned int> const triangle_indices{0, 1, 2};
 	mesh triangle_mesh{triangle_vertices, triangle_indices};
 	texture.clear(0);
@@ -94,7 +94,7 @@ static void assert_pixel_centers_are_lit_top_left_rule(pipeline& p)
 	// Picture: rasterization_top_left_rule_test_case_1.png
 	//
 	std::vector<vector3> triangle_vertices{
-		vector3{-0.8f, 0.8f, 0.0f}, vector3{-0.8f, -0.8f, 0.0f}, vector3{0.8, 0.8f, 0.0f}};
+		vector3{-0.8f, 0.8f, 0.0f}, vector3{-0.8f, -0.8f, 0.0f}, vector3{0.8f, 0.8f, 0.0f}};
 	mesh triangle_mesh_1{triangle_vertices, triangle_indices};
 	texture.clear(0);
 	p.draw(triangle_mesh_1, shader_white, texture);
@@ -111,7 +111,7 @@ static void assert_pixel_centers_are_lit_top_left_rule(pipeline& p)
 	// Picture: rasterization_top_left_rule_test_case_2.png
 	//
 	triangle_vertices = std::vector<vector3>{
-		vector3{0.8f, 0.8f, 0.0f}, vector3{-0.8f, 0.8f, 0.0f}, vector3{0.8, -0.8f, 0.0f}};
+		vector3{0.8f, 0.8f, 0.0f}, vector3{-0.8f, 0.8f, 0.0f}, vector3{0.8f, -0.8f, 0.0f}};
 	mesh triangle_mesh_2{triangle_vertices, triangle_indices};
 	texture.clear(0);
 	p.draw(triangle_mesh_2, shader_white, texture);
@@ -128,7 +128,7 @@ static void assert_pixel_centers_are_lit_top_left_rule(pipeline& p)
 	// Picture: rasterization_top_left_rule_test_case_3.png
 	//
 	triangle_vertices = std::vector<vector3>{
-		vector3{0.8f, 0.8f, 0.0f}, vector3{-0.8f, -0.8f, 0.0f}, vector3{0.8, -0.8f, 0.0f}};
+		vector3{0.8f, 0.8f, 0.0f}, vector3{-0.8f, -0.8f, 0.0f}, vector3{0.8f, -0.8f, 0.0f}};
 	mesh triangle_mesh_3{triangle_vertices, triangle_indices};
 	texture.clear(0);
 	p.draw(triangle_mesh_3, shader_white, texture);
@@ -144,7 +144,7 @@ static void assert_pixel_centers_are_lit_top_left_rule(pipeline& p)
 	// Picture: rasterization_top_left_rule_test_case_4.png
 	//
 	triangle_vertices = std::vector<vector3>{
-		vector3{-0.8f, 0.8f, 0.0f}, vector3{-0.8f, -0.8f, 0.0f}, vector3{0.8, -0.8f, 0.0f}};
+		vector3{-0.8f, 0.8f, 0.0f}, vector3{-0.8f, -0.8f, 0.0f}, vector3{0.8f, -0.8f, 0.0f}};
 	mesh triangle_mesh_4{triangle_vertices, triangle_indices};
 	texture.clear(0);
 	p.draw(triangle_mesh_4, shader_white, texture);
