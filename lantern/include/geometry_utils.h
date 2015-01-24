@@ -52,6 +52,14 @@ namespace lantern
 		{
 			return x * a + y * b + c;
 		}
+
+		vector2f intersection(line const& line) const
+		{
+			float const y{(line.a * c - a * line.c) / (a * line.b - line.a * b)};
+			float const x{a == 0.0f ? ((line.b * c - b * line.c) / (line.a * b)) : (-(b / a) * y - (c / a))};
+
+			return vector2f{x, y};
+		};
 	};
 
 	/** Class that represents axis-aligned bounding box */

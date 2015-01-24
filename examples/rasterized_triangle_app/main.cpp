@@ -30,7 +30,7 @@ private:
 rasterized_color_triangle_app::rasterized_color_triangle_app(unsigned int const width, unsigned int const height)
 	: app(width, height),
 	  m_triangle_position{0.0f, 0.0f, 1.5f},
-	  m_triangle_rotation{0.0f, 0.0f, 0.0f},
+	  m_triangle_rotation{vector3::ZERO},
 	  m_triangle_mesh{load_mesh_from_obj("resources/triangle.obj", false, false)},
 	  m_camera{
 		  vector3::ZERO,

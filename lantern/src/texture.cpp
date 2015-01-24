@@ -48,8 +48,8 @@ color texture::get_pixel_color(vector2ui const& point) const
 		m_data[pixel_first_byte_index + 3]};
 #else
 	return color{
-		m_data[pixel_first_byte_index + 0],
+		m_data[pixel_first_byte_index + 2],
 		m_data[pixel_first_byte_index + 1],
-		m_data[pixel_first_byte_index + 2]};
+		m_data[pixel_first_byte_index + 0]};
 #endif
 }
