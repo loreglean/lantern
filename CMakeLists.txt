@@ -17,6 +17,7 @@ if (MSVC)
         "")
 
     add_definitions(-D_USE_MATH_DEFINES)
+    add_definitions(-DNOMINMAX)
 else()
     set(COMPILER_FLAGS
         "-std=gnu++0x -Wall -Wno-comment")
