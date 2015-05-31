@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdexcept>
+#include <SDL_image.h>
 #include "app.h"
 
 using namespace lantern;
@@ -17,6 +18,13 @@ app::app(unsigned int const width, unsigned int const height)
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		throw std::runtime_error(SDL_GetError());
+	}
+
+	int flags = IMG_INIT_PNG;
+	int inited = IMG_Init(flags);
+	if ((inited & flags) != flags)
+	{
+		throw std::runtime_error(IMG_GetError());
 	}
 
 	m_window = SDL_CreateWindow(
@@ -70,6 +78,8 @@ app::~app()
 		SDL_DestroyWindow(m_window);
 		m_window = nullptr;
 	}
+
+	IMG_Quit();
 
 	SDL_Quit();
 }

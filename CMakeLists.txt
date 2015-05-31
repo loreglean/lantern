@@ -9,6 +9,7 @@ include(CTest)
 # SDL2 look up ==============================
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 find_package(SDL2 REQUIRED)
+find_package(SDL2IMAGE REQUIRED)
 # ===========================================
 
 # Compiler setup ============================
@@ -45,6 +46,7 @@ set(LANTERN_HEADERS
     lantern/include/camera.h
     lantern/include/color.h
     lantern/include/color_shader.h
+    lantern/include/texture_shader.h
     lantern/include/geometry_utils.h
     lantern/include/matrix3x3.h
     lantern/include/matrix4x4.h
@@ -64,7 +66,7 @@ add_library(
     ${LANTERN_HEADERS})
 
 target_include_directories(lantern PUBLIC lantern/include)
-target_include_directories(lantern PRIVATE ${SDL2_INCLUDE_DIR})
+target_include_directories(lantern PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2IMAGE_INCLUDE_DIR})
 
 set_target_properties(
     lantern PROPERTIES
@@ -138,15 +140,21 @@ set_target_properties(
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples/empty_app")
 
 target_include_directories(empty_app PRIVATE lantern/include)
-target_include_directories(empty_app PRIVATE ${SDL2_INCLUDE_DIR})
+target_include_directories(empty_app PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR})
 
-target_link_libraries(empty_app lantern ${SDL2_LIBRARY})
+target_link_libraries(empty_app lantern ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARY})
 
 if (WIN32)
     add_custom_command(
         TARGET empty_app
         POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
         "${SDL2_DLL}"
+        $<TARGET_FILE_DIR:empty_app>)
+
+    add_custom_command(
+        TARGET empty_app
+        POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+        "${SDL2IMAGE_DLL}"
         $<TARGET_FILE_DIR:empty_app>)
 endif()
 # ===========================================
@@ -161,15 +169,21 @@ set_target_properties(
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples/rasterized_triangle_app")
 
 target_include_directories(rasterized_triangle_app PRIVATE lantern/include)
-target_include_directories(rasterized_triangle_app PRIVATE ${SDL2_INCLUDE_DIR})
+target_include_directories(rasterized_triangle_app PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2IMAGE_INCLUDE_DIR})
 
-target_link_libraries(rasterized_triangle_app lantern ${SDL2_LIBRARY})
+target_link_libraries(rasterized_triangle_app lantern ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARY})
 
 if (WIN32)
     add_custom_command(
         TARGET rasterized_triangle_app
         POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
         "${SDL2_DLL}"
+        $<TARGET_FILE_DIR:rasterized_triangle_app>)
+
+    add_custom_command(
+        TARGET rasterized_triangle_app
+        POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+        "${SDL2IMAGE_DLL}"
         $<TARGET_FILE_DIR:rasterized_triangle_app>)
 endif()
 

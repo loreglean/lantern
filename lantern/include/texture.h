@@ -3,12 +3,13 @@
 
 #include <cstring>
 #include <cstddef>
+#include <string>
 #include "vector2.h"
 #include "color.h"
 
 namespace lantern
 {
-	/** Class representing ARGB8888 texture */
+	/** Class representing ARGB8888 (big endian) or BGRA8888 (little endian) texture */
 	class texture final
 	{
 	public:
@@ -17,6 +18,11 @@ namespace lantern
 		* @param height Texture height
 		*/
 		texture(unsigned int const width, unsigned int const height);
+
+		/** Moving data from other texture to the new one
+		* @param other Texture to move data from
+		*/
+		texture(texture&& other);
 
 		/** Frees memory used by the texture */
 		~texture();
@@ -55,6 +61,11 @@ namespace lantern
 
 		/** Clears texture with specified byte value (thus clearing only with gray shade) */
 		void clear(unsigned char const bytes_value);
+
+		/** Loads texture from specified file. Only PNG is supported for now
+		* @param file File to load image from
+		*/
+		static texture load_from_file(std::string file);
 
 	private:
 		/** Texture width */
