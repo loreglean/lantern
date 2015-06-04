@@ -169,12 +169,16 @@ namespace lantern
 		* @param b0 First barycentric coordinate
 		* @param b1 Second barycentric coordinate
 		* @param b2 Third barycentric coordinate
+		* @param z0_view_space_reciprocal 1/z-view for first vertex
+		* @param z1_view_space_reciprocal 1/z-view for second vertex
+		* @param z1_view_space_reciprocal 1/z-view for third vertex
 		*/
 		template<typename TAttr>
 		void set_bind_points_values_from_barycentric(
 			std::vector<binded_mesh_attribute_info<TAttr>>& binds,
 			unsigned int const index0, unsigned int const index1, unsigned int const index2,
-			float const b0, float const b1, float const b2);
+			float const b0, float const b1, float const b2,
+			float const z0_view_space_reciprocal, float const z1_view_space_reciprocal, float const z2_view_space_reciprocal);
 
 		/** Rasterizes triangle using current pipeline setup using inversed slope algorithm
 		* @param index0 First triangle vertex index in a mesh
@@ -352,11 +356,6 @@ namespace lantern
 
 		float const width{static_cast<float>(target_texture.get_width())};
 		float const height{static_cast<float>(target_texture.get_height())};
-		matrix4x4 const ndc_to_screen{
-			(width) / 2.0f, 0.0f, 0.0f, 0.0f,
-			0.0f, -(height) / 2.0f, 0.0f, 0.0f,
-			0.0f, 0.0f, 1.0f, 0.0f,
-			(width) / 2.0f, (height) / 2.0f, 0.0f, 1.0f};
 
 		for (size_t i{0}; i < vertices_count; ++i)
 		{
@@ -368,12 +367,17 @@ namespace lantern
 			}
 
 			float const w_inversed{1.0f / v.w};
+			
 			v.x *= w_inversed;
 			v.y *= w_inversed;
 			v.z *= w_inversed;
-			v.w = 1.0f;
+			
+			v.w = w_inversed;
 
-			v = v * ndc_to_screen;
+			// NDC to screen
+			//
+			v.x = v.x * width / 2.0f + width / 2.0f;
+			v.y = -v.y * height / 2.0f + height / 2.0f;
 		}
 
 		// Rasterization
@@ -558,22 +562,26 @@ namespace lantern
 					set_bind_points_values_from_barycentric<color>(
 						m_binded_color_attributes,
 						index0, index1, index2,
-						b0, b1, b2);
+						b0, b1, b2,
+						v0.w, v1.w, v2.w);
 
 					set_bind_points_values_from_barycentric<float>(
 						m_binded_float_attributes,
 						index0, index1, index2,
-						b0, b1, b2);
+						b0, b1, b2,
+						v0.w, v1.w, v2.w);
 
 					set_bind_points_values_from_barycentric<vector2f>(
 						m_binded_vector2f_attributes,
 						index0, index1, index2,
-						b0, b1, b2);
+						b0, b1, b2,
+						v0.w, v1.w, v2.w);
 
 					set_bind_points_values_from_barycentric<vector3>(
 						m_binded_vector3_attributes,
 						index0, index1, index2,
-						b0, b1, b2);
+						b0, b1, b2,
+						v0.w, v1.w, v2.w);
 
 					// Pass pixel to shader
 					//
@@ -710,22 +718,26 @@ namespace lantern
 					set_bind_points_values_from_barycentric<color>(
 						m_binded_color_attributes,
 						index0, index1, index2,
-						b0, b1, b2);
+						b0, b1, b2,
+						v0.w, v1.w, v2.w);
 
 					set_bind_points_values_from_barycentric<float>(
 						m_binded_float_attributes,
 						index0, index1, index2,
-						b0, b1, b2);
+						b0, b1, b2,
+						v0.w, v1.w, v2.w);
 
 					set_bind_points_values_from_barycentric<vector2f>(
 						m_binded_vector2f_attributes,
 						index0, index1, index2,
-						b0, b1, b2);
+						b0, b1, b2,
+						v0.w, v1.w, v2.w);
 
 					set_bind_points_values_from_barycentric<vector3>(
 						m_binded_vector3_attributes,
 						index0, index1, index2,
-						b0, b1, b2);
+						b0, b1, b2,
+						v0.w, v1.w, v2.w);
 
 					// Pass pixel to shader
 					//
@@ -917,22 +929,26 @@ namespace lantern
 					set_bind_points_values_from_barycentric<color>(
 						m_binded_color_attributes,
 						index0, index1, index2,
-						b0, b1, b2);
+						b0, b1, b2,
+						v0.w, v1.w, v2.w);
 
 					set_bind_points_values_from_barycentric<float>(
 						m_binded_float_attributes,
 						index0, index1, index2,
-						b0, b1, b2);
+						b0, b1, b2,
+						v0.w, v1.w, v2.w);
 
 					set_bind_points_values_from_barycentric<vector2f>(
 						m_binded_vector2f_attributes,
 						index0, index1, index2,
-						b0, b1, b2);
+						b0, b1, b2,
+						v0.w, v1.w, v2.w);
 
 					set_bind_points_values_from_barycentric<vector3>(
 						m_binded_vector3_attributes,
 						index0, index1, index2,
-						b0, b1, b2);
+						b0, b1, b2,
+						v0.w, v1.w, v2.w);
 
 					// Pass pixel to shader
 					//
@@ -1009,7 +1025,8 @@ namespace lantern
 	void pipeline::set_bind_points_values_from_barycentric(
 		std::vector<binded_mesh_attribute_info<TAttr>>& binds,
 		unsigned int const index0, unsigned int const index1, unsigned int const index2,
-		float const b0, float const b1, float const b2)
+		float const b0, float const b1, float const b2,
+		float const z0_view_space_reciprocal, float const z1_view_space_reciprocal, float const z2_view_space_reciprocal)
 	{
 		size_t binds_count{binds.size()};
 		for (size_t i{0}; i < binds_count; ++i)
@@ -1022,8 +1039,21 @@ namespace lantern
 			TAttr const& value1 = binded_attr_data[binded_attr_indices[index1]];
 			TAttr const& value2 = binded_attr_data[binded_attr_indices[index2]];
 
-			TAttr result_value = value0 * b0 + value1 * b1 + value2 * b2;
-			(*binded_attr.bind_point) = result_value;
+			if (binded_attr.info.get_interpolation_option() == attribute_interpolation_option::linear)
+			{
+				(*binded_attr.bind_point) = value0 * b0 + value1 * b1 + value2 * b2;
+			}
+			else if (binded_attr.info.get_interpolation_option() == attribute_interpolation_option::perspective_correct)
+			{
+				TAttr const value0_div_zview = value0 * z0_view_space_reciprocal;
+				TAttr const value1_div_zview = value1 * z1_view_space_reciprocal;
+				TAttr const value2_div_zview = value2 * z2_view_space_reciprocal;
+
+				float const zview_reciprocal_interpolated = z0_view_space_reciprocal * b0 + z1_view_space_reciprocal * b1 + z2_view_space_reciprocal * b2;
+				TAttr value_div_zview_interpolated = value0_div_zview * b0 + value1_div_zview * b1 + value2_div_zview * b2;
+
+				(*binded_attr.bind_point) = value_div_zview_interpolated * (1.0f / zview_reciprocal_interpolated);
+			}
 		}
 	}
 

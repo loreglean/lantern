@@ -5,6 +5,16 @@
 
 namespace lantern
 {
+	/** Specifies type of attribute interpolation */
+	enum class attribute_interpolation_option
+	{
+		/** Attribute should be interpolated linearly in screen space */
+		linear,
+
+		/** Attribute should be interpolated with perspective correction */
+		perspective_correct
+	};
+
 	/** Holds all the information associated with mesh attribute */
 	template<typename TAttr>
 	class mesh_attribute_info final
@@ -18,7 +28,8 @@ namespace lantern
 		mesh_attribute_info(
 			unsigned int const attribute_id,
 			std::vector<TAttr> const data,
-			std::vector<unsigned int> const indices);
+			std::vector<unsigned int> const indices,
+			attribute_interpolation_option interpolation_option);
 
 		/** Gets attribute ID
 		* @returns Attribute ID value
@@ -35,6 +46,11 @@ namespace lantern
 		*/
 		std::vector<unsigned int> const& get_indices() const;
 
+		/** Gets interpolation option
+		* @returns Interpolation type
+		*/
+		attribute_interpolation_option get_interpolation_option() const;
+
 	private:
 		/** Attribute id */
 		unsigned int const m_id;
@@ -44,6 +60,9 @@ namespace lantern
 
 		/** Attribute indices */
 		std::vector<unsigned int> const m_indices;
+
+		/** Interpolation option */
+		attribute_interpolation_option m_interpolation_option;
 	};
 
 	// Predefined attributes ids
@@ -56,10 +75,12 @@ namespace lantern
 	mesh_attribute_info<TAttr>::mesh_attribute_info(
 		unsigned int const attribute_id,
 		std::vector<TAttr> const data,
-		std::vector<unsigned int> const indices)
+		std::vector<unsigned int> const indices,
+		attribute_interpolation_option interpolation_option)
 		: m_id(attribute_id),
 		  m_data(data),
-		  m_indices(indices)
+		  m_indices(indices),
+		  m_interpolation_option(interpolation_option)
 	{
 
 	}
@@ -81,6 +102,13 @@ namespace lantern
 	{
 		return m_indices;
 	}
+
+	template<typename TAttr>
+	attribute_interpolation_option mesh_attribute_info<TAttr>::get_interpolation_option() const
+	{
+		return m_interpolation_option;
+	}
+
 }
 
 #endif

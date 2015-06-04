@@ -264,13 +264,13 @@ mesh obj_mesh_importer::get_mesh() const
 
 	if (m_read_texcoords)
 	{
-		mesh_attribute_info<vector2f> texcoords_info{TEXCOORD_ATTR_ID, m_texcoords, m_texcoords_indices};
+		mesh_attribute_info<vector2f> texcoords_info{TEXCOORD_ATTR_ID, m_texcoords, m_texcoords_indices, attribute_interpolation_option::perspective_correct};
 		m.get_vector2f_attributes().push_back(texcoords_info);
 	};
 
 	if (m_read_normals)
 	{
-		mesh_attribute_info<vector3> normals_info{NORMAL_ATTR_ID, m_normals, m_normals_indices};
+		mesh_attribute_info<vector3> normals_info{NORMAL_ATTR_ID, m_normals, m_normals_indices, attribute_interpolation_option::linear};
 		m.get_vector3_attributes().push_back(normals_info);
 	}
 
