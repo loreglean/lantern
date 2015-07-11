@@ -156,6 +156,18 @@ if (WIN32)
         POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
         "${SDL2IMAGE_DLL}"
         $<TARGET_FILE_DIR:empty_app>)
+
+	add_custom_command(
+        TARGET empty_app
+        POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+        "${SDL2IMAGE_LIBPNG_DLL}"
+        $<TARGET_FILE_DIR:empty_app>)
+
+	add_custom_command(
+        TARGET empty_app
+        POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+        "${SDL2IMAGE_ZLIB_DLL}"
+        $<TARGET_FILE_DIR:empty_app>)
 endif()
 # ===========================================
 
@@ -184,6 +196,18 @@ if (WIN32)
         TARGET rasterized_triangle_app
         POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
         "${SDL2IMAGE_DLL}"
+        $<TARGET_FILE_DIR:rasterized_triangle_app>)
+
+	add_custom_command(
+        TARGET rasterized_triangle_app
+        POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+        "${SDL2IMAGE_LIBPNG_DLL}"
+        $<TARGET_FILE_DIR:rasterized_triangle_app>)
+
+	add_custom_command(
+        TARGET rasterized_triangle_app
+        POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+        "${SDL2IMAGE_ZLIB_DLL}"
         $<TARGET_FILE_DIR:rasterized_triangle_app>)
 endif()
 

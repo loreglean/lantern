@@ -48,7 +48,7 @@ rasterized_color_triangle_app::rasterized_color_triangle_app(unsigned int const 
 	//
 	std::vector<color> const colors{color::GREEN, color::RED, color::BLUE};
 	std::vector<unsigned int> const indices{0, 1, 2};
-	mesh_attribute_info<color> const color_info{VERTEX_COLOR_ATTR_ID, colors, indices};
+	mesh_attribute_info<color> const color_info{VERTEX_COLOR_ATTR_ID, colors, indices, attribute_interpolation_option::linear};
 	m_triangle_mesh.get_color_attributes().push_back(color_info);
 };
 
