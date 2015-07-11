@@ -215,7 +215,8 @@ namespace lantern
 			float const v0_v1_edge_distance_offset, float const v0_v2_edge_distance_offset,
 			TShader& shader, texture& target_texture);
 
-		/** Saves scanline endpoints attributes values into intermediate storage
+		/** Saves scanline endpoints attributes values into intermediate storage.
+		* It saves attribute value divided by view z for attributes with perspective correction instead of just linearly interpolated values
 		* @param binds List of binds
 		* @param top_vertex_index Index of a top vertex
 		* @param left_vertex_index Index of a left vertex
@@ -224,6 +225,9 @@ namespace lantern
 		* @param distance_from_top_to_right_normalized Current distance from a top vertex to a right vertex
 		* @param left_values_storage Storage to put left edge values into
 		* @param right_values_storage Storage to put right edge values into
+		* @param top_vertex_zview_reciprocal Camera space z for top vertex, required for perspective correction
+		* @param left_vertex_zview_reciprocal Camera space z for left vertex, required for perspective correction
+		* @param right_vertex_zview_reciprocal Camera space z for right vertex, required for perspective correction
 		*/
 		template<typename TAttr>
 		void save_intermediate_attrs_values(
@@ -234,20 +238,26 @@ namespace lantern
 			float const distance_from_top_to_left_normalized,
 			float const distance_from_top_to_right_normalized,
 			std::vector<TAttr>& left_values_storage,
-			std::vector<TAttr>& right_values_storage);
+			std::vector<TAttr>& right_values_storage,
+			float const top_vertex_zview_reciprocal,
+			float const left_vertex_zview_reciprocal,
+			float const right_vertex_zview_reciprocal);
 
 		/** Sets bind points values basing on scanline's endpoints and current position
 		* @param binds List of binds
 		* @param left_endpoint_values List of left endpoint values
 		* @param right_endpoint_values List of right endpoint values
 		* @param scanline_distance_normalized Current scanline distance from left endpoint to right endpoint
+		* @param zview_reciprocal_left Reciprocal of view z for left endpoint, required for attributes with perspective correction
+		* @param zview_reciprocal_right Reciprocal of view z for right endpoint, required for attributes with perspective correction
 		*/
 		template<typename TAttr>
 		void set_bind_points_values_from_scanline_endpoints(
 			std::vector<binded_mesh_attribute_info<TAttr>>& binds,
 			std::vector<TAttr> const& left_endpoint_values,
 			std::vector<TAttr> const& right_endpoint_values,
-			float const scanline_distance_normalized);
+			float const scanline_distance_normalized,
+			float const zview_reciprocal_left, float const zview_reciprocal_right);
 
 		/** Gets next pixel center exclusively (if we're on 0.5, we move forward anyway)
 		* @param f Current position
@@ -1140,9 +1150,6 @@ namespace lantern
 			// Calculate intersection point
 			vector2f const intersection{separator_line.intersection(line{v0_sorted.x, v0_sorted.y, v2_sorted.x, v2_sorted.y})};
 
-			// Vertex that lies on separating line
-			vector4 const separator_vertex{intersection.x, intersection.y, v2_sorted.z, v2_sorted.w};
-
 			// Distance in pixels from top vertex to intersection vertex and from top vertex to bottom vertex on the same edge
 			// We need these because when we interpolate attributes across edge we need to know real edge length,
 			// even though we draw top and bottom triangles separately
@@ -1150,17 +1157,23 @@ namespace lantern
 			float const distance_to_separator_vertex{vector2f{v0_sorted.x, v0_sorted.y}.distance_to(intersection)};
 			float const total_edge_with_separator_vertex_length{vector2f{v2_sorted.x, v2_sorted.y}.distance_to(vector2f{v0_sorted.x, v0_sorted.y})};
 
+			// Vertices that lie on separating line
+			// We need two different vectors because we do not calculate interpolated values of z and w and use just distance offset
+			//
+			vector4 separator_vertex_for_top_triangle{intersection.x, intersection.y, v2.z, v2.w};
+			vector4 separator_vertex_for_bottom_triangle{intersection.x, intersection.y, v0.z, v0.w};
+
 			// Draw top triangle
 			rasterize_inverse_slope_top_or_bottom_triangle(
 				index0_sorted, index2_sorted, index1_sorted,
-				v0_sorted, separator_vertex, v1_sorted,
+				v0_sorted, separator_vertex_for_top_triangle, v1_sorted,
 				total_edge_with_separator_vertex_length - distance_to_separator_vertex, 0.0f,
 				shader, target_texture);
 
 			// Draw bottom triangle
 			rasterize_inverse_slope_top_or_bottom_triangle(
 				index2_sorted, index0_sorted, index1_sorted,
-				v2_sorted, separator_vertex, v1_sorted,
+				v2_sorted, separator_vertex_for_bottom_triangle, v1_sorted,
 				distance_to_separator_vertex, 0.0f,
 				shader, target_texture);
 		}
@@ -1274,25 +1287,29 @@ namespace lantern
 				m_binded_color_attributes,
 				index0, index1, index2,
 				current_left_distance_normalized, current_right_distance_normalized,
-				left_color_attributes, right_color_attributes);
+				left_color_attributes, right_color_attributes,
+				v0.w, v1.w, v2.w);
 
 			save_intermediate_attrs_values<float>(
 				m_binded_float_attributes,
 				index0, index1, index2,
 				current_left_distance_normalized, current_right_distance_normalized,
-				left_float_attributes, right_float_attributes);
+				left_float_attributes, right_float_attributes,
+				v0.w, v1.w, v2.w);
 
 			save_intermediate_attrs_values<vector2f>(
 				m_binded_vector2f_attributes,
 				index0, index1, index2,
 				current_left_distance_normalized, current_right_distance_normalized,
-				left_vector2f_attributes, right_vector2f_attributes);
+				left_vector2f_attributes, right_vector2f_attributes,
+				v0.w, v1.w, v2.w);
 
 			save_intermediate_attrs_values<vector3>(
 				m_binded_vector3_attributes,
 				index0, index1, index2,
 				current_left_distance_normalized, current_right_distance_normalized,
-				left_vector3_attributes, right_vector3_attributes);
+				left_vector3_attributes, right_vector3_attributes,
+				v0.w, v1.w, v2.w);
 
 			// Length of the scanline
 			float const total_scanline_distance{x_right - x_left};
@@ -1322,6 +1339,11 @@ namespace lantern
 			int const first_x{static_cast<int>(x_left_next_pixel_center)};
 			int const last_x{static_cast<int>(last_x_pixel_center)};
 
+			// Calculate endpoints interpolated z reciprocals
+			//
+			float const left_zview_reciprocal = (1.0f - current_left_distance_normalized) * v0.w + current_left_distance_normalized * v1.w;
+			float const right_zview_reciprocal = (1.0f - current_right_distance_normalized) * v0.w + current_right_distance_normalized * v2.w;
+
 			for (int x{first_x}; x <= last_x; ++x)
 			{
 				// Calculate attributes values on current pixel center
@@ -1330,22 +1352,26 @@ namespace lantern
 				set_bind_points_values_from_scanline_endpoints<color>(
 					m_binded_color_attributes,
 					left_color_attributes, right_color_attributes,
-					current_scanline_distance_normalized);
+					current_scanline_distance_normalized,
+					left_zview_reciprocal, right_zview_reciprocal);
 
 				set_bind_points_values_from_scanline_endpoints<float>(
 					m_binded_float_attributes,
 					left_float_attributes, right_float_attributes,
-					current_scanline_distance_normalized);
+					current_scanline_distance_normalized,
+					left_zview_reciprocal, right_zview_reciprocal);
 
 				set_bind_points_values_from_scanline_endpoints<vector2f>(
 					m_binded_vector2f_attributes,
 					left_vector2f_attributes, right_vector2f_attributes,
-					current_scanline_distance_normalized);
+					current_scanline_distance_normalized,
+					left_zview_reciprocal, right_zview_reciprocal);
 
 				set_bind_points_values_from_scanline_endpoints<vector3>(
 					m_binded_vector3_attributes,
 					left_vector3_attributes, right_vector3_attributes,
-					current_scanline_distance_normalized);
+					current_scanline_distance_normalized,
+					left_zview_reciprocal, right_zview_reciprocal);
 
 				// Process pixel
 				//
@@ -1375,7 +1401,10 @@ namespace lantern
 		float const distance_from_top_to_left_normalized,
 		float const distance_from_top_to_right_normalized,
 		std::vector<TAttr>& left_values_storage,
-		std::vector<TAttr>& right_values_storage)
+		std::vector<TAttr>& right_values_storage,
+		float const top_vertex_zview_reciprocal,
+		float const left_vertex_zview_reciprocal,
+		float const right_vertex_zview_reciprocal)
 	{
 		size_t const binds_count{binds.size()};
 		for (size_t i{0}; i < binds_count; ++i)
@@ -1388,8 +1417,20 @@ namespace lantern
 			TAttr const& left_value = binded_attr_data[binded_attr_indices[left_vertex_index]];
 			TAttr const& right_value = binded_attr_data[binded_attr_indices[right_vertex_index]];
 
-			left_values_storage[i] = top_value * (1.0f - distance_from_top_to_left_normalized) + left_value * distance_from_top_to_left_normalized;
-			right_values_storage[i] = top_value * (1.0f - distance_from_top_to_right_normalized) + right_value * distance_from_top_to_right_normalized;
+			if (binded_attr.info.get_interpolation_option() == attribute_interpolation_option::linear)
+			{
+				left_values_storage[i] = top_value * (1.0f - distance_from_top_to_left_normalized) + left_value * distance_from_top_to_left_normalized;
+				right_values_storage[i] = top_value * (1.0f - distance_from_top_to_right_normalized) + right_value * distance_from_top_to_right_normalized;
+			}
+			else
+			{
+				TAttr const& top_value_div_zview = top_value * top_vertex_zview_reciprocal;
+				TAttr const& left_value_div_zview = left_value * left_vertex_zview_reciprocal;
+				TAttr const& right_value_div_zview = right_value * right_vertex_zview_reciprocal;
+
+				left_values_storage[i] = top_value_div_zview * (1.0f - distance_from_top_to_left_normalized) + left_value_div_zview * distance_from_top_to_left_normalized;
+				right_values_storage[i] = top_value_div_zview * (1.0f - distance_from_top_to_right_normalized) + right_value_div_zview * distance_from_top_to_right_normalized;
+			}
 		}
 	}
 
@@ -1398,16 +1439,31 @@ namespace lantern
 		std::vector<binded_mesh_attribute_info<TAttr>>& binds,
 		std::vector<TAttr> const& left_endpoint_values,
 		std::vector<TAttr> const& right_endpoint_values,
-		float const scanline_distance_normalized)
+		float const scanline_distance_normalized,
+		float const zview_reciprocal_left, float const zview_reciprocal_right)
 	{
 		size_t binds_count{binds.size()};
 		for (size_t i{0}; i < binds_count; ++i)
 		{
 			binded_mesh_attribute_info<TAttr>& binded_attr = binds[i];
-			TAttr const result =
-				left_endpoint_values[i] * (1.0f - scanline_distance_normalized) +
-				right_endpoint_values[i] * scanline_distance_normalized;
-			(*binded_attr.bind_point) = result;
+
+			if (binded_attr.info.get_interpolation_option() == attribute_interpolation_option::linear)
+			{
+				TAttr const result =
+					left_endpoint_values[i] * (1.0f - scanline_distance_normalized) +
+					right_endpoint_values[i] * scanline_distance_normalized;
+
+				(*binded_attr.bind_point) = result;
+			}
+			else
+			{
+				TAttr const value_div_zview_interpolated = left_endpoint_values[i] * (1.0f - scanline_distance_normalized) + right_endpoint_values[i] * scanline_distance_normalized;
+
+				float const zview_reciprocal_interpolated = (1.0f - scanline_distance_normalized) * zview_reciprocal_left + scanline_distance_normalized * zview_reciprocal_right;
+				
+				(*binded_attr.bind_point) = value_div_zview_interpolated * (1.0f / zview_reciprocal_interpolated);
+			}
+
 		}
 	}
 
