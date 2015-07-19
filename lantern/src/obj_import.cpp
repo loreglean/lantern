@@ -270,8 +270,8 @@ mesh obj_mesh_importer::get_mesh() const
 
 	if (m_read_normals)
 	{
-		mesh_attribute_info<vector3> normals_info{NORMAL_ATTR_ID, m_normals, m_normals_indices, attribute_interpolation_option::linear};
-		m.get_vector3_attributes().push_back(normals_info);
+		mesh_attribute_info<vector3f> normals_info{NORMAL_ATTR_ID, m_normals, m_normals_indices, attribute_interpolation_option::linear};
+		m.get_vector3f_attributes().push_back(normals_info);
 	}
 
 	return m;
@@ -291,7 +291,7 @@ void obj_mesh_importer::on_reading_started()
 
 void obj_mesh_importer::on_vertex_def(float const x, float const y, float const z)
 {
-	m_vertices.push_back(vector3{x, y, z});
+	m_vertices.push_back(vector3f{x, y, z});
 }
 
 void obj_mesh_importer::on_texcoord_def(float const x, float const y)
@@ -306,7 +306,7 @@ void obj_mesh_importer::on_normal_def(float const x, float const y, float const 
 {
 	if (m_read_normals)
 	{
-		m_normals.push_back(vector3{x, y, z});
+		m_normals.push_back(vector3f{x, y, z});
 	}
 }
 

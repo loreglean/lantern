@@ -135,7 +135,7 @@ namespace lantern
 		bool const m_read_normals;
 
 		/** Mesh vertices */
-		std::vector<vector3> m_vertices;
+		std::vector<vector3f> m_vertices;
 
 		/** Mesh indices */
 		std::vector<unsigned int> m_indices;
@@ -147,7 +147,7 @@ namespace lantern
 		std::vector<unsigned int> m_texcoords_indices;
 
 		/** Mesh normals */
-		std::vector<vector3> m_normals;
+		std::vector<vector3f> m_normals;
 
 		/** Mesh normals indices */
 		std::vector<unsigned int> m_normals_indices;

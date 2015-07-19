@@ -27,9 +27,9 @@ public:
 		return std::vector<shader_bind_point_info<vector2f>>{};
 	}
 
-	std::vector<shader_bind_point_info<vector3>> get_vector3_bind_points()
+	std::vector<shader_bind_point_info<vector3f>> get_vector3f_bind_points()
 	{
-		return std::vector<shader_bind_point_info<vector3>>{};
+		return std::vector<shader_bind_point_info<vector3f>>{};
 	}
 
 	vector4 process_vertex(vector4 const& vertex)
@@ -65,8 +65,8 @@ static void assert_pixel_centers_are_lit_no_ambiguities(pipeline& p)
 	texture texture{5, 5};
 	test_shader shader_white{color::WHITE, &texture};
 
-	std::vector<vector3> triangle_vertices{
-		vector3{0.05f, 0.9f, 0.0f}, vector3{-0.9f, 0.5f, 0.0f}, vector3{0.15f, -0.8f, 0.0f}};
+	std::vector<vector3f> triangle_vertices{
+		vector3f{0.05f, 0.9f, 0.0f}, vector3f{-0.9f, 0.5f, 0.0f}, vector3f{0.15f, -0.8f, 0.0f}};
 	std::vector<unsigned int> const triangle_indices{0, 1, 2};
 	mesh triangle_mesh{triangle_vertices, triangle_indices};
 	texture.clear(0);
@@ -93,8 +93,8 @@ static void assert_pixel_centers_are_lit_top_left_rule(pipeline& p)
 
 	// Picture: rasterization_top_left_rule_test_case_1.png
 	//
-	std::vector<vector3> triangle_vertices{
-		vector3{-0.8f, 0.8f, 0.0f}, vector3{-0.8f, -0.8f, 0.0f}, vector3{0.8f, 0.8f, 0.0f}};
+	std::vector<vector3f> triangle_vertices{
+		vector3f{-0.8f, 0.8f, 0.0f}, vector3f{-0.8f, -0.8f, 0.0f}, vector3f{0.8f, 0.8f, 0.0f}};
 	mesh triangle_mesh_1{triangle_vertices, triangle_indices};
 	texture.clear(0);
 	p.draw(triangle_mesh_1, shader_white, texture);
@@ -110,8 +110,8 @@ static void assert_pixel_centers_are_lit_top_left_rule(pipeline& p)
 
 	// Picture: rasterization_top_left_rule_test_case_2.png
 	//
-	triangle_vertices = std::vector<vector3>{
-		vector3{0.8f, 0.8f, 0.0f}, vector3{-0.8f, 0.8f, 0.0f}, vector3{0.8f, -0.8f, 0.0f}};
+	triangle_vertices = std::vector<vector3f>{
+		vector3f{0.8f, 0.8f, 0.0f}, vector3f{-0.8f, 0.8f, 0.0f}, vector3f{0.8f, -0.8f, 0.0f}};
 	mesh triangle_mesh_2{triangle_vertices, triangle_indices};
 	texture.clear(0);
 	p.draw(triangle_mesh_2, shader_white, texture);
@@ -127,8 +127,8 @@ static void assert_pixel_centers_are_lit_top_left_rule(pipeline& p)
 
 	// Picture: rasterization_top_left_rule_test_case_3.png
 	//
-	triangle_vertices = std::vector<vector3>{
-		vector3{0.8f, 0.8f, 0.0f}, vector3{-0.8f, -0.8f, 0.0f}, vector3{0.8f, -0.8f, 0.0f}};
+	triangle_vertices = std::vector<vector3f>{
+		vector3f{0.8f, 0.8f, 0.0f}, vector3f{-0.8f, -0.8f, 0.0f}, vector3f{0.8f, -0.8f, 0.0f}};
 	mesh triangle_mesh_3{triangle_vertices, triangle_indices};
 	texture.clear(0);
 	p.draw(triangle_mesh_3, shader_white, texture);
@@ -143,8 +143,8 @@ static void assert_pixel_centers_are_lit_top_left_rule(pipeline& p)
 
 	// Picture: rasterization_top_left_rule_test_case_4.png
 	//
-	triangle_vertices = std::vector<vector3>{
-		vector3{-0.8f, 0.8f, 0.0f}, vector3{-0.8f, -0.8f, 0.0f}, vector3{0.8f, -0.8f, 0.0f}};
+	triangle_vertices = std::vector<vector3f>{
+		vector3f{-0.8f, 0.8f, 0.0f}, vector3f{-0.8f, -0.8f, 0.0f}, vector3f{0.8f, -0.8f, 0.0f}};
 	mesh triangle_mesh_4{triangle_vertices, triangle_indices};
 	texture.clear(0);
 	p.draw(triangle_mesh_4, shader_white, texture);
@@ -159,8 +159,8 @@ static void assert_pixel_centers_are_lit_top_left_rule(pipeline& p)
 
 	// Picture: rasterization_top_left_rule_test_case_5.png
 	//
-	std::vector<vector3> rect_vertices{
-		vector3{0.8f, 0.8f, 0.0f}, vector3{-0.8f, 0.8f, 0.0f}, vector3{-0.8f, -0.8f, 0.0f}, vector3{0.8f, -0.8f, 0.0f}, vector3::ZERO};
+	std::vector<vector3f> rect_vertices{
+		vector3 < float > {0.8f, 0.8f, 0.0f}, vector3 < float > {-0.8f, 0.8f, 0.0f}, vector3 < float > {-0.8f, -0.8f, 0.0f}, vector3 < float > {0.8f, -0.8f, 0.0f}, vector3f{0.0f, 0.0f, 0.0f}};
 	std::vector<unsigned int> rect_indices{
 		0, 1, 4,
 		1, 2, 4,
@@ -248,6 +248,18 @@ TEST(pipeline, mesh_rasterization_inversed_slope)
 	p.set_fill_mode(fill_mode_option::solid);
 
 	p.set_rasterization_algorithm(rasterization_algorithm_option::inversed_slope);
+	assert_pixel_centers_are_lit_no_ambiguities(p);
+	assert_pixel_centers_are_lit_top_left_rule(p);
+}
+
+TEST(pipeline, mesh_rasterization_homogeneous)
+{
+	pipeline p;
+
+	p.set_face_culling(face_culling_option::counter_clockwise);
+	p.set_fill_mode(fill_mode_option::solid);
+
+	p.set_rasterization_algorithm(rasterization_algorithm_option::homogeneous);
 	assert_pixel_centers_are_lit_no_ambiguities(p);
 	assert_pixel_centers_are_lit_top_left_rule(p);
 }

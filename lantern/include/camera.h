@@ -19,9 +19,9 @@ namespace lantern
 		* @param far_plane_z Far plane z-coordinate
 		*/
 		camera(
-			vector3 const& position,
-			vector3 const& forward,
-			vector3 const& fake_up,
+			vector3f const& position,
+			vector3f const& forward,
+			vector3f const& fake_up,
 			float const horizontal_fov,
 			float const aspect_ratio,
 			float const near_plane_z,
@@ -30,27 +30,27 @@ namespace lantern
 		/** Gets camera position
 		* @returns Current position
 		*/
-		vector3 get_position() const;
+		vector3f get_position() const;
 
 		/** Sets camera position
 		* @param position New camera position
 		*/
-		void set_position(vector3 const& position);
+		void set_position(vector3f const& position);
 
 		/** Gets camera's z-axis coordinates
 		* @returns Z-axis (forward vector)
 		*/
-		vector3 get_forward() const;
+		vector3f get_forward() const;
 
 		/** Gets camera's x-axis coordinates
 		* @returns X-axis (right vector)
 		*/
-		vector3 get_right() const;
+		vector3f get_right() const;
 
 		/** Gets camera's y-axis coordinates
 		* @returns Y-axis (up vector)
 		*/
-		vector3 get_up() const;
+		vector3f get_up() const;
 
 		/** Gets horizontal field of view
 		* @returns Horizontal field of view in radians
@@ -119,16 +119,16 @@ namespace lantern
 
 	private:
 		/** Current position */
-		vector3 m_position;
+		vector3f m_position;
 
 		/** Current forward vector */
-		vector3 m_forward;
+		vector3f m_forward;
 
 		/** Current right vector */
-		vector3 m_right;
+		vector3f m_right;
 
 		/** Current up vector */
-		vector3 m_up;
+		vector3f m_up;
 
 		/** Horizontal field of view */
 		float const m_horizontal_fov;
@@ -148,7 +148,7 @@ namespace lantern
 		/** Creates coordinate system base on forward and fake up vector
 		* @param fake_up Temp up vector
 		*/
-		void establish_coordinate_system(vector3 const& fake_up);
+		void establish_coordinate_system(vector3f const& fake_up);
 	};
 }
 

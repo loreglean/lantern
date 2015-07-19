@@ -92,20 +92,20 @@ TEST(matrix4x4, rotation)
 {
 	vector4 const v{0.5f, 1.0f, -1.0f, 1.0f};
 
-	matrix4x4 const m_rotation_around_x_axis{matrix4x4::rotation_around_x_axis(M_PI / 3.0f)};
+	matrix4x4 const m_rotation_around_x_axis{matrix4x4::rotation_around_x_axis(static_cast<float>(M_PI) / 3.0f)};
 	vector4 const v_rotated_around_x_axis{v * m_rotation_around_x_axis};
 	assert_vectors4_near(v_rotated_around_x_axis, vector4{0.5f, 1.366f, 0.366f, v.w});
 
-	matrix4x4 const m_rotation_around_y_axis{matrix4x4::rotation_around_y_axis(M_PI / 10.0f)};
+	matrix4x4 const m_rotation_around_y_axis{matrix4x4::rotation_around_y_axis(static_cast<float>(M_PI) / 10.0f)};
 	vector4 const v_rotated_around_y_axis{v * m_rotation_around_y_axis};
 	assert_vectors4_near(v_rotated_around_y_axis, vector4{0.1665f, 1.0f, -1.1055f, v.w});
 
-	matrix4x4 const m_rotation_around_z_axis{matrix4x4::rotation_around_z_axis(M_PI / 4.0f)};
+	matrix4x4 const m_rotation_around_z_axis{matrix4x4::rotation_around_z_axis(static_cast<float>(M_PI) / 4.0f)};
 	vector4 const v_rotated_around_z_axis{v * m_rotation_around_z_axis};
 	assert_vectors4_near(v_rotated_around_z_axis, vector4{-0.3535f, 1.0606f, -1.0f, v.w});
 
-	vector3 const axis{0.55f, -1.0f, -1.0f};
-	matrix4x4 const m_rotation_around_axis{matrix4x4::rotation_around_axis(axis, M_PI / 2.0f)};
+	vector3f const axis{0.55f, -1.0f, -1.0f};
+	matrix4x4 const m_rotation_around_axis{matrix4x4::rotation_around_axis(axis, static_cast<float>(M_PI) / 2.0f)};
 	vector4 const v_rotated_around_axis{v * m_rotation_around_axis};
 	assert_vectors4_near(v_rotated_around_axis, vector4{1.3837f, -0.0864f, 0.5725f, v.w});
 }

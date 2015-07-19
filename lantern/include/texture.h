@@ -88,17 +88,10 @@ namespace lantern
 	{
 		unsigned int const pixel_first_byte_index{m_pitch * point.y + point.x * 4};
 
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-		// m_data[pixel_first_byte_index + 0] is alpha, we don't use it for now
-		m_data[pixel_first_byte_index + 1] = color.r;
-		m_data[pixel_first_byte_index + 2] = color.g;
-		m_data[pixel_first_byte_index + 3] = color.b;
-#else
-		m_data[pixel_first_byte_index + 0] = color.b;
-		m_data[pixel_first_byte_index + 1] = color.g;
-		m_data[pixel_first_byte_index + 2] = color.r;
+		m_data[pixel_first_byte_index + 0] = static_cast<unsigned char>(color.b * 255);
+		m_data[pixel_first_byte_index + 1] = static_cast<unsigned char>(color.g * 255);
+		m_data[pixel_first_byte_index + 2] = static_cast<unsigned char>(color.r * 255);
 		// m_data[pixel_first_byte_index + 3] is alpha, we don't use it for now
-#endif
 	}
 
 	inline void texture::clear(unsigned char const bytes_value)

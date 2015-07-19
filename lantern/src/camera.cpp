@@ -4,9 +4,9 @@
 using namespace lantern;
 
 camera::camera(
-	vector3 const& position,
-	vector3 const& forward,
-	vector3 const& fake_up,
+	vector3f const& position,
+	vector3f const& forward,
+	vector3f const& fake_up,
 	float const horizontal_fov,
 	float const aspect_ratio,
 	float const near_plane_z,
@@ -22,27 +22,27 @@ camera::camera(
 	establish_coordinate_system(fake_up.normalized());
 }
 
-vector3 camera::get_position() const
+vector3f camera::get_position() const
 {
 	return m_position;
 }
 
-void camera::set_position(vector3 const& position)
+void camera::set_position(vector3f const& position)
 {
 	m_position = position;
 }
 
-vector3 camera::get_forward() const
+vector3f camera::get_forward() const
 {
 	return m_forward;
 }
 
-vector3 camera::get_right() const
+vector3f camera::get_right() const
 {
 	return m_right;
 }
 
-vector3 camera::get_up() const
+vector3f camera::get_up() const
 {
 	return m_up;
 }
@@ -72,7 +72,7 @@ float camera::get_far_plane_z() const
 	return m_far_plane_z;
 }
 
-void camera::establish_coordinate_system(vector3 const& fake_up)
+void camera::establish_coordinate_system(vector3f const& fake_up)
 {
 	// fake_up vector does not represent the up vector itself
 	// It might be different - together with m_forward it represents the plane where the correct up vector should be

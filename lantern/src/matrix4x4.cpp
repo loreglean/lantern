@@ -125,9 +125,9 @@ matrix4x4 matrix4x4::rotation_around_z_axis(float const radians)
 		0.0f, 0.0f, 0.0f, 1.0f};
 }
 
-matrix4x4 matrix4x4::rotation_around_axis(vector3 const& axis, float const radians)
+matrix4x4 matrix4x4::rotation_around_axis(vector3f const& axis, float const radians)
 {
-	vector3 axis_normalized{axis.normalized()};
+	vector3f axis_normalized{axis.normalized()};
 
 	float const cos_value{std::cos(radians)};
 	float const sin_value{std::sin(radians)};

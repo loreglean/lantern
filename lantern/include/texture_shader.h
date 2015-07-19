@@ -34,10 +34,10 @@ namespace lantern
 		*/
 		std::vector<shader_bind_point_info<vector2f>> get_vector2f_bind_points();
 
-		/** Gets info about vector3 bind points required by shader
-		* @returns Required vector3 bind points
+		/** Gets info about vector3f bind points required by shader
+		* @returns Required vector3f bind points
 		*/
-		std::vector<shader_bind_point_info<vector3>> get_vector3_bind_points();
+		std::vector<shader_bind_point_info<vector3f>> get_vector3f_bind_points();
 
 		/** Processes vertex
 		* @param vertex Vertex in local space
@@ -112,9 +112,9 @@ namespace lantern
 			shader_bind_point_info<vector2f> { TEXCOORD_ATTR_ID, &m_uv }};
 	}
 
-	inline std::vector<shader_bind_point_info<vector3>> texture_shader::get_vector3_bind_points()
+	inline std::vector<shader_bind_point_info<vector3f>> texture_shader::get_vector3f_bind_points()
 	{
-		return std::vector<shader_bind_point_info<vector3>>{};
+		return std::vector<shader_bind_point_info<vector3f>>{};
 	}
 }
 

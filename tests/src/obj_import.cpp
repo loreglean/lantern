@@ -8,17 +8,17 @@ static void assert_obj_vertices(mesh const& mesh)
 	// Test positions
 	//
 
-	std::vector<vector3> const correct_vertices
-		{ vector3{0.0f, 0.0f, 0.0f},
-		  vector3{0.0f, 0.0f, 1.0f},
-		  vector3{0.0f, 1.0f, 0.0f},
-		  vector3(0.0f, 1.0f, 1.0f),
-		  vector3{1.0f, 0.0f, 0.0f},
-		  vector3{1.0f, 0.0f, 1.0f},
-		  vector3{1.0f, 1.0f, 0.0f},
-		  vector3{1.0f, 1.0f, 1.0f} };
+	std::vector<vector3f> const correct_vertices
+		{ vector3f{0.0f, 0.0f, 0.0f},
+		  vector3f{0.0f, 0.0f, 1.0f},
+		  vector3f{0.0f, 1.0f, 0.0f},
+		  vector3f(0.0f, 1.0f, 1.0f),
+		  vector3f{1.0f, 0.0f, 0.0f},
+		  vector3f{1.0f, 0.0f, 1.0f},
+		  vector3f{1.0f, 1.0f, 0.0f},
+		  vector3f{1.0f, 1.0f, 1.0f} };
 
-	std::vector<vector3> const& vertices = mesh.get_vertices();
+	std::vector<vector3f> const& vertices = mesh.get_vertices();
 
 	ASSERT_EQ(vertices.size(), 8);
 	for (size_t i{0}; i < 8; ++i)
@@ -101,10 +101,10 @@ static void assert_obj_texcoords(mesh const& mesh)
 
 void assert_obj_normals(mesh const& mesh)
 {
-	mesh_attribute_info<vector3> const* normals_info{nullptr};
-	for (size_t i{0}; i < mesh.get_vector3_attributes().size(); ++i)
+	mesh_attribute_info<vector3f> const* normals_info{nullptr};
+	for (size_t i{0}; i < mesh.get_vector3f_attributes().size(); ++i)
 	{
-		mesh_attribute_info<vector3> const& attribute_info = mesh.get_vector3_attributes()[i];
+		mesh_attribute_info<vector3f> const& attribute_info = mesh.get_vector3f_attributes()[i];
 		if (attribute_info.get_id() == NORMAL_ATTR_ID)
 		{
 			normals_info = &attribute_info;
@@ -112,13 +112,13 @@ void assert_obj_normals(mesh const& mesh)
 	}
 	ASSERT_NE(normals_info, nullptr);
 
-	std::vector<vector3> const correct_normals
-		{ vector3{0.0f, 0.0f, 1.0f},
-		  vector3{0.0f, 0.0f, -1.0f},
-		  vector3{0.0f, 1.0f, 0.0f},
-		  vector3{0.0f, -1.0f, 0.0f},
-		  vector3{1.0f, 0.0f, 0.0f},
-		  vector3{-1.0f, 0.0f, 0.0f} };
+	std::vector<vector3f> const correct_normals
+		{ vector3f{0.0f, 0.0f, 1.0f},
+		  vector3f{0.0f, 0.0f, -1.0f},
+		  vector3f{0.0f, 1.0f, 0.0f},
+		  vector3f{0.0f, -1.0f, 0.0f},
+		  vector3f{1.0f, 0.0f, 0.0f},
+		  vector3f{-1.0f, 0.0f, 0.0f} };
 
 	ASSERT_EQ(normals_info->get_data().size(), 6);
 	for (size_t i{0}; i < 6; ++i)

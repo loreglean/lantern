@@ -1,6 +1,8 @@
 #ifndef LANTERN_COLOR_H
 #define LANTERN_COLOR_H
 
+#include <cmath>
+
 namespace lantern
 {
 	/** Class representing RGB color */
@@ -8,13 +10,13 @@ namespace lantern
 	{
 	public:
 		/** Red component */
-		unsigned char r;
+		float r;
 
 		/** Green component */
-		unsigned char g;
+		float g;
 
 		/** Blue component */
-		unsigned char b;
+		float b;
 
 		bool operator==(color const& c) const;
 		bool operator!=(color const& c) const;
@@ -30,23 +32,20 @@ namespace lantern
 
 	inline color color::operator*(float const s) const
 	{
-		return color{
-			static_cast<unsigned char>(r * s),
-			static_cast<unsigned char>(g * s),
-			static_cast<unsigned char>(b * s)};
+		return color{r * s, g * s, b * s};
 	}
 
 	inline color color::operator+(color const& c) const
 	{
-		return color{
-			static_cast<unsigned char>(r + c.r),
-			static_cast<unsigned char>(g + c.g),
-			static_cast<unsigned char>(b + c.b)};
+		return color{r + c.r, g + c.g, b + c.b};
 	}
 
 	inline bool color::operator==(color const& c) const
 	{
-		return ((r == c.r) && (g == c.g) && (b == c.b));
+		return (
+			(std::abs(r - c.r) < 0.001f) &&
+			(std::abs(g - c.g) < 0.001f) &&
+			(std::abs(b - c.b) < 0.001f));
 	}
 
 	inline bool color::operator!=(color const& c) const

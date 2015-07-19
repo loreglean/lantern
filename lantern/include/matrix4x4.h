@@ -72,7 +72,7 @@ namespace lantern
 		* @param axis Axis to rotate around
 		* @param radians Radians to rotate for
 		*/
-		static matrix4x4 rotation_around_axis(vector3 const& axis, float const radians);
+		static matrix4x4 rotation_around_axis(vector3f const& axis, float const radians);
 
 		/** Generates matrix that transforms point from camera space to homogeneous clip space
 		* @param hfov Horizontal field of view

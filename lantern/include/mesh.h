@@ -19,12 +19,12 @@ namespace lantern
 		* @param vertices Mesh vertices
 		* @param indices Mesh indices
 		*/
-		mesh(std::vector<vector3> vertices, std::vector<unsigned int> indices);
+		mesh(std::vector<vector3f> vertices, std::vector<unsigned int> indices);
 
 		/** Gets mesh vertices
 		/* @returns Mesh vertices
 		*/
-		std::vector<vector3> const& get_vertices() const;
+		std::vector<vector3f> const& get_vertices() const;
 
 		/** Get mesh indices
 		* @returns Mesh indices
@@ -61,19 +61,19 @@ namespace lantern
 		*/
 		std::vector<mesh_attribute_info<vector2f>> const& get_vector2f_attributes() const;
 
-		/** Gets vector3 attributes
-		* @returns vector3 attributes storage
+		/** Gets vector3f attributes
+		* @returns vector3f attributes storage
 		*/
-		std::vector<mesh_attribute_info<vector3>>& get_vector3_attributes();
+		std::vector<mesh_attribute_info<vector3f>>& get_vector3f_attributes();
 
-		/** Gets vector3 attributes
-		* @returns vector3 attributes const storage
+		/** Gets vector3f attributes
+		* @returns vector3f attributes const storage
 		*/
-		std::vector<mesh_attribute_info<vector3>> const& get_vector3_attributes() const;
+		std::vector<mesh_attribute_info<vector3f>> const& get_vector3f_attributes() const;
 
 	private:
 		/** Mesh vertices */
-		std::vector<vector3> const m_vertices;
+		std::vector<vector3f> const m_vertices;
 
 		/** Mesh indices */
 		std::vector<unsigned int> const m_indices;
@@ -87,8 +87,8 @@ namespace lantern
 		/** Mesh vector2f attributes */
 		std::vector<mesh_attribute_info<vector2f>> m_vector2f_attributes;
 
-		/** Mesh vector3 attributes */
-		std::vector<mesh_attribute_info<vector3>> m_vector3_attributes;
+		/** Mesh vector3f attributes */
+		std::vector<mesh_attribute_info<vector3f>> m_vector3f_attributes;
 	};
 }
 

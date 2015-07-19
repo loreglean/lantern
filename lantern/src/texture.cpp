@@ -56,17 +56,10 @@ color texture::get_pixel_color(vector2ui const& point) const
 {
 	unsigned int const pixel_first_byte_index{m_pitch * point.y + point.x * 4};
 
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
 	return color{
-		m_data[pixel_first_byte_index + 1],
-		m_data[pixel_first_byte_index + 2],
-		m_data[pixel_first_byte_index + 3]};
-#else
-	return color{
-		m_data[pixel_first_byte_index + 2],
-		m_data[pixel_first_byte_index + 1],
-		m_data[pixel_first_byte_index + 0]};
-#endif
+		m_data[pixel_first_byte_index + 2] / 255.0f,
+		m_data[pixel_first_byte_index + 1] / 255.0f,
+		m_data[pixel_first_byte_index + 0] / 255.0f};
 }
 
 texture texture::load_from_file(std::string file)

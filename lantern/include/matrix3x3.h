@@ -31,6 +31,15 @@ namespace lantern
 
 		matrix3x3 operator*(matrix3x3 const& m) const;
 
+		/** Calculates matrix determinant */
+		float det() const;
+
+		/** Calculates matrix inverse */
+		matrix3x3 inversed() const;
+
+		/** Calculates matrix inverse using already calculated determinant to avoid calculating it twice */
+		matrix3x3 inversed_precalc_det(float const det) const;
+
 		/** Generates scale matrix
 		* @param x Scale along x-axis
 		* @param y Scale along y-axis
@@ -62,12 +71,19 @@ namespace lantern
 		* @param axis Axis to rotate around
 		* @param radians Radians to rotate for
 		*/
-		static matrix3x3 rotation_around_axis(vector3 const& axis, float const radians);
+		static matrix3x3 rotation_around_axis(vector3f const& axis, float const radians);
 
 		static const matrix3x3 IDENTITY;
 	};
 
-	vector3 operator*(vector3 const& v, matrix3x3 const& m);
+	template<typename T>
+	vector3<T> operator*(vector3<T> const& v, matrix3x3 const& m)
+	{
+		return vector3<T>{
+			v.x * m.values[0][0] + v.y * m.values[1][0] + v.z * m.values[2][0],
+			v.x * m.values[0][1] + v.y * m.values[1][1] + v.z * m.values[2][1],
+			v.x * m.values[0][2] + v.y * m.values[1][2] + v.z * m.values[2][2]};
+	}
 }
 
 #endif

@@ -61,6 +61,47 @@ matrix3x3 matrix3x3::operator*(matrix3x3 const& m) const
 	return result;
 }
 
+float matrix3x3::det() const
+{
+	return
+		values[0][0] * (values[1][1] * values[2][2] - values[1][2] * values[2][1]) -
+		values[0][1] * (values[1][0] * values[2][2] - values[1][2] * values[2][0]) +
+		values[0][2] * (values[1][0] * values[2][1] - values[1][1] * values[2][0]);
+}
+
+matrix3x3 matrix3x3::inversed() const
+{
+	return inversed_precalc_det(det());
+}
+
+matrix3x3 matrix3x3::inversed_precalc_det(float const det) const
+{
+	matrix3x3 result;
+
+	result.values[0][0] = values[1][1] * values[2][2] - values[1][2] * values[2][1];
+	result.values[1][0] = values[1][2] * values[2][0] - values[1][0] * values[2][2];
+	result.values[2][0] = values[1][0] * values[2][1] - values[1][1] * values[2][0];
+
+	result.values[0][1] = values[0][2] * values[2][1] - values[0][1] * values[2][2];
+	result.values[1][1] = values[0][0] * values[2][2] - values[0][2] * values[2][0];
+	result.values[2][1] = values[0][1] * values[2][0] - values[0][0] * values[2][1];
+
+	result.values[0][2] = values[0][1] * values[1][2] - values[0][2] * values[1][1];
+	result.values[1][2] = values[0][2] * values[1][0] - values[0][0] * values[1][2];
+	result.values[2][2] = values[0][0] * values[1][1] - values[0][1] * values[1][0];
+
+	float const det_ivnersed = 1.0f / det;
+	for (size_t j{0}; j < 3; ++j)
+	{
+		for (size_t i{0}; i < 3; ++i)
+		{
+			result.values[i][j] *= det_ivnersed;
+		}
+	}
+
+	return result;
+}
+
 matrix3x3 matrix3x3::scale(float const x, float const y, float const z)
 {
 	return matrix3x3{
@@ -101,9 +142,9 @@ matrix3x3 matrix3x3::rotation_around_z_axis(float const radians)
 		0.0f, 0.0f, 1.0f};
 }
 
-matrix3x3 matrix3x3::rotation_around_axis(vector3 const& axis, float const radians)
+matrix3x3 matrix3x3::rotation_around_axis(vector3f const& axis, float const radians)
 {
-	vector3 axis_normalized{axis.normalized()};
+	vector3f axis_normalized{axis.normalized()};
 
 	float const cos_value{std::cos(radians)};
 	float const sin_value{std::sin(radians)};
@@ -120,12 +161,4 @@ matrix3x3 matrix3x3::rotation_around_axis(vector3 const& axis, float const radia
 		axis_normalized.x * axis_normalized.z * (1.0f - cos_value) + axis_normalized.y * sin_value,
 		axis_normalized.y * axis_normalized.z * (1.0f - cos_value) - axis_normalized.x * sin_value,
 		axis_normalized.z * axis_normalized.z * (1.0f - cos_value) + cos_value};
-}
-
-vector3 lantern::operator*(vector3 const& v, matrix3x3 const& m)
-{
-	return vector3{
-		v.x * m.values[0][0] + v.y * m.values[1][0] + v.z * m.values[2][0],
-		v.x * m.values[0][1] + v.y * m.values[1][1] + v.z * m.values[2][1],
-		v.x * m.values[0][2] + v.y * m.values[1][2] + v.z * m.values[2][2]};
 }
