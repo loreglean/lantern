@@ -40,3 +40,6 @@ Software renderer written for educational purposes. Uses SDL2 for rendering and 
 * Run: ```export GTEST_ROOT=<path to gtest src>```. You need this only if you want to build tests target
 * Run: ```cmake -G Xcode ..``` to generate project
 * XCode project is ready now
+
+###Known issues
+* Lantern might fail loading resources when running from directory different then the one where the executable is
