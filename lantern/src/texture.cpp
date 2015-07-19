@@ -1,4 +1,4 @@
-#include <exception>
+#include <stdexcept>
 #include <SDL_image.h>
 #include "texture.h"
 

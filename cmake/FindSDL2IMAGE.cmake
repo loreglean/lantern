@@ -5,6 +5,7 @@ find_path(SDL2IMAGE_INCLUDE_DIR
     ENV SDL2IMAGEDIR
   PATH_SUFFIXES
     include/
+	include/SDL2
     include/SDL2Image)
 
 find_library(SDL2IMAGE_LIBRARY
