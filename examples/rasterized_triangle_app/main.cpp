@@ -26,8 +26,8 @@ private:
 	/** Updates view-model-projection matrix and gives it to the shader */
 	void update_shader_mvp();
 
-	vector3 const m_triangle_position;
-	vector3 const m_triangle_rotation;
+	vector3f const m_triangle_position;
+	vector3f const m_triangle_rotation;
 	mesh m_triangle_mesh;
 
 	camera m_camera;
@@ -42,12 +42,12 @@ private:
 rasterized_color_triangle_app::rasterized_color_triangle_app(unsigned int const width, unsigned int const height)
 	: app(width, height),
 	  m_triangle_position{0.0f, 0.0f, 1.5f},
-	  m_triangle_rotation{vector3::ZERO},
+	  m_triangle_rotation{vector3f{0.0f, 0.0f, 0.0f}},
 	  m_triangle_mesh{load_mesh_from_obj("resources/triangle.obj", false, false)},
 	  m_camera{
-		  vector3::ZERO,
-		  vector3::Z_UNIT,
-		  vector3::Y_UNIT,
+		  vector3f{0.0f, 0.0f, 0.0f},
+		  vector3f{0.0f, 0.0f, 1.0f},
+		  vector3f{0.0f, 1.0f, 0.0f},
 		  static_cast<float>(M_PI) / 2.0f,
 		  static_cast<float>(height) / static_cast<float>(width),
 		  0.01f,
