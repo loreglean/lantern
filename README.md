@@ -24,7 +24,7 @@ Software renderer written for educational purposes. Uses SDL2 for rendering and 
 * Run: ```set GTEST_ROOT=<path to gtest src>```. You need this only if you want to build tests target
 * Run: ```cmake -G "Visual Studio 12" ..``` for VS 2013 (or ```cmake -G "Visual Studio 14" ..``` for VS 2015) to generate VS solution
 * Visual Studio solution is ready now
-* If you're facing linking problems in SDL2main library on VS 2015, you can recompile SDL2 yourself using VS 2015 or just download SDL2 build bot package here: [https://buildbot.libsdl.org/sdl-builds/sdl-visualstudio/](https://buildbot.libsdl.org/sdl-builds/sdl-visualstudio/)
+* If you're facing linking problems in SDL2main library on VS 2015, you can recompile SDL2 by yourself using VS 2015, or just download SDL2 build bot package here: [https://buildbot.libsdl.org/sdl-builds/sdl-visualstudio/](https://buildbot.libsdl.org/sdl-builds/sdl-visualstudio/)
 
 ###Building on Linux
 * Install SDL2 ([https://www.libsdl.org/download-2.0.php](https://www.libsdl.org/download-2.0.php), or just ```sudo apt-get install libsdl2-dev``` for apt). Install SDL2_Image  ([https://www.libsdl.org/projects/SDL_image/](https://www.libsdl.org/projects/SDL_image/), or just ```sudo apt-get install libsdl2-image-dev``` for apt). If you want to build tests you must also download Google C++ Testing Framework ([https://code.google.com/p/googletest/downloads/list](https://code.google.com/p/googletest/downloads/list) or just ```sudo apt-get install libgtest-dev``` for apt)
