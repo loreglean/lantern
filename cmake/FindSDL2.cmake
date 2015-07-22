@@ -75,6 +75,7 @@ find_library(SDL2_LIBRARY_TEMP
     ENV SDL2DIR
   PATH_SUFFIXES
     lib
+    lib/win32
     lib/x86
 )
 
@@ -85,6 +86,7 @@ find_file(SDL2_DLL
     ENV SDL2DIR
   PATH_SUFFIXES
     bin
+    lib/win32
     lib/x86
 )
 
@@ -101,6 +103,7 @@ if(NOT SDL2_BUILDING_LIBRARY)
         ENV SDL2DIR
       PATH_SUFFIXES
         lib
+        lib/win32
         lib/x86
     )
   endif()
