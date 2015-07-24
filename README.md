@@ -12,7 +12,7 @@ Software renderer written for educational purposes. Uses SDL2 for rendering and 
 * Run: ```set GTEST_ROOT=<path to gtest src>```. You need this only if you want to build tests target
 * Run: ```cmake -G "MinGW Makefiles" ..``` to generate makefile
 * Run: ```mingw32-make lantern``` to build library
-* Run: ```mingw32-make rotating_car_app``` to build example application
+* Run: ```mingw32-make rasterized_triangle_app``` to build example application
 * Run: ```mingw32-make tests``` to build tests executable
 
 ###Building on Windows (Visual Studio 2013 / 2015)
@@ -33,7 +33,7 @@ Software renderer written for educational purposes. Uses SDL2 for rendering and 
 * Run: ```export GTEST_ROOT=<path to gtest src>```. You need this only if you want to build tests target. If you installed it via apt the path is ```/usr/src/gtest```
 * Run: ```cmake -G "Unix Makefiles" ..``` to generate makefile
 * Run: ```make lantern``` to build library
-* Run: ```make rotating_car_app``` to build example application
+* Run: ```make rasterized_triangle_app``` to build example application
 * Run: ```make tests``` to build tests executable
 
 ###Building on Mac OS X
