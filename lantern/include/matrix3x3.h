@@ -29,6 +29,9 @@ namespace lantern
 			float const m10, float const m11, float const m12,
 			float const m20, float const m21, float const m22);
 
+		// Operators
+		//
+
 		matrix3x3 operator*(matrix3x3 const& m) const;
 
 		/** Calculates matrix determinant */

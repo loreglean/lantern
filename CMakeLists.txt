@@ -37,16 +37,20 @@ set(LANTERN_SOURCES
     lantern/src/mesh.cpp
     lantern/src/obj_import.cpp
     lantern/src/pipeline.cpp
-    lantern/src/texture.cpp
-    lantern/src/vector4.cpp)
+    lantern/src/texture.cpp)
 
 set(LANTERN_HEADERS
+    lantern/include/common_math.h
+    lantern/include/vector2.h
+    lantern/include/vector3.h
+    lantern/include/vector4.h
+    lantern/include/aabb.h
+    lantern/include/line.h
     lantern/include/app.h
     lantern/include/camera.h
     lantern/include/color.h
     lantern/include/color_shader.h
     lantern/include/texture_shader.h
-    lantern/include/geometry_utils.h
     lantern/include/matrix3x3.h
     lantern/include/matrix4x4.h
     lantern/include/mesh.h
@@ -54,10 +58,7 @@ set(LANTERN_HEADERS
     lantern/include/obj_import.h
     lantern/include/pipeline.h
     lantern/include/shader.h
-    lantern/include/texture.h
-    lantern/include/vector2.h
-    lantern/include/vector3.h
-    lantern/include/vector4.h)
+    lantern/include/texture.h)
 
 add_library(
     lantern STATIC

@@ -1,43 +1,47 @@
 #ifndef LANTERN_VECTOR3_H
 #define LANTERN_VECTOR3_H
 
-#include <cmath>
+#include "common_math.h"
 
 namespace lantern
 {
-	/** Simple 3-dimensional vector */
+	/** 3-dimensional vector template class */
 	template<typename T>
 	class vector3 final
 	{
 	public:
-		/** X-coordinate */
+		/** X-coordinate of vector */
 		T x;
 
-		/** Y-coordinate */
+		/** Y-coordinate of vector */
 		T y;
 
-		/** Z-coordinate */
+		/** Z-coordinate of vector */
 		T z;
 
-		/** Constructs vector with zero values */
+		/** Default constructor (initializes with default values) */
 		vector3();
 
 		/** Constructs vector with specified values
-		* @param x X-coordinate
-		* @param y Y-coordinate
-		* @param z Z-coordinate
+		* @param x X-coordinate of a vector
+		* @param y Y-coordinate of a vector
+		* @param z Z-coordinate of a vector
 		*/
 		vector3(T const x, T const y, T const z);
 
+		// Operators
+		//
+
+		bool operator==(vector3<T> const& v) const;
 		vector3<T> operator+(vector3<T> const& v) const;
 		vector3<T>& operator+=(vector3<T> const& v);
 		vector3<T> operator-(vector3<T> const& v) const;
 		vector3<T>& operator-=(vector3<T> const& v);
 		vector3<T> operator-() const;
-		vector3<T> operator*(float const s) const;
-		vector3<T>& operator*=(float const s);
-		vector3<T> operator/(float const s) const;
-		vector3<T>& operator/=(float const s);
+		vector3<T> operator*(float const f) const;
+		vector3<T>& operator*=(float const f);
+		vector3<T> operator/(float const f) const;
+		vector3<T>& operator/=(float const f);
 
 		/** Calculates vector's length
 		* @returns Length
@@ -88,166 +92,179 @@ namespace lantern
 		vector3<T> perpendicular_on(vector3 const& v) const;
 	};
 
+	// vector3<T> implementation
+	//
+
 	template<typename T>
-	vector3<T>::vector3()
+	inline vector3<T>::vector3()
 		: x{}, y{}, z{}
 	{
 
 	}
 
 	template<typename T>
-	vector3<T>::vector3(T const x, T const y, T const z)
+	inline vector3<T>::vector3(T const x, T const y, T const z)
 		: x(x), y(y), z(z)
 	{
 
 	}
 
 	template<typename T>
-	vector3<T> vector3<T>::operator+(vector3<T> const& v) const
+	inline bool vector3<T>::operator==(vector3<T> const& v) const
 	{
-		return vector3<T>{x + v.x, y + v.y, z + v.z};
+		return equals(this->x, v.x) && equals(this->y, v.y) && equals(this->z, v.z);
 	}
 
 	template<typename T>
-	vector3<T>& vector3<T>::operator+=(vector3<T> const& v)
+	inline vector3<T> vector3<T>::operator+(vector3<T> const& v) const
 	{
-		x += v.x;
-		y += v.y;
-		z += v.z;
+		return vector3<T>{this->x + v.x, this->y + v.y, this->z + v.z};
+	}
+
+	template<typename T>
+	inline vector3<T>& vector3<T>::operator+=(vector3<T> const& v)
+	{
+		this->x += v.x;
+		this->y += v.y;
+		this->z += v.z;
 
 		return *this;
 	}
 
 	template<typename T>
-	vector3<T> vector3<T>::operator-(vector3<T> const& v) const
+	inline vector3<T> vector3<T>::operator-(vector3<T> const& v) const
 	{
-		return vector3{x - v.x, y - v.y, z - v.z};
+		return vector3{this->x - v.x, this->y - v.y, this->z - v.z};
 	}
 
 	template<typename T>
-	vector3<T>& vector3<T>::operator-=(vector3<T> const& v)
+	inline vector3<T>& vector3<T>::operator-=(vector3<T> const& v)
 	{
-		x -= v.x;
-		y -= v.y;
-		z -= v.z;
+		this->x -= v.x;
+		this->y -= v.y;
+		this->z -= v.z;
 
 		return *this;
 	}
 
 	template<typename T>
-	vector3<T> vector3<T>::operator-() const
+	inline vector3<T> vector3<T>::operator-() const
 	{
-		return vector3<T>{-x, -y, -z};
+		return vector3<T>{-this->x, -this->y, -this->z};
 	}
 
 	template<typename T>
-	vector3<T> vector3<T>::operator*(float const s) const
+	inline vector3<T> vector3<T>::operator*(float const f) const
 	{
-		return vector3<T>{x * s, y * s, z * s};
+		return vector3<T>{this->x * f, this->y * f, this->z * f};
 	}
 
 	template<typename T>
-	vector3<T>& vector3<T>::operator*=(float const s)
+	inline vector3<T>& vector3<T>::operator*=(float const f)
 	{
-		x *= s;
-		y *= s;
-		z *= s;
+		this->x *= f;
+		this->y *= f;
+		this->z *= f;
 
 		return *this;
 	}
 
 	template<typename T>
-	vector3<T> vector3<T>::operator/(float const s) const
+	inline vector3<T> vector3<T>::operator/(float const f) const
 	{
-		return vector3{x / s, y / s, z / s};
+		return vector3{this->x / f, this->y / f, this->z / f};
 	}
 
 	template<typename T>
-	vector3<T>& vector3<T>::operator/=(float const s)
+	inline vector3<T>& vector3<T>::operator/=(float const f)
 	{
-		x /= s;
-		y /= s;
-		z /= s;
+		this->x /= f;
+		this->y /= f;
+		this->z /= f;
 
 		return *this;
 	}
 
 	template<typename T>
-	float vector3<T>::length() const
+	inline float vector3<T>::length() const
 	{
-		return std::sqrt(x * x + y * y + z * z);
+		return std::sqrt(this->x * this->x + this->y * this->y + this->z * this->z);
 	}
 
 	template<typename T>
-	float vector3<T>::length_sqr() const
+	inline float vector3<T>::length_sqr() const
 	{
-		return x * x + y * y + z * z;
+		return this->x * this->x + this->y * this->y + this->z * this->z;
 	}
 
 	template<typename T>
-	void vector3<T>::normalize()
+	inline void vector3<T>::normalize()
 	{
-		float const length_reciprocal{1.0f / length()};
+		float const length_reciprocal{1.0f / this->length()};
 
-		x *= length_reciprocal;
-		y *= length_reciprocal;
-		z *= length_reciprocal;
+		this->x *= length_reciprocal;
+		this->y *= length_reciprocal;
+		this->z *= length_reciprocal;
 	}
 
 	template<typename T>
-	vector3<T> vector3<T>::normalized() const
+	inline vector3<T> vector3<T>::normalized() const
 	{
-		float const length_reciprocal{1.0f / length()};
+		float const length_reciprocal{1.0f / this->length()};
 
-		return vector3<T>{x * length_reciprocal, y * length_reciprocal, z * length_reciprocal};
+		return vector3<T>{this->x * length_reciprocal, this->y * length_reciprocal, this->z * length_reciprocal};
 	}
 
 	template<typename T>
-	float vector3<T>::distance_to(vector3<T> const& p) const
+	inline float vector3<T>::distance_to(vector3<T> const& v) const
 	{
-		float const dist_x{p.x - x};
-		float const dist_y{p.y - y};
-		float const dist_z{p.z - z};
+		float const dist_x{v.x - this->x};
+		float const dist_y{v.y - this->y};
+		float const dist_z{v.z - this->z};
+
 		return std::sqrt(dist_x * dist_x + dist_y * dist_y + dist_z * dist_z);
 	}
 
 	template<typename T>
-	float vector3<T>::angle_with(vector3<T> const& v) const
+	inline float vector3<T>::angle_with(vector3<T> const& v) const
 	{
-		return std::acos(dot(v) / (length() * v.length()));
+		return std::acos(this->dot(v) / (this->length() * v.length()));
 	}
 
 	template<typename T>
-	vector3<T> vector3<T>::projection_on(vector3<T> const& v) const
+	inline vector3<T> vector3<T>::projection_on(vector3<T> const& v) const
 	{
-		return v.normalized() * (dot(v) / v.length());
+		return v.normalized() * (this->dot(v) / v.length());
 	}
 
 	template<typename T>
-	vector3<T> vector3<T>::perpendicular_on(vector3<T> const& v) const
+	inline vector3<T> vector3<T>::perpendicular_on(vector3<T> const& v) const
 	{
-		return (*this) - projection_on(v);
+		return (*this) - this->projection_on(v);
 	}
 
 	template<typename T>
-	float vector3<T>::dot(vector3<T> const& v) const
+	inline float vector3<T>::dot(vector3<T> const& v) const
 	{
-		return x * v.x + y * v.y + z * v.z;
+		return this->x * v.x + this->y * v.y + this->z * v.z;
 	}
 
 	template<typename T>
-	vector3<T> vector3<T>::cross(vector3<T> const& v) const
+	inline vector3<T> vector3<T>::cross(vector3<T> const& v) const
 	{
-		return vector3<T>{y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x};
+		return vector3<T>{this->y * v.z - this->z * v.y, this->z * v.x - this->x * v.z, this->x * v.y - this->y * v.x};
 	}
 
 	template<typename T>
-	vector3<T> operator*(float const s, vector3<T> const& v)
+	inline vector3<T> operator*(float const f, vector3<T> const& v)
 	{
-		return vector3<T>{v.x * s, v.y * s, v.z * s};
+		return vector3<T>{v.x * f, v.y * f, v.z * f};
 	}
 
-	typedef vector3<float> vector3f;
+	// Typedefs
+	//
+
+	using vector3f = vector3<float>;
 }
 
 #endif // LANTERN_VECTOR3_H

@@ -1,8 +1,7 @@
 #ifndef LANTERN_COLOR_H
 #define LANTERN_COLOR_H
 
-#include <cmath>
-
+#include "common_math.h"
 namespace lantern
 {
 	/** Class representing RGB color */
@@ -17,6 +16,9 @@ namespace lantern
 
 		/** Blue component */
 		float b;
+
+		// Operators
+		//
 
 		bool operator==(color const& c) const;
 		bool operator!=(color const& c) const;
@@ -42,10 +44,7 @@ namespace lantern
 
 	inline bool color::operator==(color const& c) const
 	{
-		return (
-			(std::abs(r - c.r) < 0.001f) &&
-			(std::abs(g - c.g) < 0.001f) &&
-			(std::abs(b - c.b) < 0.001f));
+		return (equals(this->r, c.r) && equals(this->g, c.g) && equals(this->b, c.b));
 	}
 
 	inline bool color::operator!=(color const& c) const

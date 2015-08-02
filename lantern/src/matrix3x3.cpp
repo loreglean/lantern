@@ -53,7 +53,7 @@ matrix3x3 matrix3x3::operator*(matrix3x3 const& m) const
 			result.values[i][j] = 0.0f;
 			for (size_t k{0}; k < 3; ++k)
 			{
-				result.values[i][j] += values[i][k] * m.values[k][j];
+				result.values[i][j] += this->values[i][k] * m.values[k][j];
 			}
 		}
 	}
@@ -64,9 +64,9 @@ matrix3x3 matrix3x3::operator*(matrix3x3 const& m) const
 float matrix3x3::det() const
 {
 	return
-		values[0][0] * (values[1][1] * values[2][2] - values[1][2] * values[2][1]) -
-		values[0][1] * (values[1][0] * values[2][2] - values[1][2] * values[2][0]) +
-		values[0][2] * (values[1][0] * values[2][1] - values[1][1] * values[2][0]);
+		this->values[0][0] * (this->values[1][1] * this->values[2][2] - this->values[1][2] * this->values[2][1]) -
+		this->values[0][1] * (this->values[1][0] * this->values[2][2] - this->values[1][2] * this->values[2][0]) +
+		this->values[0][2] * (this->values[1][0] * this->values[2][1] - this->values[1][1] * this->values[2][0]);
 }
 
 matrix3x3 matrix3x3::inversed() const
@@ -78,17 +78,17 @@ matrix3x3 matrix3x3::inversed_precalc_det(float const det) const
 {
 	matrix3x3 result;
 
-	result.values[0][0] = values[1][1] * values[2][2] - values[1][2] * values[2][1];
-	result.values[1][0] = values[1][2] * values[2][0] - values[1][0] * values[2][2];
-	result.values[2][0] = values[1][0] * values[2][1] - values[1][1] * values[2][0];
+	result.values[0][0] = this->values[1][1] * this->values[2][2] - this->values[1][2] * this->values[2][1];
+	result.values[1][0] = this->values[1][2] * this->values[2][0] - this->values[1][0] * this->values[2][2];
+	result.values[2][0] = this->values[1][0] * this->values[2][1] - this->values[1][1] * this->values[2][0];
 
-	result.values[0][1] = values[0][2] * values[2][1] - values[0][1] * values[2][2];
-	result.values[1][1] = values[0][0] * values[2][2] - values[0][2] * values[2][0];
-	result.values[2][1] = values[0][1] * values[2][0] - values[0][0] * values[2][1];
+	result.values[0][1] = this->values[0][2] * this->values[2][1] - this->values[0][1] * this->values[2][2];
+	result.values[1][1] = this->values[0][0] * this->values[2][2] - this->values[0][2] * this->values[2][0];
+	result.values[2][1] = this->values[0][1] * this->values[2][0] - this->values[0][0] * this->values[2][1];
 
-	result.values[0][2] = values[0][1] * values[1][2] - values[0][2] * values[1][1];
-	result.values[1][2] = values[0][2] * values[1][0] - values[0][0] * values[1][2];
-	result.values[2][2] = values[0][0] * values[1][1] - values[0][1] * values[1][0];
+	result.values[0][2] = this->values[0][1] * this->values[1][2] - this->values[0][2] * this->values[1][1];
+	result.values[1][2] = this->values[0][2] * this->values[1][0] - this->values[0][0] * this->values[1][2];
+	result.values[2][2] = this->values[0][0] * this->values[1][1] - this->values[0][1] * this->values[1][0];
 
 	float const det_ivnersed = 1.0f / det;
 	for (size_t j{0}; j < 3; ++j)

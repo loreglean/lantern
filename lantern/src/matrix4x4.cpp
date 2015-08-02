@@ -20,7 +20,7 @@ matrix4x4::matrix4x4(float const m[4][4])
 	{
 		for (int j{0}; j < 4; ++j)
 		{
-			values[i][j] = m[i][j];
+			this->values[i][j] = m[i][j];
 		}
 	}
 }
@@ -31,25 +31,25 @@ matrix4x4::matrix4x4(
 	float const m20, float const m21, float const m22, float const m23,
 	float const m30, float const m31, float const m32, float const m33)
 {
-	values[0][0] = m00;
-	values[0][1] = m01;
-	values[0][2] = m02;
-	values[0][3] = m03;
+	this->values[0][0] = m00;
+	this->values[0][1] = m01;
+	this->values[0][2] = m02;
+	this->values[0][3] = m03;
 
-	values[1][0] = m10;
-	values[1][1] = m11;
-	values[1][2] = m12;
-	values[1][3] = m13;
+	this->values[1][0] = m10;
+	this->values[1][1] = m11;
+	this->values[1][2] = m12;
+	this->values[1][3] = m13;
 
-	values[2][0] = m20;
-	values[2][1] = m21;
-	values[2][2] = m22;
-	values[2][3] = m23;
+	this->values[2][0] = m20;
+	this->values[2][1] = m21;
+	this->values[2][2] = m22;
+	this->values[2][3] = m23;
 
-	values[3][0] = m30;
-	values[3][1] = m31;
-	values[3][2] = m32;
-	values[3][3] = m33;
+	this->values[3][0] = m30;
+	this->values[3][1] = m31;
+	this->values[3][2] = m32;
+	this->values[3][3] = m33;
 }
 
 matrix4x4 matrix4x4::operator*(matrix4x4 const& m) const
@@ -63,7 +63,7 @@ matrix4x4 matrix4x4::operator*(matrix4x4 const& m) const
 			result.values[i][j] = 0.0f;
 			for (size_t k{0}; k < 4; ++k)
 			{
-				result.values[i][j] += values[i][k] * m.values[k][j];
+				result.values[i][j] += this->values[i][k] * m.values[k][j];
 			}
 		}
 	}
