@@ -23,4 +23,3 @@ void pipeline::set_fill_mode(fill_mode_option value)
 {
 	m_fill_mode = value;
 }
- 

@@ -1,7 +1,7 @@
 #ifndef LANTERN_VECTOR3_H
 #define LANTERN_VECTOR3_H
 
-#include "common_math.h"
+#include "math_common.h"
 
 namespace lantern
 {

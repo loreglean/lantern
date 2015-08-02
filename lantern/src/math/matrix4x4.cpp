@@ -3,18 +3,18 @@
 
 using namespace lantern;
 
-matrix4x4 const matrix4x4::IDENTITY = matrix4x4{
+matrix4x4f const matrix4x4f::IDENTITY = matrix4x4f{
 	1.0f, 0.0f, 0.0f, 0.0f,
 	0.0f, 1.0f, 1.0f, 0.0f,
 	0.0f, 0.0f, 1.0f, 0.0f,
 	0.0f, 0.0f, 0.0f, 1.0f};
 
-matrix4x4::matrix4x4()
+matrix4x4f::matrix4x4f()
 {
 
 }
 
-matrix4x4::matrix4x4(float const m[4][4])
+matrix4x4f::matrix4x4f(float const m[4][4])
 {
 	for (int i{0}; i < 4; ++i)
 	{
@@ -25,7 +25,7 @@ matrix4x4::matrix4x4(float const m[4][4])
 	}
 }
 
-matrix4x4::matrix4x4(
+matrix4x4f::matrix4x4f(
 	float const m00, float const m01, float const m02, float const m03,
 	float const m10, float const m11, float const m12, float const m13,
 	float const m20, float const m21, float const m22, float const m23,
@@ -52,9 +52,9 @@ matrix4x4::matrix4x4(
 	this->values[3][3] = m33;
 }
 
-matrix4x4 matrix4x4::operator*(matrix4x4 const& m) const
+matrix4x4f matrix4x4f::operator*(matrix4x4f const& m) const
 {
-	matrix4x4 result;
+	matrix4x4f result;
 
 	for (size_t i{0}; i < 4; ++i)
 	{
@@ -71,68 +71,68 @@ matrix4x4 matrix4x4::operator*(matrix4x4 const& m) const
 	return result;
 }
 
-matrix4x4 matrix4x4::translation(float const x, float const y, float const z)
+matrix4x4f matrix4x4f::translation(float const x, float const y, float const z)
 {
-	return matrix4x4{
+	return matrix4x4f{
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		x, y, z, 1.0f};
 }
 
-matrix4x4 matrix4x4::scale(float const x, float const y, float const z)
+matrix4x4f matrix4x4f::scale(float const x, float const y, float const z)
 {
-	return matrix4x4{
+	return matrix4x4f{
 		x, 0.0f, 0.0f, 0.0f,
 		0.0f, y, 0.0f, 0.0f,
 		0.0f, 0.0f, z, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f};
 }
 
-matrix4x4 matrix4x4::uniform_scale(float const s)
+matrix4x4f matrix4x4f::uniform_scale(float const s)
 {
-	return matrix4x4{
+	return matrix4x4f{
 		s, 0.0f, 0.0f, 0.0f,
 		0.0f, s, 0.0f, 0.0f,
 		0.0f, 0.0f, s, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f};
 }
 
-matrix4x4 matrix4x4::rotation_around_x_axis(float const radians)
+matrix4x4f matrix4x4f::rotation_around_x_axis(float const radians)
 {
-	return matrix4x4{
+	return matrix4x4f{
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, std::cos(radians), std::sin(radians), 0.0f,
 		0.0f, -std::sin(radians), std::cos(radians), 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f};
 }
 
-matrix4x4 matrix4x4::rotation_around_y_axis(float const radians)
+matrix4x4f matrix4x4f::rotation_around_y_axis(float const radians)
 {
-	return matrix4x4{
+	return matrix4x4f{
 		std::cos(radians), 0.0f, -std::sin(radians), 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
 		std::sin(radians), 0.0f, std::cos(radians), 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f};
 }
 
-matrix4x4 matrix4x4::rotation_around_z_axis(float const radians)
+matrix4x4f matrix4x4f::rotation_around_z_axis(float const radians)
 {
-	return matrix4x4{
+	return matrix4x4f{
 		std::cos(radians), std::sin(radians), 0.0f, 0.0f,
 		-std::sin(radians), std::cos(radians), 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f};
 }
 
-matrix4x4 matrix4x4::rotation_around_axis(vector3f const& axis, float const radians)
+matrix4x4f matrix4x4f::rotation_around_axis(vector3f const& axis, float const radians)
 {
 	vector3f axis_normalized{axis.normalized()};
 
 	float const cos_value{std::cos(radians)};
 	float const sin_value{std::sin(radians)};
 
-	return matrix4x4{
+	return matrix4x4f{
 		axis_normalized.x * axis_normalized.x * (1.0f - cos_value) + cos_value,
 		axis_normalized.x * axis_normalized.y * (1.0f - cos_value) + axis_normalized.z * sin_value,
 		axis_normalized.x * axis_normalized.z * (1.0f - cos_value) - axis_normalized.y * sin_value,
@@ -154,7 +154,7 @@ matrix4x4 matrix4x4::rotation_around_axis(vector3f const& axis, float const radi
 		1.0f};
 }
 
-matrix4x4 matrix4x4::clip_space(float const hfov, float const vfov, float const near, float const far)
+matrix4x4f matrix4x4f::clip_space(float const hfov, float const vfov, float const near, float const far)
 {
 	float const projection_plane_z{1.0f};
 
@@ -163,7 +163,7 @@ matrix4x4 matrix4x4::clip_space(float const hfov, float const vfov, float const 
 	float const top{std::tan(vfov / 2.0f) * projection_plane_z};
 	float const bottom{-top};
 
-	return matrix4x4{
+	return matrix4x4f{
 			2.0f * projection_plane_z / (right - left), 0.0f, 0.0f, 0.0f,
 			0.0f, 2.0f * projection_plane_z / (top - bottom), 0.0f, 0.0f,
 			(left + right) / (left - right), (bottom + top) / (bottom - top), (far + near) / (far - near), 1.0f,

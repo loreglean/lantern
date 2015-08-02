@@ -1,7 +1,7 @@
 #ifndef LANTERN_COLOR_H
 #define LANTERN_COLOR_H
 
-#include "common_math.h"
+#include "math_common.h"
 namespace lantern
 {
 	/** Class representing RGB color */
@@ -31,26 +31,6 @@ namespace lantern
 		static const color GREEN;
 		static const color BLUE;
 	};
-
-	inline color color::operator*(float const s) const
-	{
-		return color{r * s, g * s, b * s};
-	}
-
-	inline color color::operator+(color const& c) const
-	{
-		return color{r + c.r, g + c.g, b + c.b};
-	}
-
-	inline bool color::operator==(color const& c) const
-	{
-		return (equals(this->r, c.r) && equals(this->g, c.g) && equals(this->b, c.b));
-	}
-
-	inline bool color::operator!=(color const& c) const
-	{
-		return !(*this == c);
-	}
 }
 
 #endif // LANTERN_COLOR_H

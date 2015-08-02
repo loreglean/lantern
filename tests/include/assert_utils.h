@@ -33,7 +33,7 @@ inline void assert_vectors3_near(vector3<float> const& v1, vector3<float> const&
 	assert_floats_near(v1.z, v2.z);
 }
 
-inline void assert_vectors4_near(vector4 const& v1, vector4 const& v2)
+inline void assert_vectors4_near(vector4f const& v1, vector4f const& v2)
 {
 	assert_floats_near(v1.x, v2.x);
 	assert_floats_near(v1.y, v2.y);
@@ -41,7 +41,7 @@ inline void assert_vectors4_near(vector4 const& v1, vector4 const& v2)
 	assert_floats_near(v1.w, v2.w);
 }
 
-inline void assert_matrix3x3_near(matrix3x3 const& m1, matrix3x3 const& m2)
+inline void assert_matrix3x3_near(matrix3x3f const& m1, matrix3x3f const& m2)
 {
 	assert_floats_near(m1.values[0][0], m2.values[0][0]);
 	assert_floats_near(m1.values[0][1], m2.values[0][1]);
@@ -54,7 +54,7 @@ inline void assert_matrix3x3_near(matrix3x3 const& m1, matrix3x3 const& m2)
 	assert_floats_near(m1.values[2][2], m2.values[2][2]);
 }
 
-inline void assert_matrix4x4_near(matrix4x4 const& m1, matrix4x4 const& m2)
+inline void assert_matrix4x4_near(matrix4x4f const& m1, matrix4x4f const& m2)
 {
 	assert_floats_near(m1.values[0][0], m2.values[0][0]);
 	assert_floats_near(m1.values[0][1], m2.values[0][1]);

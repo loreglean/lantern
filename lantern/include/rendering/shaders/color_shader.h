@@ -42,7 +42,7 @@ namespace lantern
 		* @param vertex Vertex in local space
 		* @returns Processed vertex in homogeneous clip space
 		*/
-		vector4 process_vertex(vector4 const& vertex);
+		vector4f process_vertex(vector4f const& vertex);
 
 		/** Processes pixel
 		* @param pixel Pixel coordinates on screen
@@ -53,22 +53,22 @@ namespace lantern
 		/** Sets model-view-projection matrix to use during vertex processing
 		* @param mvp Model-view-projection matrix
 		*/
-		void set_mvp_matrix(matrix4x4 const& mvp);
+		void set_mvp_matrix(matrix4x4f const& mvp);
 
 	private:
 		/** Movel-view-projection matrix */
-		matrix4x4 m_mvp;
+		matrix4x4f m_mvp;
 
 		/** Color bind point, contains interpolated color value */
 		color m_color;
 	};
 
-	inline void color_shader::set_mvp_matrix(matrix4x4 const& mvp)
+	inline void color_shader::set_mvp_matrix(matrix4x4f const& mvp)
 	{
 		m_mvp = mvp;
 	}
 
-	inline vector4 color_shader::process_vertex(vector4 const& vertex)
+	inline vector4f color_shader::process_vertex(vector4f const& vertex)
 	{
 		return vertex * m_mvp;
 	}
@@ -82,7 +82,7 @@ namespace lantern
 	inline std::vector<shader_bind_point_info<color>> color_shader::get_color_bind_points()
 	{
 		return std::vector<shader_bind_point_info<color>>{
-			shader_bind_point_info<color> { VERTEX_COLOR_ATTR_ID, &m_color }};
+			shader_bind_point_info<color> { COLOR_ATTR_ID, &m_color }};
 	}
 
 	inline std::vector<shader_bind_point_info<float>> color_shader::get_float_bind_points()

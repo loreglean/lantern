@@ -115,7 +115,7 @@ void camera::move_backward(float const distance)
 
 void camera::yaw(float const radians)
 {
-	matrix3x3 const rotation{matrix3x3::rotation_around_y_axis(radians)};
+	matrix3x3f const rotation{matrix3x3f::rotation_around_y_axis(radians)};
 	m_forward = m_forward * rotation;
 	m_right = m_right * rotation;
 	m_up = m_up * rotation;
@@ -123,7 +123,7 @@ void camera::yaw(float const radians)
 
 void camera::pitch(float const radians)
 {
-	matrix3x3 const rotation{matrix3x3::rotation_around_x_axis(radians)};
+	matrix3x3f const rotation{matrix3x3f::rotation_around_x_axis(radians)};
 	m_forward = m_forward * rotation;
 	m_right = m_right * rotation;
 	m_up = m_up * rotation;

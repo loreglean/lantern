@@ -30,42 +30,62 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
 # Library target ============================
 set(LANTERN_SOURCES
     lantern/src/app.cpp
-    lantern/src/camera.cpp
-    lantern/src/color.cpp
-    lantern/src/matrix3x3.cpp
-    lantern/src/matrix4x4.cpp
-    lantern/src/mesh.cpp
-    lantern/src/obj_import.cpp
-    lantern/src/pipeline.cpp
-    lantern/src/texture.cpp)
+    lantern/src/math/line.cpp
+    lantern/src/math/math_common.cpp
+    lantern/src/math/matrix3x3.cpp
+    lantern/src/math/matrix4x4.cpp
+    lantern/src/math/vector4.cpp
+    lantern/src/rendering/camera.cpp
+    lantern/src/rendering/color.cpp
+    lantern/src/rendering/pipeline.cpp
+    lantern/src/rendering/texture.cpp
+    lantern/src/rendering/geometry/mesh.cpp
+    lantern/src/rendering/geometry/obj_import.cpp
+    lantern/src/rendering/rasterizing/rasterizer_traversal_common.cpp)
 
 set(LANTERN_HEADERS
-    lantern/include/common_math.h
-    lantern/include/vector2.h
-    lantern/include/vector3.h
-    lantern/include/vector4.h
-    lantern/include/aabb.h
-    lantern/include/line.h
     lantern/include/app.h
-    lantern/include/camera.h
-    lantern/include/color.h
-    lantern/include/color_shader.h
-    lantern/include/texture_shader.h
-    lantern/include/matrix3x3.h
-    lantern/include/matrix4x4.h
-    lantern/include/mesh.h
-    lantern/include/mesh_attribute_info.h
-    lantern/include/obj_import.h
-    lantern/include/pipeline.h
-    lantern/include/shader.h
-    lantern/include/texture.h)
+    lantern/include/math/aabb.h
+    lantern/include/math/line.h
+    lantern/include/math/math_common.h
+    lantern/include/math/matrix3x3.h
+    lantern/include/math/matrix4x4.h
+    lantern/include/math/vector2.h
+    lantern/include/math/vector3.h
+    lantern/include/math/vector4.h
+    lantern/include/rendering/texture.h
+    lantern/include/rendering/rendering_options.h
+    lantern/include/rendering/pipeline.h
+    lantern/include/rendering/color.h
+    lantern/include/rendering/camera.h
+    lantern/include/rendering/shaders/shader.h
+    lantern/include/rendering/shaders/color_shader.h
+    lantern/include/rendering/shaders/texture_shader.h
+    lantern/include/rendering/rasterizing/rasterizer_common.h
+    lantern/include/rendering/rasterizing/rasterizer_homogeneous.h
+    lantern/include/rendering/rasterizing/rasterizer_inversed_slope.h
+    lantern/include/rendering/rasterizing/rasterizer_traversal_aabb.h
+    lantern/include/rendering/rasterizing/rasterizer_traversal_backtracking.h
+    lantern/include/rendering/rasterizing/rasterizer_traversal_common.h
+    lantern/include/rendering/rasterizing/rasterizer_traversal_zigzag.h
+    lantern/include/rendering/geometry/obj_import.h
+    lantern/include/rendering/geometry/mesh_attribute_info.h
+    lantern/include/rendering/geometry/mesh.h)
+
+set(LANTERN_INCLUDE_FOLDERS
+    lantern/include
+    lantern/include/math
+    lantern/include/rendering
+    lantern/include/rendering/shaders
+    lantern/include/rendering/rasterizing
+    lantern/include/rendering/geometry)
 
 add_library(
     lantern STATIC
     ${LANTERN_SOURCES}
     ${LANTERN_HEADERS})
 
-target_include_directories(lantern PUBLIC lantern/include)
+target_include_directories(lantern PUBLIC ${LANTERN_INCLUDE_FOLDERS})
 target_include_directories(lantern PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2IMAGE_INCLUDE_DIR})
 
 set_target_properties(

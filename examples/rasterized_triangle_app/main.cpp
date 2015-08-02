@@ -63,7 +63,7 @@ rasterized_color_triangle_app::rasterized_color_triangle_app(unsigned int const 
 	// Add color attribute to triangle mesh
 	//
 	std::vector<color> const colors{color::GREEN, color::RED, color::BLUE};
-	mesh_attribute_info<color> const color_info{VERTEX_COLOR_ATTR_ID, colors, indices, attribute_interpolation_option::linear};
+	mesh_attribute_info<color> const color_info{COLOR_ATTR_ID, colors, indices, attribute_interpolation_option::linear};
 	m_triangle_mesh.get_color_attributes().push_back(color_info);
 
 	// Add uv attribute to triangle mesh
@@ -146,34 +146,34 @@ void rasterized_color_triangle_app::on_key_down(SDL_Keysym const key)
 
 void rasterized_color_triangle_app::update_shader_mvp()
 {
-	matrix4x4 const local_to_world_transform{
-		matrix4x4::rotation_around_x_axis(m_triangle_rotation.x) *
-		matrix4x4::rotation_around_y_axis(m_triangle_rotation.y) *
-		matrix4x4::rotation_around_z_axis(m_triangle_rotation.z) *
-		matrix4x4::translation(m_triangle_position.x, m_triangle_position.y, m_triangle_position.z)};
+	matrix4x4f const local_to_world_transform{
+		matrix4x4f::rotation_around_x_axis(m_triangle_rotation.x) *
+		matrix4x4f::rotation_around_y_axis(m_triangle_rotation.y) *
+		matrix4x4f::rotation_around_z_axis(m_triangle_rotation.z) *
+		matrix4x4f::translation(m_triangle_position.x, m_triangle_position.y, m_triangle_position.z)};
 
-	matrix4x4 const camera_rotation{
+	matrix4x4f const camera_rotation{
 		m_camera.get_right().x, m_camera.get_up().x, m_camera.get_forward().x, 0.0f,
 		m_camera.get_right().y, m_camera.get_up().y, m_camera.get_forward().y, 0.0f,
 		m_camera.get_right().z, m_camera.get_up().z, m_camera.get_forward().z, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f};
 
-	matrix4x4 const camera_translation{
+	matrix4x4f const camera_translation{
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		-m_camera.get_position().x, -m_camera.get_position().y, -m_camera.get_position().z, 1.0f};
 
-	matrix4x4 const world_to_camera_transform{camera_translation * camera_rotation};
+	matrix4x4f const world_to_camera_transform{camera_translation * camera_rotation};
 
-	matrix4x4 const camera_to_clip_transform{
-		matrix4x4::clip_space(
+	matrix4x4f const camera_to_clip_transform{
+		matrix4x4f::clip_space(
 			m_camera.get_horizontal_fov(),
 			m_camera.get_vertical_fov(),
 			m_camera.get_near_plane_z(),
 			m_camera.get_far_plane_z())};
 
-	matrix4x4 const local_to_clip_transform{
+	matrix4x4f const local_to_clip_transform{
 		local_to_world_transform * world_to_camera_transform * camera_to_clip_transform};
 
 	if (m_shader_option == shader_option::color)

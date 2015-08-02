@@ -32,7 +32,7 @@ public:
 		return std::vector<shader_bind_point_info<vector3f>>{};
 	}
 
-	vector4 process_vertex(vector4 const& vertex)
+	vector4f process_vertex(vector4f const& vertex)
 	{
 		return vertex;
 	}

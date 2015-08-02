@@ -43,7 +43,7 @@ namespace lantern
 		* @param vertex Vertex in local space
 		* @returns Processed vertex in homogeneous clip space
 		*/
-		vector4 process_vertex(vector4 const& vertex);
+		vector4f process_vertex(vector4f const& vertex);
 
 		/** Processes pixel
 		* @param pixel Pixel coordinates on screen
@@ -54,7 +54,7 @@ namespace lantern
 		/** Sets model-view-projection matrix to use during vertex processing
 		* @param mvp Model-view-projection matrix
 		*/
-		void set_mvp_matrix(matrix4x4 const& mvp);
+		void set_mvp_matrix(matrix4x4f const& mvp);
 
 		/** Sets texture to use for texturing
 		* @param tex Texture to use
@@ -66,13 +66,13 @@ namespace lantern
 		vector2f m_uv;
 
 		/** Movel-view-projection matrix */
-		matrix4x4 m_mvp;
+		matrix4x4f m_mvp;
 
 		/** Texture to use */
 		texture* m_texture;
 	};
 
-	inline void texture_shader::set_mvp_matrix(matrix4x4 const& mvp)
+	inline void texture_shader::set_mvp_matrix(matrix4x4f const& mvp)
 	{
 		m_mvp = mvp;
 	}
@@ -82,7 +82,7 @@ namespace lantern
 		m_texture = tex;
 	}
 
-	inline vector4 texture_shader::process_vertex(vector4 const& vertex)
+	inline vector4f texture_shader::process_vertex(vector4f const& vertex)
 	{
 		return vertex * m_mvp;
 	}

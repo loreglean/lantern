@@ -28,20 +28,6 @@ namespace lantern
 		/** Constructs vector with specified coordinates values */
 		vector4f(float const x, float const y, float const z, float const w);
 	};
-
-	// vector4f implementation
-	//
-
-	inline vector4f::vector4f()
-		: x{0.0f}, y{0.0f}, z{0.0f}, w{0.0f}
-	{
-	}
-
-	inline vector4f::vector4f(float const x, float const y, float const z, float const w)
-		: x{x}, y{y}, z{z}, w{w}
-	{
-
-	}
 }
 
 #endif // LANTERN_VECTOR4_H

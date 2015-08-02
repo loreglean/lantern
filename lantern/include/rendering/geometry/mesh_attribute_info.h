@@ -67,7 +67,7 @@ namespace lantern
 
 	// Predefined attributes ids
 	//
-	unsigned int const VERTEX_COLOR_ATTR_ID = 0;
+	unsigned int const COLOR_ATTR_ID = 0;
 	unsigned int const TEXCOORD_ATTR_ID = 1;
 	unsigned int const NORMAL_ATTR_ID = 2;
 
@@ -77,10 +77,10 @@ namespace lantern
 		std::vector<TAttr> const data,
 		std::vector<unsigned int> const indices,
 		attribute_interpolation_option interpolation_option)
-		: m_id(attribute_id),
-		  m_data(data),
-		  m_indices(indices),
-		  m_interpolation_option(interpolation_option)
+		: m_id{attribute_id},
+		  m_data{data},
+		  m_indices{indices},
+		  m_interpolation_option{interpolation_option}
 	{
 
 	}
@@ -108,7 +108,6 @@ namespace lantern
 	{
 		return m_interpolation_option;
 	}
-
 }
 
 #endif
