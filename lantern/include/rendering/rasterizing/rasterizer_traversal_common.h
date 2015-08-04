@@ -1,6 +1,9 @@
 #ifndef LANTERN_RATERIZER_TRAVERSAL_COMMON_H
 #define LANTERN_RATERIZER_TRAVERSAL_COMMON_H
 
+#if __linux
+#include <stddef.h>
+#endif
 #include <vector>
 #include "math_common.h"
 #include "rasterizer_common.h"
