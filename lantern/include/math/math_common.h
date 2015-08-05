@@ -2,7 +2,6 @@
 #define LATNERN_COMMON_MATH_H
 
 #include <cmath>
-#include "vector2.h"
 
 namespace lantern
 {
