@@ -78,8 +78,8 @@ namespace lantern
 		std::vector<unsigned int> const indices,
 		attribute_interpolation_option interpolation_option)
 		: m_id{attribute_id},
-		  m_data{data},
-		  m_indices{indices},
+		  m_data(data),
+		  m_indices(indices),
 		  m_interpolation_option{interpolation_option}
 	{
 
