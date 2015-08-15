@@ -35,10 +35,11 @@ set(LANTERN_SOURCES
     lantern/src/math/matrix3x3.cpp
     lantern/src/math/matrix4x4.cpp
     lantern/src/math/vector4.cpp
-    lantern/src/rendering/camera.cpp
-    lantern/src/rendering/color.cpp
-    lantern/src/rendering/pipeline.cpp
     lantern/src/rendering/texture.cpp
+    lantern/src/rendering/pipeline.cpp
+    lantern/src/rendering/merger.cpp
+    lantern/src/rendering/color.cpp
+    lantern/src/rendering/camera.cpp
     lantern/src/rendering/geometry/mesh.cpp
     lantern/src/rendering/geometry/obj_import.cpp
     lantern/src/rendering/rasterizing/rasterizer_traversal_common.cpp)
@@ -56,6 +57,7 @@ set(LANTERN_HEADERS
     lantern/include/rendering/texture.h
     lantern/include/rendering/rendering_options.h
     lantern/include/rendering/pipeline.h
+    lantern/include/rendering/merger.h
     lantern/include/rendering/color.h
     lantern/include/rendering/camera.h
     lantern/include/rendering/shaders/shader.h

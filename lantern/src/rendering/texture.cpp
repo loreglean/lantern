@@ -52,16 +52,6 @@ unsigned char const* texture::get_data() const
 	return m_data;
 }
 
-color texture::get_pixel_color(vector2ui const& point) const
-{
-	unsigned int const pixel_first_byte_index{m_pitch * point.y + point.x * 4};
-
-	return color{
-		m_data[pixel_first_byte_index + 2] / 255.0f,
-		m_data[pixel_first_byte_index + 1] / 255.0f,
-		m_data[pixel_first_byte_index + 0] / 255.0f};
-}
-
 texture texture::load_from_file(std::string file)
 {
 	SDL_Surface* surface = IMG_Load(file.c_str());

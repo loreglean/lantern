@@ -22,6 +22,7 @@ namespace lantern
 		vector4f const& v0, vector4f const& v1, vector4f const& v2,
 		TShader& shader,
 		texture& target_texture,
+		merger const& merger,
 		binded_mesh_attributes& attributes)
 	{
 		// Sort vertices by y-coordinate
@@ -76,6 +77,7 @@ namespace lantern
 				0.0f, 0.0f,
 				shader,
 				target_texture,
+				merger,
 				attributes);
 		}
 		else if (std::abs(v0_sorted.y - v1_sorted.y) < FLOAT_EPSILON)
@@ -95,6 +97,7 @@ namespace lantern
 				0.0f, 0.0f,
 				shader,
 				target_texture,
+				merger,
 				attributes);
 		}
 		else
@@ -125,6 +128,7 @@ namespace lantern
 				total_edge_with_separator_vertex_length - distance_to_separator_vertex, 0.0f,
 				shader,
 				target_texture,
+				merger,
 				attributes);
 
 			// Draw bottom triangle
@@ -134,6 +138,7 @@ namespace lantern
 				distance_to_separator_vertex, 0.0f,
 				shader,
 				target_texture,
+				merger,
 				attributes);
 		}
 	}
@@ -157,6 +162,7 @@ namespace lantern
 		float v0_v1_edge_distance_offset, float v0_v2_edge_distance_offset,
 		TShader& shader,
 		texture& target_texture,
+		merger const& merger,
 		binded_mesh_attributes& attributes)
 	{
 		// Sort vertices on horizontal edge by their x-coordinate
@@ -346,10 +352,8 @@ namespace lantern
 					current_scanline_distance_normalized,
 					left_zview_reciprocal, right_zview_reciprocal);
 
-				// Process pixel
-				//
 				vector2ui pixel{static_cast<unsigned int>(x), static_cast<unsigned int>(y)};
-				target_texture.set_pixel_color(pixel, shader.process_pixel(pixel));
+				merger.merge(target_texture, pixel, shader.process_pixel(pixel));
 
 				current_scanline_distance_normalized += scanline_step_distance_normalized;
 			}

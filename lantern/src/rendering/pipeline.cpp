@@ -9,6 +9,11 @@ pipeline::pipeline()
 	set_fill_mode(fill_mode_option::solid);
 }
 
+merger& pipeline::get_merger()
+{
+	return m_merger;
+}
+
 void pipeline::set_rasterization_algorithm(rasterization_algorithm_option value)
 {
 	m_rasterization_algorithm = value;

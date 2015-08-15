@@ -62,7 +62,7 @@ rasterized_color_triangle_app::rasterized_color_triangle_app(unsigned int const 
 
 	// Add color attribute to triangle mesh
 	//
-	std::vector<color> const colors{color::GREEN, color::RED, color::BLUE};
+	std::vector<color> const colors{color::GREEN.with_alpha(0.0f), color::RED.with_alpha(0.0f), color::BLUE.with_alpha(1.0f)};
 	mesh_attribute_info<color> const color_info{COLOR_ATTR_ID, colors, indices, attribute_interpolation_option::linear};
 	m_triangle_mesh.get_color_attributes().push_back(color_info);
 
@@ -75,6 +75,10 @@ rasterized_color_triangle_app::rasterized_color_triangle_app(unsigned int const 
 	// Setup texture shader
 	//
 	m_texture_shader.set_texture(&m_texture);
+
+	// This enables alpha blending
+	//
+	// get_pipeline().get_merger().set_alpha_blending_enabled(true);
 };
 
 void rasterized_color_triangle_app::frame(float const delta_since_last_frame)

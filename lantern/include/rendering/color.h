@@ -17,13 +17,18 @@ namespace lantern
 		/** Blue component */
 		float b;
 
+		/** Alpha component */
+		float a;
+
+		color with_alpha(float alpha) const;
+
 		// Operators
 		//
 
-		bool operator==(color const& c) const;
-		bool operator!=(color const& c) const;
+		bool operator==(color const& another) const;
+		bool operator!=(color const& another) const;
 		color operator*(float const s) const;
-		color operator+(color const& c) const;
+		color operator+(color const& another) const;
 
 		static const color BLACK;
 		static const color WHITE;

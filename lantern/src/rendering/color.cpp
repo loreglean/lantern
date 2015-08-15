@@ -8,22 +8,27 @@ const color color::RED = color{1.0f, 0.0f, 0.0f};
 const color color::GREEN = color{0.0f, 1.0f, 0.0f};
 const color color::BLUE = color{0.0f, 0.0f, 1.0f};
 
+color color::with_alpha(float alpha) const
+{
+	return color{this->r, this->g, this->b, alpha};
+}
+
+bool color::operator==(color const& another) const
+{
+	return (equals(this->r, another.r) && equals(this->g, another.g) && equals(this->b, another.b) && equals(this->a, another.a));
+}
+
+bool color::operator!=(color const& another) const
+{
+	return !(*this == another);
+}
+
 color color::operator*(float const s) const
 {
-	return color{r * s, g * s, b * s};
+	return color{this->r * s, this->g * s, this->b * s, this->a * s};
 }
 
-color color::operator+(color const& c) const
+color color::operator+(color const& another) const
 {
-	return color{r + c.r, g + c.g, b + c.b};
-}
-
-bool color::operator==(color const& c) const
-{
-	return (equals(this->r, c.r) && equals(this->g, c.g) && equals(this->b, c.b));
-}
-
-bool color::operator!=(color const& c) const
-{
-	return !(*this == c);
+	return color{this->r + another.r, this->g + another.g, this->b + another.b, this->a + another.a};
 }

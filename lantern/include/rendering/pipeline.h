@@ -13,6 +13,7 @@
 #include "line.h"
 #include "aabb.h"
 #include "math_common.h"
+#include "merger.h"
 #include "rasterizer_traversal_aabb.h"
 #include "rasterizer_traversal_backtracking.h"
 #include "rasterizer_traversal_zigzag.h"
@@ -30,6 +31,8 @@ namespace lantern
 	public:
 		/** Constructs pipeline with default parameters */
 		pipeline();
+
+		merger& get_merger();
 
 		/** Sets rasterization algorithm to use
 		* @param value Algorithm to use
@@ -65,6 +68,9 @@ namespace lantern
 			std::vector<shader_bind_point_info<TAttr>> const& required_bind_points,
 			std::vector<mesh_attribute_info<TAttr>> const& available_attributes,
 			std::vector<binded_mesh_attribute_info<TAttr>>& binded_attributes_storage);
+
+		/** Merger */
+		merger m_merger;
 
 		/** Current rasterization algorithm */
 		rasterization_algorithm_option m_rasterization_algorithm;
@@ -231,6 +237,7 @@ namespace lantern
 							m_face_culling,
 							shader,
 							target_texture,
+							m_merger,
 							m_binded_mesh_attributes);
 						break;
 
@@ -241,6 +248,7 @@ namespace lantern
 							m_face_culling,
 							shader,
 							target_texture,
+							m_merger,
 							m_binded_mesh_attributes);
 						break;
 
@@ -251,6 +259,7 @@ namespace lantern
 							m_face_culling,
 							shader,
 							target_texture,
+							m_merger,
 							m_binded_mesh_attributes);
 						break;
 
@@ -260,6 +269,7 @@ namespace lantern
 							v0, v1, v2,
 							shader,
 							target_texture,
+							m_merger,
 							m_binded_mesh_attributes);
 						break;
 
@@ -270,6 +280,7 @@ namespace lantern
 							m_face_culling,
 							shader,
 							target_texture,
+							m_merger,
 							m_binded_mesh_attributes);
 				}
 			}

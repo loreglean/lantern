@@ -25,6 +25,7 @@ namespace lantern
 		face_culling_option face_culling,
 		TShader& shader,
 		texture& target_texture,
+		merger const& merger,
 		binded_mesh_attributes& attributes)
 	{
 		// Construct edges equations, considering that top left point is origin
@@ -120,10 +121,8 @@ namespace lantern
 						b0, b1, b2,
 						v0.w, v1.w, v2.w);
 
-					// Pass pixel to shader
-					//
 					vector2ui point_ui{x, y};
-					target_texture.set_pixel_color(point_ui, shader.process_pixel(point_ui));
+					merger.merge(target_texture, point_ui, shader.process_pixel(point_ui));
 				}
 
 				edge0_equation_value += edge0.a;
