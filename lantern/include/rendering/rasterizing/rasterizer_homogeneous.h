@@ -8,6 +8,44 @@
 
 namespace lantern
 {
+	template<typename TAttr>
+	void save_edges_coefficients(
+		std::vector<binded_mesh_attribute_info<TAttr>> const& binds,
+		std::vector<vector3<TAttr>>& coefficients_storage,
+		unsigned int const index0, unsigned int const index1, unsigned int const index2,
+		matrix3x3f const& vertices_matrix_inversed)
+	{
+		for (size_t i = 0; i < binds.size(); ++i)
+		{
+			binded_mesh_attribute_info<TAttr> const& binded_attr = binds[i];
+			std::vector<TAttr> const& binded_attr_data = binded_attr.info.get_data();
+			std::vector<unsigned int> const& binded_attr_indices = binded_attr.info.get_indices();
+
+			TAttr const& value0 = binded_attr_data[binded_attr_indices[index0]];
+			TAttr const& value1 = binded_attr_data[binded_attr_indices[index1]];
+			TAttr const& value2 = binded_attr_data[binded_attr_indices[index2]];
+
+			coefficients_storage[i] = vector3<TAttr>{value0, value1, value2} *vertices_matrix_inversed;
+		}
+	}
+
+	template<typename TAttr>
+	void set_bind_points_values_from_edge_coefficients(
+		std::vector<binded_mesh_attribute_info<TAttr>>& binds,
+		std::vector<vector3<TAttr>> const& coefficients_storage,
+		vector2f const& point,
+		float const w)
+	{
+		for (size_t i = 0; i < binds.size(); ++i)
+		{
+			vector3<TAttr> abc{coefficients_storage.at(i)};
+			TAttr const value_div_w = abc.x * point.x + abc.y * point.y + abc.z;
+
+			binded_mesh_attribute_info<TAttr>& binded_attr = binds[i];
+			(*binded_attr.bind_point) = value_div_w * w;
+		}
+	}
+
 	/** Rasterizes triangle using current pipeline setup using homogeneous algorithm
 	* @param index0 First triangle vertex index in a mesh
 	* @param index1 Second triangle vertex index in a mesh
@@ -214,44 +252,6 @@ namespace lantern
 				edge2_v += edge2_abc.x;
 				one_div_w_v += one_div_w_abc.x;
 			}
-		}
-	}
-
-	template<typename TAttr>
-	void save_edges_coefficients(
-		std::vector<binded_mesh_attribute_info<TAttr>> const& binds,
-		std::vector<vector3<TAttr>>& coefficients_storage,
-		unsigned int const index0, unsigned int const index1, unsigned int const index2,
-		matrix3x3f const& vertices_matrix_inversed)
-	{
-		for (size_t i = 0; i < binds.size(); ++i)
-		{
-			binded_mesh_attribute_info<TAttr> const& binded_attr = binds[i];
-			std::vector<TAttr> const& binded_attr_data = binded_attr.info.get_data();
-			std::vector<unsigned int> const& binded_attr_indices = binded_attr.info.get_indices();
-
-			TAttr const& value0 = binded_attr_data[binded_attr_indices[index0]];
-			TAttr const& value1 = binded_attr_data[binded_attr_indices[index1]];
-			TAttr const& value2 = binded_attr_data[binded_attr_indices[index2]];
-
-			coefficients_storage[i] = vector3<TAttr>{value0, value1, value2} *vertices_matrix_inversed;
-		}
-	}
-
-	template<typename TAttr>
-	void set_bind_points_values_from_edge_coefficients(
-		std::vector<binded_mesh_attribute_info<TAttr>>& binds,
-		std::vector<vector3<TAttr>> const& coefficients_storage,
-		vector2f const& point,
-		float const w)
-	{
-		for (size_t i = 0; i < binds.size(); ++i)
-		{
-			vector3<TAttr> abc{coefficients_storage.at(i)};
-			TAttr const value_div_w = abc.x * point.x + abc.y * point.y + abc.z;
-
-			binded_mesh_attribute_info<TAttr>& binded_attr = binds[i];
-			(*binded_attr.bind_point) = value_div_w * w;
 		}
 	}
 }
