@@ -23,18 +23,30 @@ Note that because it doesn't use GPU, it is much slower comparing to DirectX or 
 
 Lantern uses CMake as its build system.
 
-Simple scripts were created to simplify building process, though (output goes to `<lantern>/build` folder):
+Simple scripts were created to simplify building process a little, though (output goes to `<lantern>/build` folder):
 * `build_vs14.bat` - creates VS solution for Visual Studio 2015
 * `build_vs12.bat` - creates VS solution for Visual Studio 2013
 * `build_mingw_make.bat` - creates MinGW makefiles
 * `build_make.sh` - creates Linux makefiles
 * `build_xcode.sh` - creates XCode project
 
-On Windows you have to specify a few environment variables for dependencies:
+On Linux and MacOS you probably have to `chmod +x build_*.sh` before running them.
+
+You also have to have all the dependencies and tools installed (obviously). As an example for Ubuntu, here are the commands for installing all of them (just skip what you don't need):
+ * `sudo apt-get install cmake`
+ * `sudo apt-get install g++`
+ * `sudo apt-get install libsdl2-dev`
+ * `sudo apt-get install libsdl2-image-dev`
+ * `sudo apt-get install libfreetype6-dev`
+ * `sudo apt-get install libgtest-dev`
+
+On Windows you have to specify a few environment variables for dependencies so that CMake's `find_package` will be able to find them:
  * `SDL2DIR` - path to SDL2 development library
  * `SDL2IMAGEDIR` - path to SDL2_Image development library
  * `FREETYPEDIR` - path to a folder containing FreeType's headers and library
  * `GTEST_ROOT` - path to Google Tests source code folder (required only if you're going to build tests target)
+
+Note for Windows FreeType library: if you're building it by yourself, make sure that output library's name is `freetype2.lib` and not `freetype26.lib` (that's what bundled FindFreeType.cmake looks for).
 
 ###Known issues
 
