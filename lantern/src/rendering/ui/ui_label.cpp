@@ -3,7 +3,7 @@
 using namespace lantern;
 
 ui_label::ui_label(font& font, texture const& target_texture)
-	: m_font{font},
+	: m_font(font),
 	  m_ndc_per_pixel{2.0f / target_texture.get_width(), 2.0f / target_texture.get_height()}
 {
 	m_shader.set_color(color::WHITE);

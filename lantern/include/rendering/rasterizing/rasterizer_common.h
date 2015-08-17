@@ -2,6 +2,7 @@
 #define LANTERN_RASTERIZER_COMMON_H
 
 #include <vector>
+#include <cstddef>
 #include "color.h"
 #include "vector2.h"
 #include "vector3.h"

@@ -6,6 +6,130 @@
 
 namespace lantern
 {
+	/** Saves scanline endpoints attributes values into intermediate storage.
+	* It saves attribute value divided by view z for attributes with perspective correction instead of just linearly interpolated values
+	* @param binds List of binds
+	* @param top_vertex_index Index of a top vertex
+	* @param left_vertex_index Index of a left vertex
+	* @param right_vertex_index Index of a right vertex
+	* @param distance_from_top_to_left_normalized Current distance from a top vertex to a left vertex
+	* @param distance_from_top_to_right_normalized Current distance from a top vertex to a right vertex
+	* @param left_values_storage Storage to put left edge values into
+	* @param right_values_storage Storage to put right edge values into
+	* @param top_vertex_zview_reciprocal Camera space z for top vertex, required for perspective correction
+	* @param left_vertex_zview_reciprocal Camera space z for left vertex, required for perspective correction
+	* @param right_vertex_zview_reciprocal Camera space z for right vertex, required for perspective correction
+	*/
+	template<typename TAttr>
+	void save_intermediate_attrs_values(
+		std::vector<binded_mesh_attribute_info<TAttr>> const& binds,
+		unsigned int const top_vertex_index,
+		unsigned int const left_vertex_index,
+		unsigned int const right_vertex_index,
+		float const distance_from_top_to_left_normalized,
+		float const distance_from_top_to_right_normalized,
+		std::vector<TAttr>& left_values_storage,
+		std::vector<TAttr>& right_values_storage,
+		float const top_vertex_zview_reciprocal,
+		float const left_vertex_zview_reciprocal,
+		float const right_vertex_zview_reciprocal)
+	{
+		size_t const binds_count{binds.size()};
+		for (size_t i{0}; i < binds_count; ++i)
+		{
+			binded_mesh_attribute_info<TAttr> const& binded_attr = binds[i];
+			std::vector<TAttr> const& binded_attr_data = binded_attr.info.get_data();
+			std::vector<unsigned int> const& binded_attr_indices = binded_attr.info.get_indices();
+
+			TAttr const& top_value = binded_attr_data[binded_attr_indices[top_vertex_index]];
+			TAttr const& left_value = binded_attr_data[binded_attr_indices[left_vertex_index]];
+			TAttr const& right_value = binded_attr_data[binded_attr_indices[right_vertex_index]];
+
+			if (binded_attr.info.get_interpolation_option() == attribute_interpolation_option::linear)
+			{
+				left_values_storage[i] = top_value * (1.0f - distance_from_top_to_left_normalized) + left_value * distance_from_top_to_left_normalized;
+				right_values_storage[i] = top_value * (1.0f - distance_from_top_to_right_normalized) + right_value * distance_from_top_to_right_normalized;
+			}
+			else
+			{
+				TAttr const& top_value_div_zview = top_value * top_vertex_zview_reciprocal;
+				TAttr const& left_value_div_zview = left_value * left_vertex_zview_reciprocal;
+				TAttr const& right_value_div_zview = right_value * right_vertex_zview_reciprocal;
+
+				left_values_storage[i] = top_value_div_zview * (1.0f - distance_from_top_to_left_normalized) + left_value_div_zview * distance_from_top_to_left_normalized;
+				right_values_storage[i] = top_value_div_zview * (1.0f - distance_from_top_to_right_normalized) + right_value_div_zview * distance_from_top_to_right_normalized;
+			}
+		}
+	}
+
+	/** Sets bind points values basing on scanline's endpoints and current position
+	* @param binds List of binds
+	* @param left_endpoint_values List of left endpoint values
+	* @param right_endpoint_values List of right endpoint values
+	* @param scanline_distance_normalized Current scanline distance from left endpoint to right endpoint
+	* @param zview_reciprocal_left Reciprocal of view z for left endpoint, required for attributes with perspective correction
+	* @param zview_reciprocal_right Reciprocal of view z for right endpoint, required for attributes with perspective correction
+	*/
+	template<typename TAttr>
+	void set_bind_points_values_from_scanline_endpoints(
+		std::vector<binded_mesh_attribute_info<TAttr>>& binds,
+		std::vector<TAttr> const& left_endpoint_values,
+		std::vector<TAttr> const& right_endpoint_values,
+		float const scanline_distance_normalized,
+		float const zview_reciprocal_left, float const zview_reciprocal_right)
+	{
+		size_t binds_count{binds.size()};
+		for (size_t i{0}; i < binds_count; ++i)
+		{
+			binded_mesh_attribute_info<TAttr>& binded_attr = binds[i];
+
+			if (binded_attr.info.get_interpolation_option() == attribute_interpolation_option::linear)
+			{
+				TAttr const result =
+					left_endpoint_values[i] * (1.0f - scanline_distance_normalized) +
+					right_endpoint_values[i] * scanline_distance_normalized;
+
+				(*binded_attr.bind_point) = result;
+			}
+			else
+			{
+				TAttr const value_div_zview_interpolated = left_endpoint_values[i] * (1.0f - scanline_distance_normalized) + right_endpoint_values[i] * scanline_distance_normalized;
+
+				float const zview_reciprocal_interpolated = (1.0f - scanline_distance_normalized) * zview_reciprocal_left + scanline_distance_normalized * zview_reciprocal_right;
+
+				(*binded_attr.bind_point) = value_div_zview_interpolated * (1.0f / zview_reciprocal_interpolated);
+			}
+
+		}
+	}
+
+	/** Gets next pixel center exclusively (if we're on 0.5, we move forward anyway)
+	* @param f Current position
+	* @returns Pixel center coordinate
+	*/
+	inline float get_next_pixel_center_exclusive(float const f)
+	{
+		return (std::floor(f + 0.5f) + 0.5f);
+	}
+
+	/** Gets next pixel center inclusively (if we're on 0.5, we don't move)
+	* @param f Current position
+	* @returns Pixel center coordinate
+	*/
+	inline float get_next_pixel_center_inclusive(float const f)
+	{
+		return (std::floor(f + (0.5f - FLOAT_EPSILON)) + 0.5f);
+	}
+
+	/** Gets next previous center exclusively (if we're on 0.5, we move back anyway)
+	* @param f Current position
+	* @returns Pixel center coordinate
+	*/
+	inline float get_previous_pixel_center_exclusive(float const f)
+	{
+		return (std::floor(f - (0.5f + FLOAT_EPSILON)) + 0.5f);
+	}
+
 	/** Rasterizes triangle using current pipeline setup using inversed slope algorithm
 	* @param index0 First triangle vertex index in a mesh
 	* @param index1 Second triangle vertex index in a mesh
@@ -367,130 +491,6 @@ namespace lantern
 			current_left_distance_normalized += left_distance_step_normalized;
 			current_right_distance_normalized += right_distance_step_normalized;
 		}
-	}
-
-	/** Saves scanline endpoints attributes values into intermediate storage.
-	* It saves attribute value divided by view z for attributes with perspective correction instead of just linearly interpolated values
-	* @param binds List of binds
-	* @param top_vertex_index Index of a top vertex
-	* @param left_vertex_index Index of a left vertex
-	* @param right_vertex_index Index of a right vertex
-	* @param distance_from_top_to_left_normalized Current distance from a top vertex to a left vertex
-	* @param distance_from_top_to_right_normalized Current distance from a top vertex to a right vertex
-	* @param left_values_storage Storage to put left edge values into
-	* @param right_values_storage Storage to put right edge values into
-	* @param top_vertex_zview_reciprocal Camera space z for top vertex, required for perspective correction
-	* @param left_vertex_zview_reciprocal Camera space z for left vertex, required for perspective correction
-	* @param right_vertex_zview_reciprocal Camera space z for right vertex, required for perspective correction
-	*/
-	template<typename TAttr>
-	void save_intermediate_attrs_values(
-		std::vector<binded_mesh_attribute_info<TAttr>> const& binds,
-		unsigned int const top_vertex_index,
-		unsigned int const left_vertex_index,
-		unsigned int const right_vertex_index,
-		float const distance_from_top_to_left_normalized,
-		float const distance_from_top_to_right_normalized,
-		std::vector<TAttr>& left_values_storage,
-		std::vector<TAttr>& right_values_storage,
-		float const top_vertex_zview_reciprocal,
-		float const left_vertex_zview_reciprocal,
-		float const right_vertex_zview_reciprocal)
-	{
-		size_t const binds_count{binds.size()};
-		for (size_t i{0}; i < binds_count; ++i)
-		{
-			binded_mesh_attribute_info<TAttr> const& binded_attr = binds[i];
-			std::vector<TAttr> const& binded_attr_data = binded_attr.info.get_data();
-			std::vector<unsigned int> const& binded_attr_indices = binded_attr.info.get_indices();
-
-			TAttr const& top_value = binded_attr_data[binded_attr_indices[top_vertex_index]];
-			TAttr const& left_value = binded_attr_data[binded_attr_indices[left_vertex_index]];
-			TAttr const& right_value = binded_attr_data[binded_attr_indices[right_vertex_index]];
-
-			if (binded_attr.info.get_interpolation_option() == attribute_interpolation_option::linear)
-			{
-				left_values_storage[i] = top_value * (1.0f - distance_from_top_to_left_normalized) + left_value * distance_from_top_to_left_normalized;
-				right_values_storage[i] = top_value * (1.0f - distance_from_top_to_right_normalized) + right_value * distance_from_top_to_right_normalized;
-			}
-			else
-			{
-				TAttr const& top_value_div_zview = top_value * top_vertex_zview_reciprocal;
-				TAttr const& left_value_div_zview = left_value * left_vertex_zview_reciprocal;
-				TAttr const& right_value_div_zview = right_value * right_vertex_zview_reciprocal;
-
-				left_values_storage[i] = top_value_div_zview * (1.0f - distance_from_top_to_left_normalized) + left_value_div_zview * distance_from_top_to_left_normalized;
-				right_values_storage[i] = top_value_div_zview * (1.0f - distance_from_top_to_right_normalized) + right_value_div_zview * distance_from_top_to_right_normalized;
-			}
-		}
-	}
-
-	/** Sets bind points values basing on scanline's endpoints and current position
-	* @param binds List of binds
-	* @param left_endpoint_values List of left endpoint values
-	* @param right_endpoint_values List of right endpoint values
-	* @param scanline_distance_normalized Current scanline distance from left endpoint to right endpoint
-	* @param zview_reciprocal_left Reciprocal of view z for left endpoint, required for attributes with perspective correction
-	* @param zview_reciprocal_right Reciprocal of view z for right endpoint, required for attributes with perspective correction
-	*/
-	template<typename TAttr>
-	void set_bind_points_values_from_scanline_endpoints(
-		std::vector<binded_mesh_attribute_info<TAttr>>& binds,
-		std::vector<TAttr> const& left_endpoint_values,
-		std::vector<TAttr> const& right_endpoint_values,
-		float const scanline_distance_normalized,
-		float const zview_reciprocal_left, float const zview_reciprocal_right)
-	{
-		size_t binds_count{binds.size()};
-		for (size_t i{0}; i < binds_count; ++i)
-		{
-			binded_mesh_attribute_info<TAttr>& binded_attr = binds[i];
-
-			if (binded_attr.info.get_interpolation_option() == attribute_interpolation_option::linear)
-			{
-				TAttr const result =
-					left_endpoint_values[i] * (1.0f - scanline_distance_normalized) +
-					right_endpoint_values[i] * scanline_distance_normalized;
-
-				(*binded_attr.bind_point) = result;
-			}
-			else
-			{
-				TAttr const value_div_zview_interpolated = left_endpoint_values[i] * (1.0f - scanline_distance_normalized) + right_endpoint_values[i] * scanline_distance_normalized;
-
-				float const zview_reciprocal_interpolated = (1.0f - scanline_distance_normalized) * zview_reciprocal_left + scanline_distance_normalized * zview_reciprocal_right;
-
-				(*binded_attr.bind_point) = value_div_zview_interpolated * (1.0f / zview_reciprocal_interpolated);
-			}
-
-		}
-	}
-
-	/** Gets next pixel center exclusively (if we're on 0.5, we move forward anyway)
-	* @param f Current position
-	* @returns Pixel center coordinate
-	*/
-	inline float get_next_pixel_center_exclusive(float const f)
-	{
-		return (std::floor(f + 0.5f) + 0.5f);
-	}
-
-	/** Gets next pixel center inclusively (if we're on 0.5, we don't move)
-	* @param f Current position
-	* @returns Pixel center coordinate
-	*/
-	inline float get_next_pixel_center_inclusive(float const f)
-	{
-		return (std::floor(f + (0.5f - FLOAT_EPSILON)) + 0.5f);
-	}
-	
-	/** Gets next previous center exclusively (if we're on 0.5, we move back anyway)
-	* @param f Current position
-	* @returns Pixel center coordinate
-	*/
-	inline float get_previous_pixel_center_exclusive(float const f)
-	{
-		return (std::floor(f - (0.5f + FLOAT_EPSILON)) + 0.5f);
 	}
 }
 
