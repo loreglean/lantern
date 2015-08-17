@@ -13,14 +13,25 @@ texture::texture(unsigned int const width, unsigned int const height)
 {
 }
 
-texture::texture(texture&& other)
-	: m_width(other.m_width),
-	  m_height(other.m_height),
-	  m_data_total_size(other.m_data_total_size),
-	  m_data{other.m_data},
-	  m_pitch(other.m_pitch)
+texture::texture(texture const& another)
+	: m_width{another.m_width},
+	  m_height{another.m_height},
+	  m_data_total_size{another.m_data_total_size},
+	  m_data{nullptr},
+	  m_pitch{another.m_pitch}
 {
-	other.m_data = nullptr;
+	m_data = new unsigned char[m_data_total_size];
+	memcpy(m_data, another.m_data, m_data_total_size);
+}
+
+texture::texture(texture&& another)
+	: m_width(another.m_width),
+	  m_height(another.m_height),
+	  m_data_total_size(another.m_data_total_size),
+	  m_data{another.m_data},
+	  m_pitch(another.m_pitch)
+{
+	another.m_data = nullptr;
 }
 
 texture::~texture()

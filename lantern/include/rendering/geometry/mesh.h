@@ -15,6 +15,9 @@ namespace lantern
 	class mesh final
 	{
 	public:
+		/** Constructs empy mesh */
+		mesh();
+
 		/** Constructs mesh with specified vertices and indices
 		* @param vertices Mesh vertices
 		* @param indices Mesh indices
@@ -22,14 +25,24 @@ namespace lantern
 		mesh(std::vector<vector3f> vertices, std::vector<unsigned int> indices);
 
 		/** Gets mesh vertices
-		/* @returns Mesh vertices
+		* @returns Mesh vertices
 		*/
 		std::vector<vector3f> const& get_vertices() const;
+
+		/** Gets mesh vertices
+		* @returns Mesh vertices
+		*/
+		std::vector<vector3f>& get_vertices();
 
 		/** Get mesh indices
 		* @returns Mesh indices
 		*/
 		std::vector<unsigned int> const& get_indices() const;
+
+		/** Get mesh indices
+		* @returns Mesh indices
+		*/
+		std::vector<unsigned int>& get_indices();
 
 		/** Gets color attributes
 		* @returns Color attributes storage
@@ -73,10 +86,10 @@ namespace lantern
 
 	private:
 		/** Mesh vertices */
-		std::vector<vector3f> const m_vertices;
+		std::vector<vector3f> m_vertices;
 
 		/** Mesh indices */
-		std::vector<unsigned int> const m_indices;
+		std::vector<unsigned int> m_indices;
 
 		/** Mesh color attributes */
 		std::vector<mesh_attribute_info<color>> m_color_attributes;

@@ -1,13 +1,15 @@
 #ifndef LANTERN_APP_H
 #define LANTERN_APP_H
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
 #include "SDL.h"
 #include "pipeline.h"
 
 namespace lantern
 {
 	/** Base class for all lantern applications.
-	* It handles most part of low level stuff, like initializating SDL library and according objects, running the main loop, etc
+	* It handles most part of low level stuff, like initializating libraries and according objects, running the main loop, etc.
 	*/
 	class app
 	{
@@ -25,6 +27,21 @@ namespace lantern
 		* @returns Result error code
 		*/
 		int start();
+
+		/** Gets FreeType library main object
+		* @returns Pointer to FreeType main object
+		*/
+		FT_Library get_freetype_library() const;
+
+		/** Gets FPS
+		* @returns Last saved framerate
+		*/
+		unsigned int get_last_fps() const;
+
+		/** Gets application instance
+		* @returns Instance
+		*/
+		static app const* get_instance();
 
 	protected:
 		/** Gets texture used as a framebuffer
@@ -53,6 +70,9 @@ namespace lantern
 		virtual void on_key_down(SDL_Keysym const key);
 
 	private:
+		/** FreeType library main object */
+		FT_Library m_freetype_library;
+
 		/** SDL window object */
 		SDL_Window* m_window;
 
@@ -70,6 +90,12 @@ namespace lantern
 
 		/** Delay between frames to stick to the target framerate */
 		Uint32 m_target_framerate_delay;
+
+		/** Last saved framerate */
+		unsigned int m_last_fps;
+
+		/** Instance pointer */
+		static app* _instance;
 	};
 }
 

@@ -14,15 +14,20 @@ namespace lantern
 	{
 	public:
 		/** Constructs texture with given width and height
-		* @param width Texture width
-		* @param height Texture height
+		* @param width Texture's width
+		* @param height Texture's height
 		*/
 		texture(unsigned int const width, unsigned int const height);
 
-		/** Moving data from other texture to the new one
-		* @param other Texture to move data from
+		/** Copies texture from another instance
+		* @param another Texture to copy data from
 		*/
-		texture(texture&& other);
+		texture(texture const& another);
+
+		/** Moving data from other texture to the new one
+		* @param another Texture to move data from
+		*/
+		texture(texture&& another);
 
 		/** Frees memory used by the texture */
 		~texture();

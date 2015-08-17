@@ -2,6 +2,11 @@
 
 using namespace lantern;
 
+mesh::mesh()
+{
+
+}
+
 mesh::mesh(std::vector<vector3f> vertices, std::vector<unsigned int> indices)
 	: m_vertices(vertices), m_indices(indices)
 {
@@ -13,7 +18,17 @@ std::vector<vector3f> const& mesh::get_vertices() const
 	return m_vertices;
 }
 
+std::vector<vector3f>& mesh::get_vertices()
+{
+	return m_vertices;
+}
+
 std::vector<unsigned int> const& mesh::get_indices() const
+{
+	return m_indices;
+}
+
+std::vector<unsigned int>& mesh::get_indices()
 {
 	return m_indices;
 }

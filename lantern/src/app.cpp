@@ -5,13 +5,31 @@
 
 using namespace lantern;
 
+app* app::_instance = nullptr;
+
 app::app(unsigned int const width, unsigned int const height)
-	: m_window{nullptr},
+	: m_freetype_library{nullptr},
+	  m_window{nullptr},
 	  m_renderer{nullptr},
 	  m_sdl_target_texture{nullptr},
 	  m_target_texture{width, height},
-	  m_target_framerate_delay(0)
+	  m_target_framerate_delay{0},
+	  m_last_fps{0}
 {
+	if (_instance != nullptr)
+	{
+		throw std::runtime_error("Another app isntance has already been created");
+	}
+
+	_instance = this;
+
+	// Initialize FreeType library
+	//
+	if (FT_Init_FreeType(&m_freetype_library))
+	{
+		throw std::runtime_error("Couldn't initialize FreeType library");
+	}
+
 	// Initialize SDL library and according objects
 	//
 
@@ -58,6 +76,15 @@ app::app(unsigned int const width, unsigned int const height)
 
 app::~app()
 {
+	// Clean up FreeType library
+	//
+
+	if (m_freetype_library != nullptr)
+	{
+		FT_Done_FreeType(m_freetype_library);
+		m_freetype_library = nullptr;
+	}
+
 	// Clean up SDL library
 	//
 
@@ -154,15 +181,28 @@ int app::start()
 		//
 		if (time_accumulator >= 1000)
 		{
-#ifdef LANTERN_DEBUG_OUTPUT_FPS
-			std::cout << "FPS: " << frames_accumulator << std::endl;
-#endif
+			m_last_fps = frames_accumulator;
 			time_accumulator = 0;
 			frames_accumulator = 0;
 		}
 	}
 
 	return 0;
+}
+
+FT_Library app::get_freetype_library() const
+{
+	return m_freetype_library;
+}
+
+unsigned int app::get_last_fps() const
+{
+	return m_last_fps;
+}
+
+app const* app::get_instance()
+{
+	return _instance;
 }
 
 texture& app::get_target_texture()

@@ -1,8 +1,10 @@
+#include <sstream>
 #include "app.h"
 #include "obj_import.h"
 #include "camera.h"
 #include "color_shader.h"
 #include "texture_shader.h"
+#include "ui_label.h"
 
 using namespace lantern;
 
@@ -37,6 +39,13 @@ private:
 	shader_option m_shader_option;
 
 	texture m_texture;
+
+	font m_ui_font;
+	ui_label m_fps_label;
+	ui_label m_controls_description_label;
+	ui_label m_modes_description_label;
+
+	unsigned int m_last_fps;
 };
 
 rasterized_color_triangle_app::rasterized_color_triangle_app(unsigned int const width, unsigned int const height)
@@ -53,7 +62,12 @@ rasterized_color_triangle_app::rasterized_color_triangle_app(unsigned int const 
 		  0.01f,
 		  20.0f},
 	  m_shader_option{shader_option::color},
-	  m_texture{texture::load_from_file("resources/chess.png")}
+	  m_texture{texture::load_from_file("resources/chess.png")},
+	  m_ui_font{"resources/Ubuntu-L.ttf", 15},
+	  m_fps_label{m_ui_font, get_target_texture()},
+	  m_controls_description_label{m_ui_font, get_target_texture()},
+	  m_modes_description_label{m_ui_font, get_target_texture()}
+
 {
 	// Update model-view-projection matrix for the first time
 	update_shader_mvp();
@@ -76,6 +90,19 @@ rasterized_color_triangle_app::rasterized_color_triangle_app(unsigned int const 
 	//
 	m_texture_shader.set_texture(&m_texture);
 
+	// Setup UI labels
+	//
+
+	m_fps_label.set_position(vector2f{-0.95f, 0.9f});
+	m_controls_description_label.set_position(vector2f{-0.95f, -0.85f});
+	m_modes_description_label.set_position(vector2f{-0.95f, -0.95f});
+
+	m_controls_description_label.set_text("Controls: WASD. R or F to move along Y-axis");
+	m_modes_description_label.set_text("Shaders: 1 - color shader, 2 - texture mapping");
+
+	m_controls_description_label.set_color(color{0.5f, 0.5f, 0.5f});
+	m_modes_description_label.set_color(color{0.5f, 0.5f, 0.5f});
+
 	// This enables alpha blending
 	//
 	// get_pipeline().get_merger().set_alpha_blending_enabled(true);
@@ -83,6 +110,15 @@ rasterized_color_triangle_app::rasterized_color_triangle_app(unsigned int const 
 
 void rasterized_color_triangle_app::frame(float const delta_since_last_frame)
 {
+	if (m_last_fps != get_last_fps())
+	{
+		m_last_fps = get_last_fps();
+
+		std::ostringstream output_stream;
+		output_stream << "Framerate is: " << m_last_fps;
+		m_fps_label.set_text(output_stream.str());
+	}
+
 	// Draw the triangle
 	//
 
@@ -94,6 +130,10 @@ void rasterized_color_triangle_app::frame(float const delta_since_last_frame)
 	{
 		get_pipeline().draw(m_triangle_mesh, m_texture_shader, get_target_texture());
 	}
+
+	m_fps_label.draw(get_pipeline(), get_target_texture());
+	m_controls_description_label.draw(get_pipeline(), get_target_texture());
+	m_modes_description_label.draw(get_pipeline(), get_target_texture());
 }
 
 void rasterized_color_triangle_app::on_key_down(SDL_Keysym const key)

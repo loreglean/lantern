@@ -8,6 +8,11 @@ merger::merger()
 
 }
 
+bool merger::get_alpha_blending_enabled() const
+{
+	return m_alpha_blending_enabled;
+}
+
 void merger::set_alpha_blending_enabled(bool const enabled)
 {
 	m_alpha_blending_enabled = enabled;

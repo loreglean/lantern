@@ -13,7 +13,8 @@ namespace lantern
 
 		void merge(texture& target_texture, vector2ui const& pixel_coordinates, color const& pixel_color) const;
 
-		void set_alpha_blending_enabled(bool enabled);
+		bool get_alpha_blending_enabled() const;
+		void set_alpha_blending_enabled(bool const enabled);
 
 	private:
 		/** True = using colors alpha components during merge */
@@ -21,4 +22,4 @@ namespace lantern
 	};
 }
 
-#endif LANTERN_MERGER_H
+#endif // LANTERN_MERGER_H

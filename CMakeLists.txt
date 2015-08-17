@@ -10,6 +10,7 @@ include(CTest)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 find_package(SDL2 REQUIRED)
 find_package(SDL2IMAGE REQUIRED)
+find_package(FREETYPE REQUIRED)
 # ===========================================
 
 # Compiler setup ============================
@@ -38,11 +39,14 @@ set(LANTERN_SOURCES
     lantern/src/rendering/texture.cpp
     lantern/src/rendering/pipeline.cpp
     lantern/src/rendering/merger.cpp
+    lantern/src/rendering/font.cpp
     lantern/src/rendering/color.cpp
     lantern/src/rendering/camera.cpp
     lantern/src/rendering/geometry/mesh.cpp
     lantern/src/rendering/geometry/obj_import.cpp
-    lantern/src/rendering/rasterizing/rasterizer_traversal_common.cpp)
+    lantern/src/rendering/rasterizing/rasterizer_traversal_common.cpp
+    lantern/src/rendering/ui/ui_element_base.cpp
+    lantern/src/rendering/ui/ui_label.cpp)
 
 set(LANTERN_HEADERS
     lantern/include/app.h
@@ -58,11 +62,13 @@ set(LANTERN_HEADERS
     lantern/include/rendering/rendering_options.h
     lantern/include/rendering/pipeline.h
     lantern/include/rendering/merger.h
+    lantern/include/rendering/font.h
     lantern/include/rendering/color.h
     lantern/include/rendering/camera.h
     lantern/include/rendering/shaders/shader.h
     lantern/include/rendering/shaders/color_shader.h
     lantern/include/rendering/shaders/texture_shader.h
+    lantern/include/rendering/shaders/ui_label_shader.h
     lantern/include/rendering/rasterizing/rasterizer_common.h
     lantern/include/rendering/rasterizing/rasterizer_homogeneous.h
     lantern/include/rendering/rasterizing/rasterizer_inversed_slope.h
@@ -70,6 +76,8 @@ set(LANTERN_HEADERS
     lantern/include/rendering/rasterizing/rasterizer_traversal_backtracking.h
     lantern/include/rendering/rasterizing/rasterizer_traversal_common.h
     lantern/include/rendering/rasterizing/rasterizer_traversal_zigzag.h
+    lantern/include/rendering/ui/ui_element_base.h
+    lantern/include/rendering/ui/ui_label.h
     lantern/include/rendering/geometry/obj_import.h
     lantern/include/rendering/geometry/mesh_attribute_info.h
     lantern/include/rendering/geometry/mesh.h)
@@ -80,7 +88,8 @@ set(LANTERN_INCLUDE_FOLDERS
     lantern/include/rendering
     lantern/include/rendering/shaders
     lantern/include/rendering/rasterizing
-    lantern/include/rendering/geometry)
+    lantern/include/rendering/geometry
+    lantern/include/rendering/ui)
 
 add_library(
     lantern STATIC
@@ -88,7 +97,7 @@ add_library(
     ${LANTERN_HEADERS})
 
 target_include_directories(lantern PUBLIC ${LANTERN_INCLUDE_FOLDERS})
-target_include_directories(lantern PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2IMAGE_INCLUDE_DIR})
+target_include_directories(lantern PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2IMAGE_INCLUDE_DIR} ${FREETYPE_INCLUDE_DIRS})
 
 set_target_properties(
     lantern PROPERTIES
@@ -181,7 +190,7 @@ endif()
 
 # Empty app target ==========================
 add_executable(
-    empty_app
+    empty_app WIN32
     examples/empty_app/main.cpp)
 
 set_target_properties(
@@ -189,9 +198,9 @@ set_target_properties(
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples/empty_app")
 
 target_include_directories(empty_app PRIVATE lantern/include)
-target_include_directories(empty_app PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR})
+target_include_directories(empty_app PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${FREETYPE_INCLUDE_DIRS})
 
-target_link_libraries(empty_app lantern ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARY})
+target_link_libraries(empty_app lantern ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARY} ${FREETYPE_LIBRARIES})
 
 if (WIN32)
     add_custom_command(
@@ -222,7 +231,7 @@ endif()
 
 # Rasterized triangle app target ======
 add_executable(
-    rasterized_triangle_app
+    rasterized_triangle_app WIN32
     examples/rasterized_triangle_app/main.cpp)
 
 set_target_properties(
@@ -230,9 +239,9 @@ set_target_properties(
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples/rasterized_triangle_app")
 
 target_include_directories(rasterized_triangle_app PRIVATE lantern/include)
-target_include_directories(rasterized_triangle_app PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2IMAGE_INCLUDE_DIR})
+target_include_directories(rasterized_triangle_app PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2IMAGE_INCLUDE_DIR} ${FREETYPE_INCLUDE_DIRS})
 
-target_link_libraries(rasterized_triangle_app lantern ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARY})
+target_link_libraries(rasterized_triangle_app lantern ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARY} ${FREETYPE_LIBRARIES})
 
 if (WIN32)
     add_custom_command(

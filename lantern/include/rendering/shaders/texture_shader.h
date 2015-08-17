@@ -59,7 +59,7 @@ namespace lantern
 		/** Sets texture to use for texturing
 		* @param tex Texture to use
 		*/
-		void set_texture(texture* tex);
+		void set_texture(texture const* tex);
 
 	private:
 		/** UV coordinates bind point */
@@ -69,7 +69,7 @@ namespace lantern
 		matrix4x4f m_mvp;
 
 		/** Texture to use */
-		texture* m_texture;
+		texture const* m_texture;
 	};
 
 	inline void texture_shader::set_mvp_matrix(matrix4x4f const& mvp)
@@ -77,7 +77,7 @@ namespace lantern
 		m_mvp = mvp;
 	}
 
-	inline void texture_shader::set_texture(texture* tex)
+	inline void texture_shader::set_texture(texture const* tex)
 	{
 		m_texture = tex;
 	}
