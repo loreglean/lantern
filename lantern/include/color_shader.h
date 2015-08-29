@@ -2,7 +2,7 @@
 #define LANTERN_COLOR_SHADER_H
 
 #include <vector>
-#include "shader.h"
+#include "shader_bind_point_info.h"
 #include "color.h"
 #include "vector2.h"
 #include "vector3.h"

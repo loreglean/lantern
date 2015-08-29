@@ -2,7 +2,7 @@
 #define LANTERN_UI_LABEL_SHADER_H
 
 #include <vector>
-#include "shader.h"
+#include "shader_bind_point_info.h"
 #include "color.h"
 #include "vector2.h"
 #include "vector3.h"
@@ -103,8 +103,8 @@ namespace lantern
 	{
 		color symbol_color = m_symbol_texture->get_pixel_color(
 			vector2ui{
-				static_cast<unsigned int>(m_symbol_texture->get_width() * m_uv.x),
-				static_cast<unsigned int>(m_symbol_texture->get_height() * m_uv.y)});
+			static_cast<unsigned int>(m_symbol_texture->get_width() * m_uv.x),
+			static_cast<unsigned int>(m_symbol_texture->get_height() * m_uv.y)});
 
 		// Copy all the channels except for alpha from required color
 		//

@@ -4,7 +4,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include "SDL.h"
-#include "pipeline.h"
+#include "renderer.h"
 
 namespace lantern
 {
@@ -52,7 +52,7 @@ namespace lantern
 		/** Gets rendering pipeline
 		* @returns Pipeline
 		*/
-		pipeline& get_pipeline();
+		renderer& get_renderer();
 
 		/** Sets target framerate
 		* @param fps Target framerate
@@ -77,7 +77,7 @@ namespace lantern
 		SDL_Window* m_window;
 
 		/** SDL renderer object */
-		SDL_Renderer* m_renderer;
+		SDL_Renderer* m_sdl_renderer;
 
 		/** SDL texture we are using as a framebuffer */
 		SDL_Texture* m_sdl_target_texture;
@@ -86,7 +86,7 @@ namespace lantern
 		texture m_target_texture;
 
 		/** Rendering pipeline */
-		pipeline m_pipeline;
+		renderer m_renderer;
 
 		/** Delay between frames to stick to the target framerate */
 		Uint32 m_target_framerate_delay;

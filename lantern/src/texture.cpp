@@ -6,19 +6,19 @@ using namespace lantern;
 
 texture::texture(unsigned int const width, unsigned int const height)
 	: m_width{width},
-	  m_height{height},
-	  m_data_total_size{width * height * 4},
-	  m_data{new unsigned char[m_data_total_size]},
-	  m_pitch{width * 4}
+	m_height{height},
+	m_data_total_size{width * height * 4},
+	m_data{new unsigned char[m_data_total_size]},
+	m_pitch{width * 4}
 {
 }
 
 texture::texture(texture const& another)
 	: m_width{another.m_width},
-	  m_height{another.m_height},
-	  m_data_total_size{another.m_data_total_size},
-	  m_data{nullptr},
-	  m_pitch{another.m_pitch}
+	m_height{another.m_height},
+	m_data_total_size{another.m_data_total_size},
+	m_data{nullptr},
+	m_pitch{another.m_pitch}
 {
 	m_data = new unsigned char[m_data_total_size];
 	memcpy(m_data, another.m_data, m_data_total_size);
@@ -26,10 +26,10 @@ texture::texture(texture const& another)
 
 texture::texture(texture&& another)
 	: m_width(another.m_width),
-	  m_height(another.m_height),
-	  m_data_total_size(another.m_data_total_size),
-	  m_data{another.m_data},
-	  m_pitch(another.m_pitch)
+	m_height(another.m_height),
+	m_data_total_size(another.m_data_total_size),
+	m_data{another.m_data},
+	m_pitch(another.m_pitch)
 {
 	another.m_data = nullptr;
 }
@@ -66,7 +66,7 @@ unsigned char const* texture::get_data() const
 texture texture::load_from_file(std::string file)
 {
 	SDL_Surface* surface = IMG_Load(file.c_str());
-	
+
 	if (surface->format->format == SDL_PIXELFORMAT_ARGB8888)
 	{
 		texture result(surface->w, surface->h);

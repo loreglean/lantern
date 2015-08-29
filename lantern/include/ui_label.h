@@ -36,7 +36,7 @@ namespace lantern
 		* @param pipeline Pipeline to use
 		* @param target_texture Texture to draw to
 		*/
-		void draw(pipeline& pipeline, texture& target_texture) override;
+		void draw(renderer& pipeline, texture& target_texture) override;
 
 	protected:
 		/** Invokes whenever position is changed */

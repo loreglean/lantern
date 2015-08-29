@@ -97,7 +97,7 @@ namespace lantern
 			m_data[pixel_first_byte_index + 2] / 255.0f,
 			m_data[pixel_first_byte_index + 1] / 255.0f,
 			m_data[pixel_first_byte_index + 0] / 255.0f,
-			m_data[pixel_first_byte_index + 3] / 255.0f };
+			m_data[pixel_first_byte_index + 3] / 255.0f};
 	}
 
 	inline void texture::set_pixel_color(vector2ui const& point, color const& color)

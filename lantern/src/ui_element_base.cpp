@@ -14,7 +14,7 @@ void ui_element_base::set_position(vector2f position)
 	on_position_changed();
 }
 
-void ui_element_base::draw(pipeline& pipeline, texture& target_texture)
+void ui_element_base::draw(renderer& pipeline, texture& target_texture)
 {
 	for (ui_element_base* element : m_children)
 	{

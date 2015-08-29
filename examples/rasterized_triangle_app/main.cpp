@@ -124,16 +124,16 @@ void rasterized_color_triangle_app::frame(float const delta_since_last_frame)
 
 	if (m_shader_option == shader_option::color)
 	{
-		get_pipeline().draw(m_triangle_mesh, m_color_shader, get_target_texture());
+		get_renderer().render_mesh(m_triangle_mesh, m_color_shader, get_target_texture());
 	}
 	else if (m_shader_option == shader_option::texture)
 	{
-		get_pipeline().draw(m_triangle_mesh, m_texture_shader, get_target_texture());
+		get_renderer().render_mesh(m_triangle_mesh, m_texture_shader, get_target_texture());
 	}
 
-	m_fps_label.draw(get_pipeline(), get_target_texture());
-	m_controls_description_label.draw(get_pipeline(), get_target_texture());
-	m_modes_description_label.draw(get_pipeline(), get_target_texture());
+	m_fps_label.draw(get_renderer(), get_target_texture());
+	m_controls_description_label.draw(get_renderer(), get_target_texture());
+	m_modes_description_label.draw(get_renderer(), get_target_texture());
 }
 
 void rasterized_color_triangle_app::on_key_down(SDL_Keysym const key)

@@ -4,7 +4,7 @@ using namespace lantern;
 
 ui_label::ui_label(font& font, texture const& target_texture)
 	: m_font(font),
-	  m_ndc_per_pixel{2.0f / target_texture.get_width(), 2.0f / target_texture.get_height()}
+	m_ndc_per_pixel{2.0f / target_texture.get_width(), 2.0f / target_texture.get_height()}
 {
 	m_shader.set_color(color::WHITE);
 }
@@ -23,13 +23,13 @@ void ui_label::set_color(color const& color)
 	m_shader.set_color(color);
 }
 
-void ui_label::draw(pipeline& pipeline, texture& target_texture)
+void ui_label::draw(renderer& pipeline, texture& target_texture)
 {
 	// Remember if alpha blending was enable
-	bool const alpha_blending_was_enabled{pipeline.get_merger().get_alpha_blending_enabled()};
+	bool const alpha_blending_was_enabled{pipeline.get_merging_stage().get_alpha_blending_enabled()};
 
 	// We need to enable it
-	pipeline.get_merger().set_alpha_blending_enabled(true);
+	pipeline.get_merging_stage().set_alpha_blending_enabled(true);
 
 	// Draw each symbol's mesh
 	//
@@ -37,11 +37,11 @@ void ui_label::draw(pipeline& pipeline, texture& target_texture)
 	for (size_t i{0}; i < meshes_count; ++i)
 	{
 		m_shader.set_symbol_texture(&m_symbols.at(i)->get_texture());
-		pipeline.draw(m_meshes.at(i), m_shader, target_texture);
+		pipeline.render_mesh(m_meshes.at(i), m_shader, target_texture);
 	}
 
 	// Return alpha blending to the old value
-	pipeline.get_merger().set_alpha_blending_enabled(alpha_blending_was_enabled);
+	pipeline.get_merging_stage().set_alpha_blending_enabled(alpha_blending_was_enabled);
 }
 
 void ui_label::on_position_changed()

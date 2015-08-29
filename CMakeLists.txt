@@ -29,58 +29,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
 # ===========================================
 
 # Library target ============================
-set(LANTERN_SOURCES
-    lantern/src/app.cpp
-    lantern/src/math/line.cpp
-    lantern/src/math/math_common.cpp
-    lantern/src/math/matrix3x3.cpp
-    lantern/src/math/matrix4x4.cpp
-    lantern/src/math/vector4.cpp
-    lantern/src/rendering/texture.cpp
-    lantern/src/rendering/pipeline.cpp
-    lantern/src/rendering/merger.cpp
-    lantern/src/rendering/font.cpp
-    lantern/src/rendering/color.cpp
-    lantern/src/rendering/camera.cpp
-    lantern/src/rendering/geometry/mesh.cpp
-    lantern/src/rendering/geometry/obj_import.cpp
-    lantern/src/rendering/rasterizing/rasterizer_traversal_common.cpp
-    lantern/src/rendering/ui/ui_element_base.cpp
-    lantern/src/rendering/ui/ui_label.cpp)
+file(GLOB LANTERN_HEADERS "lantern/include/*.h")
 
-set(LANTERN_HEADERS
-    lantern/include/app.h
-    lantern/include/math/aabb.h
-    lantern/include/math/line.h
-    lantern/include/math/math_common.h
-    lantern/include/math/matrix3x3.h
-    lantern/include/math/matrix4x4.h
-    lantern/include/math/vector2.h
-    lantern/include/math/vector3.h
-    lantern/include/math/vector4.h
-    lantern/include/rendering/texture.h
-    lantern/include/rendering/rendering_options.h
-    lantern/include/rendering/pipeline.h
-    lantern/include/rendering/merger.h
-    lantern/include/rendering/font.h
-    lantern/include/rendering/color.h
-    lantern/include/rendering/camera.h
-    lantern/include/rendering/shaders/shader.h
-    lantern/include/rendering/shaders/color_shader.h
-    lantern/include/rendering/shaders/texture_shader.h
-    lantern/include/rendering/shaders/ui_label_shader.h
-    lantern/include/rendering/rasterizing/rasterizer_common.h
-    lantern/include/rendering/rasterizing/rasterizer_homogeneous.h
-    lantern/include/rendering/rasterizing/rasterizer_inversed_slope.h
-    lantern/include/rendering/rasterizing/rasterizer_traversal_aabb.h
-    lantern/include/rendering/rasterizing/rasterizer_traversal_backtracking.h
-    lantern/include/rendering/rasterizing/rasterizer_traversal_common.h
-    lantern/include/rendering/rasterizing/rasterizer_traversal_zigzag.h
-    lantern/include/rendering/ui/ui_element_base.h
-    lantern/include/rendering/ui/ui_label.h
-    lantern/include/rendering/geometry/obj_import.h
-    lantern/include/rendering/geometry/mesh_attribute_info.h
-    lantern/include/rendering/geometry/mesh.h)
+file(GLOB LANTERN_SOURCES "lantern/src/*.cpp")
 
 set(LANTERN_INCLUDE_FOLDERS
     lantern/include

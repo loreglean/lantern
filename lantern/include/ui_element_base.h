@@ -1,7 +1,7 @@
 #ifndef LANTERN_UI_ELEMENT_BASE_H
 #define LANTERN_UI_ELEMENT_BASE_H
 
-#include "pipeline.h"
+#include "renderer.h"
 
 namespace lantern
 {
@@ -23,7 +23,7 @@ namespace lantern
 		* @param pipeline Pipeline to use
 		* @param target_texture Texture to draw to
 		*/
-		virtual void draw(pipeline& pipeline, texture& target_texture);
+		virtual void draw(renderer& pipeline, texture& target_texture);
 
 		/** Gets children storage
 		* @returns Children storage

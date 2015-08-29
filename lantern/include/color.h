@@ -8,6 +8,7 @@ namespace lantern
 	class color final
 	{
 	public:
+
 		/** Red component */
 		float r;
 

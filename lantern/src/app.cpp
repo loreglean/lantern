@@ -10,7 +10,7 @@ app* app::_instance = nullptr;
 app::app(unsigned int const width, unsigned int const height)
 	: m_freetype_library{nullptr},
 	  m_window{nullptr},
-	  m_renderer{nullptr},
+	  m_sdl_renderer{nullptr},
 	  m_sdl_target_texture{nullptr},
 	  m_target_texture{width, height},
 	  m_target_framerate_delay{0},
@@ -55,14 +55,14 @@ app::app(unsigned int const width, unsigned int const height)
 		throw std::runtime_error(SDL_GetError());
 	}
 
-	m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
-	if (m_renderer == nullptr)
+	m_sdl_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
+	if (m_sdl_renderer == nullptr)
 	{
 		throw std::runtime_error(SDL_GetError());
 	}
 
 	m_sdl_target_texture = SDL_CreateTexture(
-		m_renderer,
+		m_sdl_renderer,
 		SDL_PIXELFORMAT_ARGB8888,
 		SDL_TEXTUREACCESS_STREAMING,
 		width, height);
@@ -94,10 +94,10 @@ app::~app()
 		m_sdl_target_texture = nullptr;
 	}
 
-	if (m_renderer != nullptr)
+	if (m_sdl_renderer != nullptr)
 	{
-		SDL_DestroyRenderer(m_renderer);
-		m_renderer = nullptr;
+		SDL_DestroyRenderer(m_sdl_renderer);
+		m_sdl_renderer = nullptr;
 	}
 
 	if (m_window != nullptr)
@@ -158,8 +158,8 @@ int app::start()
 		// Present texture on a screen
 		//
 		SDL_UpdateTexture(m_sdl_target_texture, nullptr, m_target_texture.get_data(), m_target_texture.get_pitch());
-		SDL_RenderCopy(m_renderer, m_sdl_target_texture, nullptr, nullptr);
-		SDL_RenderPresent(m_renderer);
+		SDL_RenderCopy(m_sdl_renderer, m_sdl_target_texture, nullptr, nullptr);
+		SDL_RenderPresent(m_sdl_renderer);
 
 		// Sum up passed frames
 		++frames_accumulator;
@@ -210,9 +210,9 @@ texture& app::get_target_texture()
 	return m_target_texture;
 }
 
-pipeline& app::get_pipeline()
+renderer& app::get_renderer()
 {
-	return m_pipeline;
+	return m_renderer;
 }
 
 void app::on_key_down(SDL_Keysym const)
