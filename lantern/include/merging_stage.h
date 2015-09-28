@@ -41,7 +41,7 @@ namespace lantern
 	template<typename TShader, typename TDelegate>
 	inline void merging_stage::invoke(vector2ui const& pixel_coordinates, vector3f const& sample_point, TShader& shader, texture& target_texture, TDelegate& delegate)
 	{
-		color const color_from_shader{shader.process_pixel(pixel_coordinates)};
+		color const color_from_shader = shader.process_pixel(pixel_coordinates);
 
 		if (!m_alpha_blending_enabled)
 		{
@@ -56,4 +56,4 @@ namespace lantern
 	}
 }
 
-#endif LANTERN_MERGING_STAGE_H
+#endif // LANTERN_MERGING_STAGE_H
