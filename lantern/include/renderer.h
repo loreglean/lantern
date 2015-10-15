@@ -5,6 +5,7 @@
 #include "geometry_stage.h"
 #include "rasterizing_stage.h"
 #include "merging_stage.h"
+#include <stdexcept>
 
 namespace lantern
 {
