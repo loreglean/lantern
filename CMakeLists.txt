@@ -10,7 +10,19 @@ include(CTest)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 find_package(SDL2 REQUIRED)
 find_package(SDL2IMAGE REQUIRED)
+
+if(DEFINED ENV{FREETYPEDIR})
+    string(REPLACE "\\" "/" FREETYPEDIR $ENV{FREETYPEDIR})
+elseif(DEFINED FREETYPEDIR)
+    string(REPLACE "\\" "/" FREETYPEDIR ${FREETYPEDIR})
+endif()
+
 find_package(Freetype REQUIRED)
+
+if(WIN32)
+    set(FREETYPE_DLL "${FREETYPEDIR}/bin/freetype6.dll")
+endif()
+
 # ===========================================
 
 # Compiler setup ============================
@@ -177,6 +189,12 @@ if (WIN32)
         POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
         "${SDL2IMAGE_ZLIB_DLL}"
         $<TARGET_FILE_DIR:empty_app>)
+
+    add_custom_command(
+        TARGET empty_app
+        POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+        "${FREETYPE_DLL}"
+        $<TARGET_FILE_DIR:empty_app>)
 endif()
 # ===========================================
 
@@ -217,6 +235,12 @@ if (WIN32)
         TARGET rasterized_triangle_app
         POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
         "${SDL2IMAGE_ZLIB_DLL}"
+        $<TARGET_FILE_DIR:rasterized_triangle_app>)
+
+    add_custom_command(
+        TARGET rasterized_triangle_app
+        POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+        "${FREETYPE_DLL}"
         $<TARGET_FILE_DIR:rasterized_triangle_app>)
 endif()
 
