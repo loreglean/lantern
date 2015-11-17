@@ -3,7 +3,6 @@
 
 #include "mesh.h"
 #include "texture.h"
-#include "vector4.h"
 #include "matrix4x4.h"
 
 namespace lantern
@@ -135,7 +134,7 @@ namespace lantern
 				v.y = -v.y * height / 2.0f + height / 2.0f;
 			}
 		}
-		
+
 		// Process results
 		//
 		std::vector<unsigned int> const& indices = mesh.get_indices();
