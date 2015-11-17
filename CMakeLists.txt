@@ -104,39 +104,12 @@ set_target_properties(
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests")
 
 target_link_libraries(tests lantern gtest)
-target_link_libraries(tests lantern ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARY})
 
 add_custom_command(
     TARGET tests POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     "${PROJECT_SOURCE_DIR}/tests/resources"
     $<TARGET_FILE_DIR:tests>/resources)
-
-if (WIN32)
-    add_custom_command(
-        TARGET tests
-        POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-        "${SDL2_DLL}"
-        $<TARGET_FILE_DIR:tests>)
-
-    add_custom_command(
-        TARGET tests
-        POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-        "${SDL2IMAGE_DLL}"
-        $<TARGET_FILE_DIR:tests>)
-
-	add_custom_command(
-        TARGET tests
-        POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-        "${SDL2IMAGE_LIBPNG_DLL}"
-        $<TARGET_FILE_DIR:tests>)
-
-	add_custom_command(
-        TARGET tests
-        POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-        "${SDL2IMAGE_ZLIB_DLL}"
-        $<TARGET_FILE_DIR:tests>)
-endif()
 # ===========================================
 
 # Empty app target ==========================
