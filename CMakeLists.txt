@@ -58,16 +58,22 @@ set_target_properties(
 # Gooogle C++ testing framework target ======
 if(DEFINED ENV{GTEST_ROOT})
 
-    string(REPLACE "\\" "/" GTEST_SOURCES "$ENV{GTEST_ROOT}/src/gtest-all.cc")
+    string(REPLACE "\\" "/" GTEST_ROOT $ENV{GTEST_ROOT})
+    set(GTEST_LIBRARY ${GTEST_ROOT})
+    set(GTEST_INCLUDE_DIR ${GTEST_ROOT}/include)
+    set(GTEST_MAIN_LIBRARY gtest)
+    find_package(GTest REQUIRED)
+
+    set(GTEST_SOURCES ${GTEST_ROOT}/src/gtest-all.cc)
 
     add_library(
-        gtest STATIC
+        ${GTEST_MAIN_LIBRARY} STATIC
         ${GTEST_SOURCES})
 
-    target_include_directories(gtest PRIVATE $ENV{GTEST_ROOT}/include $ENV{GTEST_ROOT})
+    target_include_directories(${GTEST_MAIN_LIBRARY} PRIVATE ${GTEST_LIBRARY} ${GTEST_INCLUDE_DIR})
 
     if(UNIX)
-        target_link_libraries(gtest pthread)
+        target_link_libraries(${GTEST_MAIN_LIBRARY} pthread)
     endif()
 
 endif()
