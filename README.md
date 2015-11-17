@@ -46,7 +46,7 @@ On Windows you have to specify a few environment variables for dependencies so t
  * `FREETYPEDIR` - path to a folder containing FreeType's headers and library
  * `GTEST_ROOT` - path to Google Tests source code folder (required only if you're going to build tests target)
 
-Note for Windows FreeType library: if you're building it by yourself, make sure that output library's name is `freetype2.lib` and not `freetype26.lib` (that's what bundled FindFreeType.cmake looks for).
+Note for Windows FreeType library: if you're building it by yourself, make sure that output library's name is `freetype2.lib` and not `freetype26.lib` (that's what bundled FindFreeType.cmake looks for). It's also assumed for now that FreeType is compiled as a static library, otherwise you'll have to copy dll to resulting folder by yourself (or alter CMakeLists.txt a little)
 
 ###Known issues
 
