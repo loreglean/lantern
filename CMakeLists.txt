@@ -136,6 +136,45 @@ if (WIN32)
         POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
         "${SDL2IMAGE_ZLIB_DLL}"
         $<TARGET_FILE_DIR:tests>)
+
+    if(MSVC)
+        if(EXISTS ${CMAKE_BINARY_DIR}/tests.vcxproj.user)
+            # file(READ ${CMAKE_BINARY_DIR}/tests.vcxproj.user file_content)
+            # message(${file_content})
+        else()
+            set(file_content "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n")
+
+            if((CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 19.0) AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 20.0))
+                set(file_content "${file_content}<Project ToolsVersion=\"14.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\n")
+            elseif((CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 18.0) AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.0))
+                set(file_content "${file_content}<Project ToolsVersion=\"12.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\n")
+            endif()
+
+            set(file_content "${file_content}  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|Win32'\">\n")
+            set(file_content "${file_content}    <LocalDebuggerWorkingDirectory>$(ProjectDir)$(TargetName)\\$(Configuration)</LocalDebuggerWorkingDirectory>\n")
+            set(file_content "${file_content}    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>\n")
+            set(file_content "${file_content}  </PropertyGroup>\n")
+
+            set(file_content "${file_content}  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|Win32'\">\n")
+            set(file_content "${file_content}    <LocalDebuggerWorkingDirectory>$(ProjectDir)$(TargetName)\\$(Configuration)</LocalDebuggerWorkingDirectory>\n")
+            set(file_content "${file_content}    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>\n")
+            set(file_content "${file_content}  </PropertyGroup>\n")
+
+            set(file_content "${file_content}  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'\">\n")
+            set(file_content "${file_content}    <LocalDebuggerWorkingDirectory>$(ProjectDir)$(TargetName)\\$(Configuration)</LocalDebuggerWorkingDirectory>\n")
+            set(file_content "${file_content}    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>\n")
+            set(file_content "${file_content}  </PropertyGroup>\n")
+
+            set(file_content "${file_content}  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'\">\n")
+            set(file_content "${file_content}    <LocalDebuggerWorkingDirectory>$(ProjectDir)$(TargetName)\\$(Configuration)</LocalDebuggerWorkingDirectory>\n")
+            set(file_content "${file_content}    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>\n")
+            set(file_content "${file_content}  </PropertyGroup>\n")
+
+            set(file_content "${file_content}</Project>")
+
+            file(WRITE ${CMAKE_BINARY_DIR}/tests.vcxproj.user "${file_content}")
+        endif()
+    endif()
 endif()
 # ===========================================
 
@@ -225,4 +264,43 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     "${PROJECT_SOURCE_DIR}/examples/rasterized_triangle_app/resources"
     $<TARGET_FILE_DIR:rasterized_triangle_app>/resources)
+
+if(MSVC)
+    if(EXISTS ${CMAKE_BINARY_DIR}/rasterized_triangle_app.vcxproj.user)
+        # file(READ ${CMAKE_BINARY_DIR}/rasterized_triangle_app.vcxproj.user file_content)
+        # message(${file_content})
+    else()
+        set(file_content "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n")
+
+        if((CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 19.0) AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 20.0))
+            set(file_content "${file_content}<Project ToolsVersion=\"14.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\n")
+        elseif((CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 18.0) AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.0))
+            set(file_content "${file_content}<Project ToolsVersion=\"12.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\n")
+        endif()
+
+        set(file_content "${file_content}  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|Win32'\">\n")
+        set(file_content "${file_content}    <LocalDebuggerWorkingDirectory>$(ProjectDir)examples\\$(TargetName)\\$(Configuration)</LocalDebuggerWorkingDirectory>\n")
+        set(file_content "${file_content}    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>\n")
+        set(file_content "${file_content}  </PropertyGroup>\n")
+
+        set(file_content "${file_content}  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|Win32'\">\n")
+        set(file_content "${file_content}    <LocalDebuggerWorkingDirectory>$(ProjectDir)examples\\$(TargetName)\\$(Configuration)</LocalDebuggerWorkingDirectory>\n")
+        set(file_content "${file_content}    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>\n")
+        set(file_content "${file_content}  </PropertyGroup>\n")
+
+        set(file_content "${file_content}  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'\">\n")
+        set(file_content "${file_content}    <LocalDebuggerWorkingDirectory>$(ProjectDir)examples\\$(TargetName)\\$(Configuration)</LocalDebuggerWorkingDirectory>\n")
+        set(file_content "${file_content}    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>\n")
+        set(file_content "${file_content}  </PropertyGroup>\n")
+
+        set(file_content "${file_content}  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'\">\n")
+        set(file_content "${file_content}    <LocalDebuggerWorkingDirectory>$(ProjectDir)examples\\$(TargetName)\\$(Configuration)</LocalDebuggerWorkingDirectory>\n")
+        set(file_content "${file_content}    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>\n")
+        set(file_content "${file_content}  </PropertyGroup>\n")
+
+        set(file_content "${file_content}</Project>")
+
+        file(WRITE ${CMAKE_BINARY_DIR}/rasterized_triangle_app.vcxproj.user "${file_content}")
+    endif()
+endif()
 # ===========================================
