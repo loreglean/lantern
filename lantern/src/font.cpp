@@ -74,13 +74,20 @@ font::font(std::string font_file_path, int size)
 font::~font()
 {
 	// Clean up
+	//
+
+	for (auto const& kvp : m_symbols_map)
+	{
+		delete kvp.second;
+	}
+
 	FT_Done_Face(m_font);
 }
 
-symbol const& font::get_symbol(char c)
+symbol const* font::get_symbol(char c)
 {
 	// Check if we already got that symbol's metrics
-	std::map<char, symbol>::const_iterator find_result = m_symbols_map.find(c);
+	std::map<char, symbol const*>::const_iterator find_result = m_symbols_map.find(c);
 
 	if (find_result == m_symbols_map.end())
 	{
@@ -95,7 +102,7 @@ symbol const& font::get_symbol(char c)
 		}
 
 		// Cache it
-		m_symbols_map.insert(std::make_pair(c, symbol{m_font->glyph}));
+		m_symbols_map.insert(std::make_pair(c, new symbol{m_font->glyph}));
 
 		// Return the result
 		return m_symbols_map.find(c)->second;

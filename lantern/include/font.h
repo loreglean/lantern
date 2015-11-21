@@ -70,14 +70,14 @@ namespace lantern
 		* @param c Character
 		* @returns Symbol object for the character
 		*/
-		symbol const& get_symbol(char c);
+		symbol const* get_symbol(char c);
 
 	private:
 		/** FreeType font object */
 		FT_Face m_font;
 
 		/** Dictionary of already loaded symbols: character -> symbol object */
-		std::map<char, symbol> m_symbols_map;
+		std::map<char, symbol const*> m_symbols_map;
 	};
 }
 

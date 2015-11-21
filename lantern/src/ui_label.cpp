@@ -74,14 +74,14 @@ void ui_label::update_mesh()
 
 		// Get font's symbol and save it
 		//
-		symbol const& symbol{m_font.get_symbol(c)};
-		m_symbols.push_back(&symbol);
+		symbol const* symbol{m_font.get_symbol(c)};
+		m_symbols.push_back(symbol);
 
 		// Calculate metrics in NDC
 		//
-		vector2f const quad_size_ndc{symbol.get_size().x * m_ndc_per_pixel.x, symbol.get_size().y * m_ndc_per_pixel.y};
-		vector2f const bearing_ndc{symbol.get_bearing().x * m_ndc_per_pixel.x, symbol.get_bearing().y * m_ndc_per_pixel.y};
-		float const advance_ndc{symbol.get_advance() * m_ndc_per_pixel.x};
+		vector2f const quad_size_ndc{symbol->get_size().x * m_ndc_per_pixel.x, symbol->get_size().y * m_ndc_per_pixel.y};
+		vector2f const bearing_ndc{symbol->get_bearing().x * m_ndc_per_pixel.x, symbol->get_bearing().y * m_ndc_per_pixel.y};
+		float const advance_ndc{symbol->get_advance() * m_ndc_per_pixel.x};
 		float const baseline_offset_ndc{quad_size_ndc.y - bearing_ndc.y};
 
 		// Create quad's verices
