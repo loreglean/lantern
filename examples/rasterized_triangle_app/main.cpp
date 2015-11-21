@@ -52,7 +52,7 @@ rasterized_color_triangle_app::rasterized_color_triangle_app(unsigned int const 
 	: app(width, height),
 	  m_triangle_position{0.0f, 0.0f, 1.5f},
 	  m_triangle_rotation{vector3f{0.0f, 0.0f, 0.0f}},
-	  m_triangle_mesh{load_mesh_from_obj("resources/triangle.obj", false, false)},
+	  m_triangle_mesh{load_mesh_from_obj(get_resources_path() + "triangle.obj", false, false)},
 	  m_camera{
 		  vector3f{0.0f, 0.0f, 0.0f},
 		  vector3f{0.0f, 0.0f, 1.0f},
@@ -62,8 +62,8 @@ rasterized_color_triangle_app::rasterized_color_triangle_app(unsigned int const 
 		  0.01f,
 		  20.0f},
 	  m_shader_option{shader_option::color},
-	  m_texture{texture::load_from_file("resources/chess.png")},
-	  m_ui_font{"resources/Ubuntu-L.ttf", 15},
+	  m_texture{texture::load_from_file(get_resources_path() + "chess.png")},
+	  m_ui_font{get_resources_path() + "Ubuntu-L.ttf", 15},
 	  m_fps_label{m_ui_font, get_target_texture()},
 	  m_controls_description_label{m_ui_font, get_target_texture()},
 	  m_modes_description_label{m_ui_font, get_target_texture()}

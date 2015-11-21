@@ -3,6 +3,7 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include <string>
 #include "SDL.h"
 #include "renderer.h"
 
@@ -38,6 +39,16 @@ namespace lantern
 		*/
 		unsigned int get_last_fps() const;
 
+		/** Gets platform-dependent separator symbol 
+		* @returns Separator
+		*/
+		char get_path_separator() const;
+
+		/** Gets absolute path to resources folder, already contains ending separator
+		* @returns Path to resources
+		*/
+		std::string get_resources_path() const;
+		
 		/** Gets application instance
 		* @returns Instance
 		*/
@@ -93,6 +104,12 @@ namespace lantern
 
 		/** Last saved framerate */
 		unsigned int m_last_fps;
+
+		/** Platform-dependent path separator */
+		char const m_path_separator;
+
+		/** Absolute path to resources folder */
+		std::string m_resources_path;
 
 		/** Instance pointer */
 		static app* _instance;

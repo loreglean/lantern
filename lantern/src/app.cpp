@@ -14,7 +14,12 @@ app::app(unsigned int const width, unsigned int const height)
 	  m_sdl_target_texture{nullptr},
 	  m_target_texture{width, height},
 	  m_target_framerate_delay{0},
-	  m_last_fps{0}
+	  m_last_fps{0},
+#ifdef _WIN32
+	  m_path_separator{'\\'}
+#else
+	  m_path_separator{'/'}
+#endif
 {
 	if (_instance != nullptr)
 	{
@@ -67,6 +72,17 @@ app::app(unsigned int const width, unsigned int const height)
 		SDL_TEXTUREACCESS_STREAMING,
 		width, height);
 	if (m_sdl_target_texture == nullptr)
+	{
+		throw std::runtime_error(SDL_GetError());
+	}
+
+	char* base_path{SDL_GetBasePath()};
+	if (base_path != nullptr)
+	{
+		m_resources_path = std::string(base_path) + "resources" + m_path_separator;
+		SDL_free(base_path);
+	}
+	else
 	{
 		throw std::runtime_error(SDL_GetError());
 	}
@@ -198,6 +214,16 @@ FT_Library app::get_freetype_library() const
 unsigned int app::get_last_fps() const
 {
 	return m_last_fps;
+}
+
+std::string app::get_resources_path() const
+{
+	return m_resources_path;
+}
+
+char app::get_path_separator() const
+{
+	return m_path_separator;
 }
 
 app const* app::get_instance()

@@ -51,5 +51,3 @@ Note for Windows FreeType library: if you're building it by yourself, make sure 
 ###Known issues
 
 * If you're facing linking problems in SDL2main library on VS 2015, you can recompile SDL2 by yourself using VS 2015, or just download SDL2 build bot package here: https://buildbot.libsdl.org/sdl-builds/sdl-visualstudio/
-
-* Lantern fails loading resources when running from a directory different than the one where the executable is
