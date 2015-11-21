@@ -1,6 +1,12 @@
 #include <iostream>
 #include <stdexcept>
 #include <SDL_image.h>
+#if defined(WIN32)
+#include <windows.h>
+#endif
+#if defined(__linux)
+#include <unistd.h>
+#endif
 #include "app.h"
 
 using namespace lantern;
@@ -88,6 +94,15 @@ app::app(unsigned int const width, unsigned int const height)
 	}
 
 	set_target_framerate(60);
+
+#if defined(WIN32)
+	char* base_path = SDL_GetBasePath();
+	SetCurrentDirectory(base_path);
+#endif
+#if defined(__linux)
+	char* base_path = SDL_GetBasePath();
+	chdir(base_path);
+#endif
 }
 
 app::~app()
