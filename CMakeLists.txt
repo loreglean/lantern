@@ -56,15 +56,25 @@ set_target_properties(
 # ===========================================
 
 # Gooogle C++ testing framework target ======
-if(DEFINED ENV{GTEST_ROOT})
+if(UNIX)
+    if(EXISTS /usr/src/gtest/)
+        set(GTEST_ROOT /usr/src/gtest)
+    endif()
+else()
+    if(DEFINED ENV{GTEST_ROOT})
+        string(REPLACE "\\" "/" GTEST_ROOT "$ENV{GTEST_ROOT}")
+    endif()
+endif()
 
-    string(REPLACE "\\" "/" GTEST_SOURCES "$ENV{GTEST_ROOT}/src/gtest-all.cc")
+if(DEFINED GTEST_ROOT)
+
+    set(GTEST_SOURCES "${GTEST_ROOT}/src/gtest-all.cc")
 
     add_library(
         gtest STATIC
         ${GTEST_SOURCES})
 
-    target_include_directories(gtest PRIVATE $ENV{GTEST_ROOT}/include $ENV{GTEST_ROOT})
+    target_include_directories(gtest PRIVATE ${GTEST_ROOT}/include ${GTEST_ROOT})
 
     if(UNIX)
         target_link_libraries(gtest pthread)
@@ -95,8 +105,8 @@ add_executable(
 
 target_include_directories(tests PRIVATE lantern/include tests/include)
 
-if (DEFINED ENV{GTEST_ROOT})
-    target_include_directories(tests PRIVATE $ENV{GTEST_ROOT}/include)
+if (DEFINED GTEST_ROOT)
+    target_include_directories(tests PRIVATE ${GTEST_ROOT}/include)
 endif()
 
 set_target_properties(
